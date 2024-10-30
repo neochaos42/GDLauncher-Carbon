@@ -5,6 +5,7 @@ import { Tabs, TabList, Tab, Button, ContextMenu } from "@gd/ui";
 import { Outlet, useLocation, useParams, useRouteData } from "@solidjs/router";
 import {
   For,
+  JSX,
   Match,
   Show,
   Switch,
@@ -40,9 +41,11 @@ import {
   setExportStep
 } from "@/managers/ModalsManager/modals/InstanceExport";
 import { setCheckedFiles } from "@/managers/ModalsManager/modals/InstanceExport/atoms/ExportCheckboxParent";
+import { isFullScreen } from "./Tabs/Log";
+import FeatureStatusBadge from "@/components/FeatureStatusBadge";
 
 type InstancePage = {
-  label: string;
+  label: string | JSX.Element;
   path: string;
 };
 
@@ -164,7 +167,12 @@ const Instance = () => {
       path: `/library/${params.id}/settings`
     },
     {
-      label: "Logs",
+      label: (
+        <div class="flex gap-2 items-center">
+          Logs
+          <FeatureStatusBadge type="beta" />
+        </div>
+      ),
       path: `/library/${params.id}/logs`
     }
     // {
@@ -372,6 +380,10 @@ const Instance = () => {
     <main
       id="main-container-instance-details"
       class="h-full bg-darkSlate-800 flex flex-col relative overflow-x-hidden"
+      classList={{
+        "overflow-hidden": isFullScreen(),
+        "overflow-x-hidden": !isFullScreen()
+      }}
       onScroll={() => {
         const rect = refStickyTabs.getBoundingClientRect();
         setIsSticky(rect.top <= 104);
@@ -387,7 +399,7 @@ const Instance = () => {
         ref={(el) => {
           headerRef = el;
         }}
-        class="relative flex flex-col justify-between ease-in-out transition-all ease-in-out items-stretch bg-cover bg-center min-h-60 transition-100"
+        class="relative flex flex-col justify-between ease-in-out transition-all items-stretch bg-cover bg-center min-h-60 transition-100"
         style={{
           transition: "height 0.2s",
           "background-image": routeData.instanceDetails.data?.iconRevision
@@ -470,7 +482,7 @@ const Instance = () => {
                           onInput={(e) => {
                             setNewName(e.target.innerHTML);
                           }}
-                          class="cursor-pointer z-10 m-0 border-box focus-visible:border-0 focus:outline-none focus-visible:outline-none cursor-text min-h-10"
+                          class="z-10 m-0 border-box focus-visible:border-0 focus:outline-none focus-visible:outline-none cursor-text min-h-10"
                           contentEditable={editableName()}
                           onFocusIn={() => {
                             setEditableName(true);
@@ -622,7 +634,7 @@ const Instance = () => {
       </header>
       <div class="bg-darkSlate-800 sticky">
         <div
-          class="flex justify-center min-h-150 py-6"
+          class="flex justify-center py-0"
           classList={{
             "px-6": !instancePages()[selectedIndex()]?.noPadding
           }}
@@ -713,7 +725,13 @@ const Instance = () => {
                 </Button>
               </div>
             </div>
-            <div class="py-4">
+            <div
+              class="px-4"
+              classList={{
+                "pt-14": isFullScreen(),
+                "pt-4": !isFullScreen()
+              }}
+            >
               <Outlet />
             </div>
           </div>

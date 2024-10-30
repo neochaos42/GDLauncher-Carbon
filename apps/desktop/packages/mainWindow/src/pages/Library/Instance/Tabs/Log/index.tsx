@@ -1,193 +1,169 @@
-import { LogEntry, LogEntryLevel } from "@/utils/logs";
+import { LogEntry } from "@/utils/logs";
 import { port, rspc } from "@/utils/rspcClient";
-import { Trans } from "@gd/i18n";
 import { useParams } from "@solidjs/router";
-import {
-  For,
-  Match,
-  Show,
-  Switch,
-  createEffect,
-  createSignal,
-  onCleanup,
-  onMount
-} from "solid-js";
-import { Button, Tooltip } from "@gd/ui";
+import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
+import LogsSidebar from "./LogsSidebar";
+import LogsContent from "./LogsContent";
+import { createStore } from "solid-js/store";
+
+export const [isFullScreen, setIsFullScreen] = createSignal(false);
 
 const Logs = () => {
-  const [logsCopied, setLogsCopied] = createSignal(false);
-  const [logs, setLogs] = createSignal<LogEntry[]>([]);
+  let logsContentRef: HTMLDivElement | undefined;
+  let scrollBottomRef: HTMLDivElement | undefined;
+  const [logs, setLogs] = createStore<LogEntry[]>([]);
+  const [selectedLog, setSelectedLog] = createSignal<number | undefined>(
+    undefined
+  );
+  const [autoFollowPreference, setAutoFollowPreference] = createSignal(true);
+  const [autoFollow, setAutoFollow] = createSignal(true);
   const params = useParams();
+  const [newLogsCount, setNewLogsCount] = createSignal(0);
 
-  const _logs = rspc.createQuery(() => ({
+  const availableLogEntries = rspc.createQuery(() => ({
     queryKey: ["instance.getLogs", parseInt(params.id, 10)]
   }));
 
-  const instanceLogs = () => {
-    if (!_logs.data) {
-      return undefined;
-    }
-
-    return _logs.data[_logs.data.length - 1];
-  };
+  const isActive = () =>
+    availableLogEntries.data?.find((log) => log.id === selectedLog())?.active;
 
   createEffect(() => {
-    if (instanceLogs()) {
+    if (!availableLogEntries.data) return;
+    const activeLogId = availableLogEntries.data.find((log) => log.active)?.id;
+
+    if (activeLogId !== undefined) setSelectedLog(activeLogId);
+  });
+
+  createEffect(() => {
+    if (selectedLog() === undefined) return;
+
+    const wsConnection = new WebSocket(
+      `ws://127.0.0.1:${port}/instance/log?id=${selectedLog()}`
+    );
+
+    wsConnection.onmessage = (event) => {
+      const newLogs = JSON.parse(event.data) as LogEntry[];
+
+      setLogs((prev) => [...prev, ...newLogs]);
+
+      if (!logsContentRef || !autoFollowPreference()) return;
+
+      if (autoFollow()) {
+        logsContentRef.scrollTop = logsContentRef.scrollHeight;
+        setNewLogsCount(0);
+      } else {
+        setNewLogsCount((prev) => prev + 1);
+      }
+    };
+
+    onCleanup(() => {
       setLogs([]);
 
-      const wsConnection = new WebSocket(
-        `ws://127.0.0.1:${port}/instance/log?id=${instanceLogs()?.id}`
-      );
-
-      wsConnection.onmessage = (event) => {
-        const newLog = JSON.parse(event.data) as LogEntry;
-        setLogs((prevLogs) => [...prevLogs, newLog]);
-      };
-
-      onCleanup(() => {
-        if (wsConnection && wsConnection.readyState === wsConnection.OPEN) {
-          wsConnection.close();
-        }
-      });
-    }
+      if (wsConnection && wsConnection.readyState === wsConnection.OPEN) {
+        wsConnection.close();
+      }
+    });
   });
 
-  const copyLogsToClipboard = () => {
-    window.copyToClipboard(JSON.stringify(instanceLogs()));
-    setLogsCopied(true);
-  };
+  onCleanup(() => {
+    setSelectedLog(undefined);
+  });
 
   createEffect(() => {
-    if (logsCopied()) {
-      const timeoutId = setTimeout(() => {
-        setLogsCopied(false);
-      }, 400);
-
-      onCleanup(() => {
-        clearTimeout(timeoutId);
-      });
-    }
+    // autoFollowPreference call NEEDS to be here for scrollToBottom to be called when it changes
+    autoFollowPreference();
+    selectedLog();
+    setNewLogsCount(0);
+    handleScroll();
   });
 
-  const [showButton, setShowButton] = createSignal(false);
+  const handleScroll = () => {
+    if (!logsContentRef) return;
 
-  const checkScrollTop = () => {
-    const container = document.getElementById(
-      "main-container-instance-details"
-    );
-    if (container) {
-      if (!showButton() && container.scrollTop > 400) {
-        setShowButton(true);
-      } else if (showButton() && container.scrollTop <= 400) {
-        setShowButton(false);
+    const isAtBottom =
+      logsContentRef.scrollHeight - logsContentRef.scrollTop ===
+      logsContentRef.clientHeight;
+
+    if (scrollBottomRef && (!autoFollowPreference() || !isActive())) {
+      scrollBottomRef.style.display = "none";
+      return;
+    }
+
+    if (isAtBottom) {
+      setAutoFollow(true);
+      if (scrollBottomRef && autoFollowPreference()) {
+        scrollBottomRef.style.display = "none";
+      }
+    } else {
+      setAutoFollow(false);
+      if (scrollBottomRef && autoFollowPreference()) {
+        scrollBottomRef.style.display = "flex";
       }
     }
   };
 
-  // Function to scroll to top smoothly
-  const scrollTop = () => {
-    const container = document.getElementById(
-      "main-container-instance-details"
-    );
-    if (container) {
-      container.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
-
-  const container = document.getElementById("main-container-instance-details");
-  // Scroll event listener
   onMount(() => {
-    if (container) {
-      container.addEventListener("scroll", checkScrollTop);
+    if (logsContentRef) {
+      logsContentRef.addEventListener("scroll", handleScroll);
     }
   });
 
   onCleanup(() => {
-    if (container) {
-      container.removeEventListener("scroll", checkScrollTop);
+    if (logsContentRef) {
+      logsContentRef.removeEventListener("scroll", handleScroll);
     }
   });
 
+  createEffect(() => {
+    if (isFullScreen() && logsContentRef) {
+      logsContentRef.scrollIntoView({
+        block: "start",
+        inline: "end"
+      });
+    }
+  });
+
+  onCleanup(() => {
+    setIsFullScreen(false);
+  });
+
+  const scrollToBottom = () => {
+    if (logsContentRef) {
+      logsContentRef.scrollTop = logsContentRef.scrollHeight;
+      setAutoFollow(true);
+      setNewLogsCount(0);
+      if (scrollBottomRef) {
+        scrollBottomRef.style.display = "none";
+      }
+    }
+  };
+
+  function assignScrollBottomRef(ref: HTMLDivElement) {
+    scrollBottomRef = ref;
+  }
+
+  function assignLogsContentRef(ref: HTMLDivElement) {
+    logsContentRef = ref;
+  }
+
   return (
-    <div>
-      <Show when={showButton()}>
-        <div class="rounded-full fixed bottom-4 right-[490px]">
-          <Button typeof="secondary" onClick={scrollTop}>
-            <Trans key="logs.scroll_top" />
-          </Button>
-        </div>
-      </Show>
-      <div class="w-full flex justify-end px-4 py-2 box-border">
-        <Tooltip content={logsCopied() ? "Copied" : "Copy"}>
-          <Button type="secondary" onClick={copyLogsToClipboard}>
-            <div class="i-ri:file-copy-fill cursor-pointer" />
-            <span>
-              <Trans key="logs.copy" />
-            </span>
-          </Button>
-        </Tooltip>
-      </div>
-      <div class="pb-4 max-h-full flex flex-col divide-y divide-darkSlate-500 divide-x-none divide-solid select-text">
-        <Switch>
-          <Match when={(logs().length || 0) > 0}>
-            <For each={logs()}>
-              {(log) => {
-                let levelColorClass = "";
-
-                switch (log.level) {
-                  case LogEntryLevel.Trace: {
-                    levelColorClass = "text-gray-500";
-
-                    break;
-                  }
-                  case LogEntryLevel.Debug: {
-                    levelColorClass = "text-orange-500";
-
-                    break;
-                  }
-                  case LogEntryLevel.Info: {
-                    levelColorClass = "text-green-500";
-
-                    break;
-                  }
-                  case LogEntryLevel.Warn: {
-                    levelColorClass = "text-text-500";
-
-                    break;
-                  }
-                  case LogEntryLevel.Error: {
-                    levelColorClass = "text-red-500";
-
-                    break;
-                  }
-                }
-
-                return (
-                  <div class="flex flex-col justify-center items-center w-full overflow-x-auto scrollbar-hide">
-                    <pre class="m-0 w-full box-border leading-8">
-                      <code class="text-darkSlate-50 text-sm select-text">
-                        <span class={levelColorClass}>
-                          [{log.level.toUpperCase()}]
-                        </span>{" "}
-                        {log.logger}@{log.thread}
-                        {": "}
-                        {log?.message}
-                      </code>
-                    </pre>
-                  </div>
-                );
-              }}
-            </For>
-          </Match>
-          <Match when={(logs().length || 0) === 0}>
-            <div class="h-full flex justify-center items-center">
-              <p>
-                <Trans key="logs.no_logs" />
-              </p>
-            </div>
-          </Match>
-        </Switch>
-      </div>
+    <div class="h-full w-full flex overflow-hidden border border-darkSlate-600 border-t-solid">
+      <LogsSidebar
+        availableLogEntries={availableLogEntries.data || []}
+        setSelectedLog={setSelectedLog}
+        selectedLog={selectedLog()}
+        isLoading={availableLogEntries.isLoading}
+      />
+      <LogsContent
+        logs={logs}
+        isActive={isActive() || false}
+        scrollToBottom={scrollToBottom}
+        assignScrollBottomRef={assignScrollBottomRef}
+        assignLogsContentRef={assignLogsContentRef}
+        newLogsCount={newLogsCount()}
+        autoFollowPreference={autoFollowPreference()}
+        setAutoFollowPreference={setAutoFollowPreference}
+      />
     </div>
   );
 };
