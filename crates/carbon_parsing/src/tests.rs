@@ -443,6 +443,32 @@ fn test_special_characters_in_attributes() {
     }
 }
 
+// TODO: Maybe we can parse this better?
+#[test]
+fn test_illegal_crash() {
+    let input = r#"
+    Exception in thread "main" java.lang.ExceptionInInitializerError
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23)
+Caused by: java.lang.IllegalStateException: duplicate ASM classes found on classpath: jar:file:/Users/davideceschia/Library/Application%20Support/gdlauncher_carbon_dev/data/libraries/org/ow2/asm/asm/9.7.1/asm-9.7.1.jar!/org/objectweb/asm/ClassReader.class, jar:file:/Users/davideceschia/Library/Application%20Support/gdlauncher_carbon_dev/data/libraries/org/ow2/asm/asm/9.3/asm-9.3.jar!/org/objectweb/asm/ClassReader.class
+	at net.fabricmc.loader.impl.util.LoaderUtil.verifyClasspath(LoaderUtil.java:83)
+	at net.fabricmc.loader.impl.launch.knot.Knot.<clinit>(Knot.java:345)
+	... 1 more
+    "#;
+
+    let mut parser = LogParser::new();
+    parser.feed(input.as_bytes());
+
+    match parser.parse_next().unwrap() {
+        Some(ParsedItem::PlainText(v)) => {
+            assert_eq!(v, input);
+        }
+        v => panic!("Expected Plaintext, got {:?}", v),
+    }
+
+    let next = parser.parse_next().unwrap();
+    assert!(next.is_none());
+}
+
 // #[test]
 // fn test_fuzzy_parsing_variations() {
 //     let log_text = r#"Some plain text before

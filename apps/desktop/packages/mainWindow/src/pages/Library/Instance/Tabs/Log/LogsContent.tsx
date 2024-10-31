@@ -139,6 +139,7 @@ function ContentFormatter(props: {
 
   return (
     <span
+      class="whitespace-pre-wrap"
       classList={{
         "text-lightSlate-50": defaultColor() && !isSystemLog(),
         [color[props.level]]: !defaultColor() && !isSystemLog(),

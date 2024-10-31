@@ -77,6 +77,17 @@ impl LogEntry {
         }
     }
 
+    pub fn plaintext(msg: impl ToString, source_kind: LogEntrySourceKind) -> Self {
+        Self {
+            source_kind,
+            logger: "N/A".into(),
+            timestamp: chrono::Local::now().timestamp_millis() as u64,
+            thread: "N/A".into(),
+            level: LogEntryLevel::Info,
+            message: msg.to_string(),
+        }
+    }
+
     /// Create a new system message with an `error` level.
     pub fn system_error(msg: impl ToString) -> Self {
         let mut this = Self::system_message(msg);
@@ -348,7 +359,10 @@ impl LogProcessor {
                     });
                 }
                 ParsedItem::PlainText(text) => {
-                    tracing::trace!("Plain text log: {}", text);
+                    self.log.send_if_modified(|log| {
+                        log.add_entry(LogEntry::plaintext(text, self.kind));
+                        true
+                    });
                 }
                 ParsedItem::Partial(_) => {
                     break;
