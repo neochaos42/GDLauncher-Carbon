@@ -36,7 +36,7 @@ function Settings() {
         <div class="relative flex gap-2 items-center">
           {"Appearance"}
           <div class="absolute -top-14 right-0">
-            <FeatureStatusBadge type="updated" />
+            <FeatureStatusBadge type="beta" />
           </div>
         </div>
       ),

@@ -48,7 +48,8 @@ const changelogs: Changelog = {
   ],
   fixed: [
     {
-      title: "Fixed instance names with precomposed UNICODE characters.",
+      title:
+        "Fixed instances crashing when having names with precomposed UNICODE characters.",
       description:
         "You can now use any character in instance names, including japanese characters, emoji, and any other unicode characters."
     },
@@ -59,6 +60,10 @@ const changelogs: Changelog = {
     {
       title:
         "Fixed microphone not being allowed to be used in instances on MacOS."
+    },
+    {
+      title:
+        "Fixed Minecraft 1.21.2+ not working with fabric and other modloaders"
     },
     {
       title: "Fixed tabs always being flagged as selected by default"
@@ -112,6 +117,9 @@ const changelogs: Changelog = {
     },
     {
       title: "Updated terms of service and privacy statement"
+    },
+    {
+      title: "Added a parallax effect to the instance cover image"
     }
   ]
 };
