@@ -242,6 +242,8 @@ impl ManagerRef<'_, InstanceManager> {
         drop(instance);
         drop(instances);
 
+        let (log_id, log) = app.instance_manager().create_log(instance_id, None).await;
+
         let installation_task = tokio::spawn(async move {
             let instance_manager = app.instance_manager();
             let instance_root = instance_path.get_root();
@@ -901,15 +903,6 @@ impl ManagerRef<'_, InstanceManager> {
                     .await
                     .map_err(|e| anyhow::anyhow!("Error getting minecraft version: {:?}", e))?;
 
-                let lwjgl_group = get_lwjgl_meta(
-                    Arc::clone(&app.prisma_client),
-                    &app.reqwest_client,
-                    &version_info,
-                    &app.minecraft_manager().meta_base_url,
-                )
-                .await
-                .map_err(|e| anyhow::anyhow!("Error getting lwjgl meta: {:?}", e))?;
-
                 t_request_version_info.complete_opaque();
 
                 let java_profile = daedalus::minecraft::MinecraftJavaProfile::try_from(
@@ -924,6 +917,10 @@ impl ManagerRef<'_, InstanceManager> {
                 ).with_context(
                     || anyhow::anyhow!("instance java version unsupported")
                 )?;
+
+                log.send_modify(|log| {
+                    log.add_entry(LogEntry::system_message(format!("Suggested Java Profile: {java_profile:?}")))
+                });
 
                 let mut required_java_system_profile = SystemJavaProfileName::try_from(java_profile).with_context(
                     || anyhow::anyhow!("System java version unsupported")
@@ -1110,6 +1107,10 @@ impl ManagerRef<'_, InstanceManager> {
                     }
                 };
 
+                log.send_modify(|log| {
+                    log.add_entry(LogEntry::system_message(format!("Using Java: {java:#?}")))
+                });
+
                 t_request_modloader_info.start_opaque();
 
                 for modloader in version.modloaders.iter() {
@@ -1215,11 +1216,11 @@ impl ManagerRef<'_, InstanceManager> {
 
                 t_request_minecraft_files.start_opaque();
 
-                downloads.extend(
-                    app.minecraft_manager()
-                        .get_all_version_info_files(version_info.clone(), &java.arch)
-                        .await?,
-                );
+                let (lwjgl_group, version_files) = app.minecraft_manager()
+                    .get_all_version_info_files(version_info.clone(), &java.arch, &log)
+                    .await?;
+
+                downloads.extend(version_files);
 
                 t_request_minecraft_files.complete_opaque();
 
@@ -1599,7 +1600,6 @@ impl ManagerRef<'_, InstanceManager> {
 
                     let start_time = Utc::now();
 
-                    let (log_id, log) = app.instance_manager().create_log(instance_id, None).await;
                     let _ = app.instance_manager()
                         .change_launch_state(
                             instance_id,
@@ -1886,6 +1886,7 @@ impl From<&LaunchState> for domain::LaunchState {
         }
     }
 }
+
 async fn read_logs(
     log: watch::Sender<GameLog>,
     stdout: impl AsyncReadExt + Unpin + Send + 'static,
@@ -1974,3 +1975,6 @@ async fn process_logs(
         }
     }
 }
+
+// store consents on s3 but keep an index on redis/sqlite for lookup
+// keep hashed data of button of accepted consent

@@ -1,13 +1,19 @@
-use std::sync::Arc;
+use std::{
+    cmp::Ordering,
+    collections::{HashMap, HashSet},
+    sync::Arc,
+};
 
 use carbon_net::Downloadable;
 use const_format::formatcp;
 use daedalus::{
-    minecraft::{DownloadType, Version, VersionInfo, VersionManifest, CURRENT_FORMAT_VERSION},
+    minecraft::{
+        DownloadType, LibraryGroup, Version, VersionInfo, VersionManifest, CURRENT_FORMAT_VERSION,
+    },
     modded::Manifest,
 };
 use reqwest::Url;
-use tokio::sync::Mutex;
+use tokio::sync::{watch, Mutex};
 
 use crate::domain::{
     java::JavaArch,
@@ -19,7 +25,10 @@ use crate::domain::{
 
 use self::minecraft::get_lwjgl_meta;
 
-use super::ManagerRef;
+use super::{
+    instance::log::{GameLog, LogEntry},
+    ManagerRef,
+};
 
 pub mod assets;
 pub mod curseforge;
@@ -82,7 +91,8 @@ impl ManagerRef<'_, MinecraftManager> {
         self,
         version_info: VersionInfo,
         java_arch: &JavaArch,
-    ) -> anyhow::Result<Vec<Downloadable>> {
+        log: &watch::Sender<GameLog>,
+    ) -> anyhow::Result<(LibraryGroup, Vec<Downloadable>)> {
         let runtime_path = &self.app.settings_manager().runtime_path;
 
         let version_id = version_info
@@ -101,17 +111,56 @@ impl ManagerRef<'_, MinecraftManager> {
         )
         .await?;
 
-        let tmp: Vec<_> = version_info
+        log.send_modify(|log| {
+            log.add_entry(LogEntry::system_message(format!(
+                "LWJGL Meta {} - {}",
+                lwjgl.uid, lwjgl.version
+            )))
+        });
+
+        let mut libs = version_info
             .libraries
             .into_iter()
-            .chain(lwjgl.libraries.into_iter())
-            .collect();
+            .chain(lwjgl.libraries.iter().cloned())
+            .fold(
+                HashMap::new(),
+                |mut set: HashMap<String, daedalus::minecraft::Library>, lib| {
+                    if let Some(other) = set.get(&lib.name.get_computed_name()) {
+                        // is this version newer?
+                        let Ok(comp) = lib.name.compare_versions(&other.name) else {
+                            set.insert(lib.name.get_computed_name(), lib);
+                            return set;
+                        };
 
-        let libraries = libraries_into_vec_downloadable(
-            &tmp,
+                        if comp == Ordering::Greater {
+                            set.insert(lib.name.get_computed_name(), lib);
+                        }
+                    } else {
+                        set.insert(lib.name.get_computed_name(), lib);
+                    }
+
+                    set
+                },
+            )
+            .into_values()
+            .collect::<Vec<_>>();
+
+        let downloadables = libraries_into_vec_downloadable(
+            &libs,
             &runtime_path.get_libraries().to_path(),
             java_arch,
         );
+
+        log.send_modify(|log| {
+            log.add_entry(LogEntry::system_message(format!(
+                "Libraries: {}",
+                downloadables
+                    .iter()
+                    .map(|v| v.path.to_string_lossy().to_string())
+                    .collect::<Vec<_>>()
+                    .join("\n")
+            )))
+        });
 
         let client_main_jar = version_download_into_downloadable(
             version_info
@@ -122,6 +171,13 @@ impl ManagerRef<'_, MinecraftManager> {
             &version_id,
             runtime_path,
         );
+
+        log.send_modify(|log| {
+            log.add_entry(LogEntry::system_message(format!(
+                "Client Main Jar: {}",
+                client_main_jar.path.to_string_lossy().to_string()
+            )))
+        });
 
         let (assets_meta, _) = assets::get_meta(
             Arc::clone(&self.app.prisma_client),
@@ -149,10 +205,10 @@ impl ManagerRef<'_, MinecraftManager> {
         }
 
         all_files.push(client_main_jar);
-        all_files.extend(libraries);
+        all_files.extend(downloadables);
         all_files.extend(assets);
 
-        Ok(all_files)
+        Ok((lwjgl, all_files))
     }
 }
 
@@ -188,12 +244,15 @@ mod tests {
     use carbon_net::{DownloadOptions, Progress};
     use chrono::Utc;
 
-    use crate::managers::{
-        account::{FullAccount, FullAccountType},
-        java::java_checker::{JavaChecker, RealJavaChecker},
-        minecraft::{
-            forge::execute_processors,
-            minecraft::{extract_natives, get_lwjgl_meta, launch_minecraft},
+    use crate::{
+        domain::instance::InstanceId,
+        managers::{
+            account::{FullAccount, FullAccountType},
+            java::java_checker::{JavaChecker, RealJavaChecker},
+            minecraft::{
+                forge::execute_processors,
+                minecraft::{extract_natives, get_lwjgl_meta, launch_minecraft},
+            },
         },
     };
 
@@ -289,9 +348,13 @@ mod tests {
         //     }
         // });
 
-        let vanilla_files = app
+        let instance_id = InstanceId(0);
+
+        let (_, log) = app.instance_manager().create_log(instance_id, None).await;
+
+        let (_, vanilla_files) = app
             .minecraft_manager()
-            .get_all_version_info_files(version_info.clone(), &java_component.arch)
+            .get_all_version_info_files(version_info.clone(), &java_component.arch, &log)
             .await
             .unwrap();
 

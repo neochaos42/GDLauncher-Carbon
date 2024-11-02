@@ -1,7 +1,7 @@
 use daedalus::minecraft::{
     Argument, ArgumentValue, AssetsIndex, Download, Library, Os, OsRule, Rule, RuleAction,
 };
-use std::path::PathBuf;
+use std::{cmp::Ordering, collections::HashMap, path::PathBuf};
 
 use crate::domain::{
     java::JavaArch,
@@ -177,6 +177,27 @@ pub fn chain_lwjgl_libs_with_base_libs(
     let mut libraries = all_libs
         .iter()
         .chain(lwjgl_libs.iter())
+        .fold(
+            HashMap::new(),
+            |mut set: HashMap<String, &daedalus::minecraft::Library>, lib| {
+                if let Some(other) = set.get(&lib.name.get_computed_name()) {
+                    // is this version newer?
+                    let Ok(comp) = lib.name.compare_versions(&other.name) else {
+                        set.insert(lib.name.get_computed_name(), lib);
+                        return set;
+                    };
+
+                    if comp == Ordering::Greater {
+                        set.insert(lib.name.get_computed_name(), lib);
+                    }
+                } else {
+                    set.insert(lib.name.get_computed_name(), lib);
+                }
+
+                set
+            },
+        )
+        .into_values()
         .filter_map(|library| {
             if !library_is_allowed(library, java_component_arch)
                 || (only_classpath_visible && !library.include_in_classpath)
@@ -215,8 +236,6 @@ pub fn chain_lwjgl_libs_with_base_libs(
             Some(path.display().to_string())
         })
         .collect::<Vec<String>>();
-
-    libraries.dedup();
 
     libraries
 }
