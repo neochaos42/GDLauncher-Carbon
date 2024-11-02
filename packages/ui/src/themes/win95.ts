@@ -120,6 +120,7 @@ const win95: Theme = {
   "brands-twitchBlack": "38 38 38",
 
   font: "W95FA",
+  "font-mono": "W95FA",
   "ads-sidebar-background": "rgb(var(--accent))",
   "additional-styles": additionalStyles,
 };

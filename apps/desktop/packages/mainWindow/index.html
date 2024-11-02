@@ -54,6 +54,24 @@
       }
 
       @font-face {
+        font-family: "Ubuntu Mono";
+        font-style: normal;
+        font-weight: 400;
+        src:
+          local("Ubuntu Mono"),
+          url("/assets/fonts/UbuntuMono-Regular.ttf") format("truetype");
+      }
+
+      @font-face {
+        font-family: "Ubuntu Mono";
+        font-style: normal;
+        font-weight: 500;
+        src:
+          local("Ubuntu Mono"),
+          url("/assets/fonts/UbuntuMono-Bold.ttf") format("truetype");
+      }
+
+      @font-face {
         font-family: "Monocraft";
         font-style: normal;
         font-weight: 300;
@@ -126,6 +144,7 @@
       #instance_logs_container * {
         user-select: text;
         cursor: auto;
+        font-family: var(--font-mono);
       }
 
       *[data-cursor-pointer] {

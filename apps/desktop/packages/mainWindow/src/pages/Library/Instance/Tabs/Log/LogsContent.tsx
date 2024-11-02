@@ -110,7 +110,7 @@ function LevelFormatter(props: {
 }) {
   return (
     <span
-      class={`mr-2 font-thin ${color[props.level]}`}
+      class={`mr-2 font-bold ${color[props.level]}`}
       classList={{
         "text-xs": props.fontMultiplier === 0,
         "text-sm": props.fontMultiplier === 1,

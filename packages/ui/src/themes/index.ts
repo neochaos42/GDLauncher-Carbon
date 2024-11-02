@@ -90,6 +90,7 @@ type Theme = {
   "brands-twitchBlack": string;
 
   font: string;
+  "font-mono": string;
   "ads-sidebar-background": string;
   "additional-styles": string;
 };
