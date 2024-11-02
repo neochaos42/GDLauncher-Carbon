@@ -57,6 +57,7 @@ const Instance = () => {
   const [editableName, setEditableName] = createSignal(false);
   const [isFavorite, setIsFavorite] = createSignal(false);
   const [tabsTranslate, setTabsTranslate] = createSignal(0);
+  const [isSticky, setIsSticky] = createSignal(false);
   const routeData: ReturnType<typeof fetchData> = useRouteData();
   const [newName, setNewName] = createSignal(
     routeData.instanceDetails.data?.name || ""
@@ -64,13 +65,44 @@ const Instance = () => {
   const [modpackDetails, setModpackDetails] = createSignal<
     FEModResponse | MRFEProject | undefined
   >(undefined);
+  const [scrollTop, setScrollTop] = createSignal(0);
 
   const [t] = useTransContext();
   const modalsContext = useModal();
   let backButtonRef: HTMLSpanElement;
+  let headerRef: HTMLElement;
+  let innerContainerRef: HTMLDivElement | undefined;
+  let refStickyTabs: HTMLDivElement;
+  let nameRef: HTMLHeadingElement | undefined;
+
+  const handleScroll = () => {
+    if (!headerRef?.parentElement) return;
+
+    // Use requestAnimationFrame for smooth updates
+    requestAnimationFrame(() => {
+      setScrollTop(headerRef.parentElement?.scrollTop || 0);
+
+      // Handle sticky tabs
+      const rect = refStickyTabs.getBoundingClientRect();
+      setIsSticky(rect.top <= 104);
+      if (rect.top <= 104) {
+        setTabsTranslate(0);
+      } else {
+        setTabsTranslate(-backButtonRef.offsetWidth);
+      }
+    });
+  };
 
   onMount(() => {
+    headerRef.parentElement?.addEventListener("scroll", handleScroll);
+    checkContainerSize();
+    window?.addEventListener("resize", checkContainerSize);
     setTabsTranslate(-backButtonRef.offsetWidth);
+  });
+
+  onCleanup(() => {
+    headerRef.parentElement?.removeEventListener("scroll", handleScroll);
+    window?.removeEventListener("resize", checkContainerSize);
   });
 
   const setFavoriteMutation = rspc.createMutation(() => ({
@@ -260,42 +292,21 @@ const Instance = () => {
     setEditableName(false);
   };
 
-  let nameRef: HTMLHeadingElement | undefined;
-  let headerRef: HTMLElement;
-  let innerContainerRef: HTMLDivElement | undefined;
-
   const checkContainerSize = () => {
     if (!headerRef || !innerContainerRef) return;
-    // get computed style for the container
     let containerStyle = window.getComputedStyle(headerRef);
-
-    // get width as integer
     let containerWidth = parseInt(containerStyle.getPropertyValue("width"));
 
     if (containerWidth <= 800) {
-      // add flex-col class
       innerContainerRef.classList.remove("flex-row");
       innerContainerRef.classList.add("flex-col");
       innerContainerRef.classList.add("gap-4");
     } else {
-      // add flex-row class
       innerContainerRef.classList.remove("flex-col");
       innerContainerRef.classList.add("flex-row");
       innerContainerRef.classList.remove("gap-4");
     }
   };
-
-  onMount(() => {
-    checkContainerSize();
-
-    // Then run it every time the window resizes
-    window?.addEventListener("resize", checkContainerSize);
-  });
-
-  onCleanup(() => window?.removeEventListener("resize", checkContainerSize));
-
-  let refStickyTabs: HTMLDivElement;
-  const [isSticky, setIsSticky] = createSignal(false);
 
   const openFolderMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.openInstanceFolder"]
@@ -384,33 +395,30 @@ const Instance = () => {
         "overflow-hidden": isFullScreen(),
         "overflow-x-hidden": !isFullScreen()
       }}
-      onScroll={() => {
-        const rect = refStickyTabs.getBoundingClientRect();
-        setIsSticky(rect.top <= 104);
-        // TODO FIX ME
-        if (rect.top <= 104) {
-          setTabsTranslate(0);
-        } else {
-          setTabsTranslate(-backButtonRef.offsetWidth);
-        }
-      }}
     >
       <header
         ref={(el) => {
           headerRef = el;
         }}
-        class="relative flex flex-col justify-between ease-in-out transition-all items-stretch bg-cover bg-center min-h-60 transition-100"
-        style={{
-          transition: "height 0.2s",
-          "background-image": routeData.instanceDetails.data?.iconRevision
-            ? `url("${getInstanceImageUrl(
-                params.id,
-                routeData.instanceDetails.data?.iconRevision
-              )}")`
-            : `url("${DefaultImg}")`
-        }}
+        class="relative flex flex-col justify-between ease-in-out transition-all items-stretch min-h-60 transition-100 overflow-hidden"
       >
-        <div class="h-full bg-gradient-to-t from-darkSlate-800">
+        <img
+          src={
+            routeData.instanceDetails.data?.iconRevision
+              ? getInstanceImageUrl(
+                  params.id,
+                  routeData.instanceDetails.data?.iconRevision
+                )
+              : DefaultImg
+          }
+          alt="Instance cover"
+          class="absolute w-full h-full object-cover"
+          style={{
+            transform: `translate3d(0, ${scrollTop() * 0.4}px, 0)`,
+            "will-change": "transform"
+          }}
+        />
+        <div class="h-full bg-gradient-to-t from-darkSlate-800 relative z-10">
           <div class="sticky top-5 left-5 w-fit z-50">
             <Button
               rounded
@@ -451,16 +459,18 @@ const Instance = () => {
             <div class="flex w-full justify-start">
               <div class="flex justify-between w-full items-end">
                 <div class="flex flex-col gap-4 flex-1 lg:flex-row justify-end">
-                  <div
-                    class="bg-center bg-cover h-16 w-16 rounded-xl"
-                    style={{
-                      "background-image": routeData.instanceDetails.data
-                        ?.iconRevision
-                        ? `url("${getInstanceImageUrl(
+                  <img
+                    src={
+                      routeData.instanceDetails.data?.iconRevision
+                        ? getInstanceImageUrl(
                             params.id,
                             routeData.instanceDetails.data?.iconRevision
-                          )}")`
-                        : `url("${DefaultImg}")`,
+                          )
+                        : DefaultImg
+                    }
+                    alt="Instance icon"
+                    class="h-16 w-16 rounded-xl object-cover"
+                    style={{
                       "view-transition-name": `instance-tile-image`,
                       contain: "layout"
                     }}
@@ -558,6 +568,7 @@ const Instance = () => {
                                   <img
                                     class="w-4 h-4"
                                     src={getCFModloaderIcon(modloader.type_)}
+                                    alt="Modloader icon"
                                   />
                                 </Show>
                                 <span>{modloader.type_}</span>
