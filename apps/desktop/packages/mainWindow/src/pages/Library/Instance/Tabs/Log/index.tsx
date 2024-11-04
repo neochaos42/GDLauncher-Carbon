@@ -12,6 +12,7 @@ const Logs = () => {
   let logsContentRef: HTMLDivElement | undefined;
   let scrollBottomRef: HTMLDivElement | undefined;
   const [logs, setLogs] = createStore<LogEntry[]>([]);
+  const [isLoading, setIsLoading] = createSignal(false);
   const [selectedLog, setSelectedLog] = createSignal<number | undefined>(
     undefined
   );
@@ -42,6 +43,7 @@ const Logs = () => {
     );
 
     wsConnection.onmessage = (event) => {
+      setIsLoading(false);
       const newLogs = JSON.parse(event.data) as LogEntry[];
 
       setLogs((prev) => [...prev, ...newLogs]);
@@ -58,6 +60,7 @@ const Logs = () => {
 
     onCleanup(() => {
       setLogs([]);
+      setIsLoading(true);
 
       if (wsConnection && wsConnection.readyState === wsConnection.OPEN) {
         wsConnection.close();
@@ -66,12 +69,14 @@ const Logs = () => {
   });
 
   onCleanup(() => {
+    setIsLoading(false);
     setSelectedLog(undefined);
   });
 
   createEffect(() => {
     // autoFollowPreference call NEEDS to be here for scrollToBottom to be called when it changes
     autoFollowPreference();
+    // selectedLog call NEEDS to be here for scrollToBottom to be called when it changes
     selectedLog();
     setNewLogsCount(0);
     handleScroll();
@@ -157,6 +162,7 @@ const Logs = () => {
       <LogsContent
         logs={logs}
         isActive={isActive() || false}
+        isLoading={isLoading()}
         scrollToBottom={scrollToBottom}
         assignScrollBottomRef={assignScrollBottomRef}
         assignLogsContentRef={assignLogsContentRef}

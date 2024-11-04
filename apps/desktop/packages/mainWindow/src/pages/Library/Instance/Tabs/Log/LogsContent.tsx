@@ -10,6 +10,7 @@ import { Button } from "@gd/ui";
 type Props = {
   logs: LogEntry[];
   isActive: boolean;
+  isLoading: boolean;
   scrollToBottom: () => void;
   assignScrollBottomRef: (ref: HTMLDivElement) => void;
   assignLogsContentRef: (ref: HTMLDivElement) => void;
@@ -32,7 +33,7 @@ function DateTimeFormatter(props: {
 }) {
   return (
     <span
-      class="text-lightSlate-600 font-thin mr-2"
+      class="text-lightSlate-600 font-thin pr-2 py-2 leading-4 sticky top-0 bg-darkSlate-900 z-10 rounded-md"
       classList={{
         "text-xs": props.fontMultiplier === 0,
         "text-sm": props.fontMultiplier === 1,
@@ -49,7 +50,7 @@ function DateTimeFormatter(props: {
 function LoggerFormatter(props: { logger: string; fontMultiplier: 0 | 1 | 2 }) {
   return (
     <span
-      class={`mr-2 font-thin`}
+      class={`pr-2 py-2 font-thin leading-4 sticky top-0 bg-darkSlate-900 z-10 rounded-md`}
       classList={{
         "text-xs": props.fontMultiplier === 0,
         "text-sm": props.fontMultiplier === 1,
@@ -69,7 +70,7 @@ function SourceKindFormatter(props: {
 }) {
   return (
     <span
-      class={`mr-2 font-thin`}
+      class={`pr-2 py-2 font-thin leading-4 sticky top-0 bg-darkSlate-900 z-10 rounded-md`}
       classList={{
         "text-xs": props.fontMultiplier === 0,
         "text-sm": props.fontMultiplier === 1,
@@ -90,7 +91,7 @@ function ThreadNameFormatter(props: {
 }) {
   return (
     <span
-      class={`mr-2 font-thin`}
+      class={`pr-2 py-2 font-thin leading-4 sticky top-0 bg-darkSlate-900 z-10 rounded-md`}
       classList={{
         "text-xs": props.fontMultiplier === 0,
         "text-sm": props.fontMultiplier === 1,
@@ -110,7 +111,7 @@ function LevelFormatter(props: {
 }) {
   return (
     <span
-      class={`mr-2 font-bold ${color[props.level]}`}
+      class={`pr-2 py-2 font-bold ${color[props.level]} leading-4 sticky top-0 bg-darkSlate-900 z-10 rounded-md`}
       classList={{
         "text-xs": props.fontMultiplier === 0,
         "text-sm": props.fontMultiplier === 1,
@@ -266,6 +267,9 @@ const LogsContent = (props: Props) => {
         id="instance_logs_container" // used to override user select and cursor in index.html
       >
         <Switch>
+          <Match when={props.isLoading}>
+            <div />
+          </Match>
           <Match when={props.logs.length === 0}>
             <div class="flex h-full justify-center items-center text-center text-lightSlate-600 text-xl select-none">
               <Trans key="logs.no_logs" />
