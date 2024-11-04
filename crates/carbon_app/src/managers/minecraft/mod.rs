@@ -122,27 +122,6 @@ impl ManagerRef<'_, MinecraftManager> {
             .libraries
             .into_iter()
             .chain(lwjgl.libraries.iter().cloned())
-            .fold(
-                HashMap::new(),
-                |mut set: HashMap<String, daedalus::minecraft::Library>, lib| {
-                    if let Some(other) = set.get(&lib.name.get_computed_name()) {
-                        // is this version newer?
-                        let Ok(comp) = lib.name.compare_versions(&other.name) else {
-                            set.insert(lib.name.get_computed_name(), lib);
-                            return set;
-                        };
-
-                        if comp == Ordering::Greater {
-                            set.insert(lib.name.get_computed_name(), lib);
-                        }
-                    } else {
-                        set.insert(lib.name.get_computed_name(), lib);
-                    }
-
-                    set
-                },
-            )
-            .into_values()
             .collect::<Vec<_>>();
 
         let downloadables = libraries_into_vec_downloadable(

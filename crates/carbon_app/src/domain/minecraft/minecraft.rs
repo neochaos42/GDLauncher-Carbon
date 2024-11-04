@@ -177,6 +177,10 @@ pub fn chain_lwjgl_libs_with_base_libs(
     let mut libraries = all_libs
         .iter()
         .chain(lwjgl_libs.iter())
+        .filter(|lib| {
+            library_is_allowed(lib, java_component_arch)
+                && (!only_classpath_visible || lib.include_in_classpath)
+        })
         .fold(
             HashMap::new(),
             |mut set: HashMap<String, &daedalus::minecraft::Library>, lib| {
@@ -199,12 +203,6 @@ pub fn chain_lwjgl_libs_with_base_libs(
         )
         .into_values()
         .filter_map(|library| {
-            if !library_is_allowed(library, java_component_arch)
-                || (only_classpath_visible && !library.include_in_classpath)
-            {
-                return None;
-            }
-
             let path = libraries_path.get_library_path({
                 if let Some(downloads) = library.downloads.as_ref() {
                     if let Some(artifact) = downloads.artifact.as_ref() {
