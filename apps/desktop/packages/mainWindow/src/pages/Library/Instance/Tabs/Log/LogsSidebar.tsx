@@ -2,7 +2,7 @@ import { GameLogEntry } from "@gd/core_module/bindings";
 import { Collapsable, Spinner } from "@gd/ui";
 import { createSignal, For, Match, Show, Switch } from "solid-js";
 import formatDateTime from "./formatDateTime";
-import { Trans } from "@gd/i18n";
+import { Trans, useTransContext } from "@gd/i18n";
 
 type LogsByTimespan = Record<string, Array<GameLogEntry>>;
 
@@ -15,6 +15,8 @@ export type LogsCollapsableProps = {
 };
 
 const LogsCollapsable = (props: LogsCollapsableProps) => {
+  const [t] = useTransContext();
+
   const sortedLogs = () => {
     return props.logGroup
       .filter((log) => !log.active)
@@ -36,6 +38,8 @@ const LogsCollapsable = (props: LogsCollapsableProps) => {
     const diffTime = Math.abs(today.getTime() - logDate.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
+    console.log(diffDays);
+
     let dateText: string;
 
     if (diffDays === 0) {
@@ -43,9 +47,11 @@ const LogsCollapsable = (props: LogsCollapsableProps) => {
     } else if (diffDays === 1) {
       dateText = "Yesterday";
     } else if (diffDays < 7) {
-      dateText = logDate.toLocaleDateString(undefined, { weekday: "long" });
+      dateText = t("x_days_ago", { count: diffDays });
     } else {
-      dateText = props.title;
+      dateText = new Date(logDate).toLocaleDateString(undefined, {
+        dateStyle: "short"
+      });
     }
 
     return dateText;

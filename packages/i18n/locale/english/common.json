@@ -422,6 +422,7 @@
   "handle_preferences": "Handle Preferences",
   "import_instances": "Import instances",
   "tracking.setting_disabled": "Disabled",
+  "x_days_ago": "{{count}} days ago",
   "SOON": "SOON",
   "tracking.setting_disabled_text": "Almost completely disables any metrics being sent to us. Doing this will also disable some functionalities like sending automatic bug reports and access to preview features.",
   "tracking.setting_anonymous": "Anonymous",
