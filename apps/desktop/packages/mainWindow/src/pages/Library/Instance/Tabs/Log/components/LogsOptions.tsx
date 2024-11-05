@@ -72,27 +72,12 @@ function TimestampColumn(props: ColumnProps) {
       classList={{ "bg-lightSlate-600": props.selected }}
       onClick={props.onClick}
     >
-      <div class="w-4 h-2 rounded-sm bg-lightSlate-50" />
-      <div class="w-4 h-2 rounded-sm bg-darkSlate-100" />
-      <div class="w-4 h-2 rounded-sm bg-darkSlate-100" />
-      <div class="w-10 h-2 rounded-sm bg-darkSlate-100" />
-      <Show when={props.selected}>
-        <div class="absolute top-1 right-1 w-4 h-4 i-ri:checkbox-fill text-green-600" />
-      </Show>
-    </div>
-  );
-}
-
-function SourceKindColumn(props: ColumnProps) {
-  return (
-    <div
-      class="relative w-24 h-10 flex gap-1 justify-center items-center box-border border-2 border-solid border-darkSlate-100 rounded-md cursor-pointer"
-      classList={{ "bg-lightSlate-600": props.selected }}
-      onClick={props.onClick}
-    >
-      <div class="w-4 h-2 rounded-sm bg-darkSlate-100" />
-      <div class="w-4 h-2 rounded-sm bg-darkSlate-100" />
-      <div class="w-10 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-lightSlate-50" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-6 h-2 rounded-sm bg-darkSlate-100" />
       <Show when={props.selected}>
         <div class="absolute top-1 right-1 w-4 h-4 i-ri:checkbox-fill text-green-600" />
       </Show>
@@ -107,8 +92,32 @@ function LoggerColumn(props: ColumnProps) {
       classList={{ "bg-lightSlate-600": props.selected }}
       onClick={props.onClick}
     >
-      <div class="w-4 h-2 rounded-sm bg-darkSlate-100" />
-      <div class="w-4 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-lightSlate-50" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-6 h-2 rounded-sm bg-darkSlate-100" />
+      <Show when={props.selected}>
+        <div class="absolute top-1 right-1 w-4 h-4 i-ri:checkbox-fill text-green-600" />
+      </Show>
+    </div>
+  );
+}
+
+function SourceKindColumn(props: ColumnProps) {
+  return (
+    <div
+      class="relative w-24 h-10 flex gap-1 justify-center items-center box-border border-2 border-solid border-darkSlate-100 rounded-md cursor-pointer"
+      classList={{ "bg-lightSlate-600": props.selected }}
+      onClick={props.onClick}
+    >
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-lightSlate-50" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-6 h-2 rounded-sm bg-darkSlate-100" />
       <Show when={props.selected}>
         <div class="absolute top-1 right-1 w-4 h-4 i-ri:checkbox-fill text-green-600" />
       </Show>
@@ -123,10 +132,12 @@ function ThreadNameColumn(props: ColumnProps) {
       classList={{ "bg-lightSlate-600": props.selected }}
       onClick={props.onClick}
     >
-      <div class="w-4 h-2 rounded-sm bg-darkSlate-100" />
-      <div class="w-4 h-2 rounded-sm bg-lightSlate-50" />
-      <div class="w-4 h-2 rounded-sm bg-darkSlate-100" />
-      <div class="w-10 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-lightSlate-50" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-6 h-2 rounded-sm bg-darkSlate-100" />
       <Show when={props.selected}>
         <div class="absolute top-1 right-1 w-4 h-4 i-ri:checkbox-fill text-green-600" />
       </Show>
@@ -141,10 +152,12 @@ function LogLevelColumn(props: ColumnProps) {
       classList={{ "bg-lightSlate-600": props.selected }}
       onClick={props.onClick}
     >
-      <div class="w-4 h-2 rounded-sm bg-darkSlate-100" />
-      <div class="w-4 h-2 rounded-sm bg-darkSlate-100" />
-      <div class="w-4 h-2 rounded-sm bg-lightSlate-50" />
-      <div class="w-10 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-darkSlate-100" />
+      <div class="w-3 h-2 rounded-sm bg-lightSlate-50" />
+      <div class="w-6 h-2 rounded-sm bg-darkSlate-100" />
       <Show when={props.selected}>
         <div class="absolute top-1 right-1 w-4 h-4 i-ri:checkbox-fill text-green-600" />
       </Show>
