@@ -25,7 +25,7 @@ use regex::{Captures, Regex};
 use reqwest::Url;
 use strum_macros::EnumIter;
 use thiserror::Error;
-use tokio::{process::Child, sync::Mutex};
+use tokio::{process::Child, sync::Mutex, time::Instant};
 use tracing::{info, trace, warn};
 
 use crate::{
@@ -56,12 +56,17 @@ pub async fn get_manifest(
     meta_base_url: &Url,
 ) -> anyhow::Result<VersionManifest> {
     let server_url = meta_base_url.join(&format!("minecraft/{}/manifest.json", META_VERSION))?;
+    let time = Instant::now();
     let new_manifest = reqwest_client
         .get(server_url)
         .send()
         .await?
         .json::<VersionManifest>()
         .await?;
+
+    let elapsed = time.elapsed();
+
+    tracing::info!("Fetched manifest {}ms", elapsed.as_millis());
 
     Ok(new_manifest)
 }

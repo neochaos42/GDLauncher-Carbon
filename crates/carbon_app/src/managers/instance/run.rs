@@ -10,7 +10,9 @@ use crate::domain::modplatforms::curseforge::filters::ModFileParameters;
 use crate::domain::modplatforms::modrinth::search::VersionID;
 use crate::domain::runtime_path::InstancePath;
 use crate::domain::vtask::VisualTaskId;
-use crate::managers::instance::log::{GameLog, LogEntry, LogEntrySourceKind};
+use crate::managers::instance::log::{
+    format_message_as_log4j_event, GameLog, LogEntry, LogEntrySourceKind,
+};
 use crate::managers::instance::modpack::packinfo;
 use crate::managers::instance::schema::make_instance_config;
 use crate::managers::java::java_checker::{JavaChecker, RealJavaChecker};
@@ -50,6 +52,7 @@ use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
 use tokio::sync::{watch, Mutex, Semaphore};
 use tokio::task::JoinHandle;
+use tokio::time::Instant;
 use tokio::{io::AsyncReadExt, sync::mpsc};
 use tracing::{debug, info, trace};
 
@@ -244,30 +247,66 @@ impl ManagerRef<'_, InstanceManager> {
 
         let (log_id, log) = app.instance_manager().create_log(instance_id, None).await;
 
+        let now = Utc::now();
+
+        let log_file_name = format!("{}_{}", now.format("%Y-%m-%d"), now.format("%H-%M-%S"));
+
+        let logs_file_path = instance_path
+            .get_gdl_logs_path()
+            .join(format!("{}.log", log_file_name));
+
+        let logs_file_path_clone = logs_file_path.clone();
+
+        let file_fut = logs_file_path
+            .parent()
+            .map(|p| async {
+                if let Err(e) =
+                    tokio::fs::create_dir_all(&logs_file_path_clone.parent().unwrap()).await
+                {
+                    tracing::error!({ error = ?e }, "Failed to create log directory");
+                }
+            })
+            .map(|f| async {
+                f.await;
+                tokio::fs::File::create(&logs_file_path_clone).await
+            });
+
+        let mut file = match file_fut {
+            Some(f) => f.await.ok(),
+            None => None,
+        };
+
         app.meta_cache_manager()
             .watch_and_prioritize(Some(instance_id))
             .await;
 
         let result = app.instance_manager().list_mods(instance_id).await?;
+        let msg = format!(
+            "Mods ({} enabled / {} disabled): {}",
+            result.iter().filter(|mod_| mod_.enabled).count(),
+            result.iter().filter(|mod_| !mod_.enabled).count(),
+            result.into_iter().fold(String::new(), |mut acc, mod_| {
+                acc.push_str("\n\t [");
+                if mod_.enabled {
+                    acc.push_str("x]");
+                } else {
+                    acc.push_str(" ]");
+                }
+
+                acc.push(' ');
+                acc.push_str(&mod_.filename);
+
+                acc
+            })
+        );
 
         log.send_modify(|log| {
-            log.add_entry(LogEntry::system_message(format!(
-                "Mods: {}",
-                result.into_iter().fold(String::new(), |mut acc, mod_| {
-                    acc.push_str("\n\t [");
-                    if mod_.enabled {
-                        acc.push_str("x]");
-                    } else {
-                        acc.push_str(" ]");
-                    }
-
-                    acc.push(' ');
-                    acc.push_str(&mod_.filename);
-
-                    acc
-                })
-            )))
+            log.add_entry(LogEntry::system_message(msg.clone()));
         });
+        if let Some(file) = file.as_mut() {
+            file.write_all(format_message_as_log4j_event(&msg).as_bytes())
+                .await?;
+        }
 
         let installation_task = tokio::spawn(async move {
             let instance_manager = app.instance_manager();
@@ -943,9 +982,15 @@ impl ManagerRef<'_, InstanceManager> {
                     || anyhow::anyhow!("instance java version unsupported")
                 )?;
 
+                let msg = format!("Suggested Java Profile: {java_profile:?}");
+
                 log.send_modify(|log| {
-                    log.add_entry(LogEntry::system_message(format!("Suggested Java Profile: {java_profile:?}")))
+                    log.add_entry(LogEntry::system_message(msg.clone()))
                 });
+
+                if let Some(file) = file.as_mut() {
+                    file.write_all(format_message_as_log4j_event(&msg).as_bytes()).await?;
+                }
 
                 let mut required_java_system_profile = SystemJavaProfileName::try_from(java_profile).with_context(
                     || anyhow::anyhow!("System java version unsupported")
@@ -1132,9 +1177,15 @@ impl ManagerRef<'_, InstanceManager> {
                     }
                 };
 
+                let msg = format!("Using Java: {java:#?}");
+
                 log.send_modify(|log| {
-                    log.add_entry(LogEntry::system_message(format!("Using Java: {java:#?}")))
+                    log.add_entry(LogEntry::system_message(msg.clone()))
                 });
+
+                if let Some(file) = file.as_mut() {
+                    file.write_all(format_message_as_log4j_event(&msg).as_bytes()).await?;
+                }
 
                 t_request_modloader_info.start_opaque();
 
@@ -1242,7 +1293,7 @@ impl ManagerRef<'_, InstanceManager> {
                 t_request_minecraft_files.start_opaque();
 
                 let (lwjgl_group, version_files) = app.minecraft_manager()
-                    .get_all_version_info_files(version_info.clone(), &java.arch, &log)
+                    .get_all_version_info_files(version_info.clone(), &java.arch, &log, file.as_mut())
                     .await?;
 
                 downloads.extend(version_files);
@@ -1661,16 +1712,6 @@ impl ManagerRef<'_, InstanceManager> {
 
                     time_at_start = Some(Utc::now());
 
-                    let log_file_name = format!(
-                        "{}_{}",
-                        start_time.format("%Y-%m-%d"),
-                        start_time.format("%H-%M-%S")
-                    );
-
-                    let logs_file_path = instance_path
-                        .get_gdl_logs_path()
-                        .join(format!("{}.log", log_file_name));
-
                     tokio::select! {
                         _ = child.wait() => {
                             tracing::info!("Instance waited");
@@ -1679,7 +1720,7 @@ impl ManagerRef<'_, InstanceManager> {
                             tracing::info!("Instance killed");
                             drop(child.kill().await);
                         },
-                        _ = read_logs(log.clone(), stdout, stderr, logs_file_path) => {
+                        _ = read_logs(log.clone(), stdout, stderr, file.as_mut()) => {
                             tracing::info!("Instance read logs");
                         },
                         _ = update_playtime => {
@@ -1702,9 +1743,16 @@ impl ManagerRef<'_, InstanceManager> {
                     }
 
                     if let Ok(exitcode) = child.wait().await {
-                        log.send_modify(|log| {
-                            log.add_entry(LogEntry::system_message(format!("{exitcode}")))
-                        });
+                        let msg = format!("{exitcode}");
+
+                        log.send_modify(|log| log.add_entry(LogEntry::system_message(msg.clone())));
+
+                        if let Some(file) = file.as_mut() {
+                            // TODO: not sure how to handle an error in here
+                            let _ = file
+                                .write_all(format_message_as_log4j_event(&msg).as_bytes())
+                                .await;
+                        }
                     }
 
                     let _ = app.rich_presence_manager().stop_activity().await;
@@ -1916,7 +1964,7 @@ async fn read_logs(
     log: watch::Sender<GameLog>,
     stdout: impl AsyncReadExt + Unpin + Send + 'static,
     stderr: impl AsyncReadExt + Unpin + Send + 'static,
-    log_file_path: PathBuf,
+    file: Option<&mut File>,
 ) {
     let (stdout_tx, stdout_rx) = mpsc::channel::<Vec<u8>>(1000);
     let (stderr_tx, stderr_rx) = mpsc::channel::<Vec<u8>>(1000);
@@ -1924,9 +1972,9 @@ async fn read_logs(
     let stdout_task = tokio::spawn(read_pipe(stdout, stdout_tx));
     let stderr_task = tokio::spawn(read_pipe(stderr, stderr_tx));
 
-    let process_task = tokio::spawn(process_logs(log, stdout_rx, stderr_rx, log_file_path));
+    process_logs(log, stdout_rx, stderr_rx, file).await;
 
-    let _ = tokio::join!(stdout_task, stderr_task, process_task);
+    let _ = tokio::join!(stdout_task, stderr_task);
 }
 
 async fn read_pipe(
@@ -1961,25 +2009,8 @@ async fn process_logs(
     log: watch::Sender<GameLog>,
     mut stdout_rx: mpsc::Receiver<Vec<u8>>,
     mut stderr_rx: mpsc::Receiver<Vec<u8>>,
-    log_file_path: PathBuf,
+    mut file: Option<&mut File>,
 ) {
-    let file_fut = log_file_path
-        .parent()
-        .map(|p| async {
-            if let Err(e) = tokio::fs::create_dir_all(log_file_path.parent().unwrap()).await {
-                tracing::error!({ error = ?e }, "Failed to create log directory");
-            }
-        })
-        .map(|f| async {
-            f.await;
-            tokio::fs::File::create(&log_file_path).await
-        });
-
-    let mut file = match file_fut {
-        Some(f) => f.await.ok(),
-        None => None,
-    };
-
     let mut stdout_processor = LogProcessor::new(LogEntrySourceKind::StdOut, log.clone()).await;
 
     let mut stderr_processor = LogProcessor::new(LogEntrySourceKind::StdErr, log).await;
@@ -1987,12 +2018,12 @@ async fn process_logs(
     loop {
         tokio::select! {
             Some(data) = stdout_rx.recv() => {
-                if let Err(e) = stdout_processor.process_data(&data, file.as_mut()).await {
+                if let Err(e) = stdout_processor.process_data(&data, file.as_deref_mut()).await {
                     tracing::error!("Failed to process stdout data: {}", e);
                 }
             }
             Some(data) = stderr_rx.recv() => {
-                if let Err(e) = stderr_processor.process_data(&data, file.as_mut()).await {
+                if let Err(e) = stderr_processor.process_data(&data, file.as_deref_mut()).await {
                     tracing::error!("Failed to process stderr data: {}", e);
                 }
             }

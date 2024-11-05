@@ -1643,28 +1643,24 @@ impl<'s> ManagerRef<'s, InstanceManager> {
             None => None,
         };
 
-        let mut version_info = None;
+        let mut mc_manifest = None;
 
         if let Some(mc_version) = &mc_version {
-            version_info = Some(
-                self.app
-                    .minecraft_manager()
-                    .get_minecraft_version(&mc_version)
-                    .await,
-            );
+            let manifest = self.app.minecraft_manager().get_minecraft_manifest().await;
+            mc_manifest = manifest.ok();
         }
 
         let required_java_profile = mc_version.clone().and_then(|version| {
-            let version_info = version_info.unwrap().ok();
-            let java = version_info
-                .map(|version| version.java_version)
-                .and_then(|version| version.map(|version| version.component));
-
-            let Some(java) = java else {
+            let Some(manifest) = mc_manifest else {
                 return None;
             };
+            let java = manifest
+                .versions
+                .iter()
+                .find(|profile| profile.id == version)
+                .and_then(|version| version.java_profile.clone());
 
-            let Ok(required_java) = MinecraftJavaProfile::try_from(java.as_str()) else {
+            let Some(required_java) = java else {
                 return None;
             };
 

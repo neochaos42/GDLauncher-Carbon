@@ -13,7 +13,11 @@ use daedalus::{
     modded::Manifest,
 };
 use reqwest::Url;
-use tokio::sync::{watch, Mutex};
+use tokio::{
+    fs::File,
+    io::AsyncWriteExt,
+    sync::{watch, Mutex},
+};
 
 use crate::domain::{
     java::JavaArch,
@@ -26,7 +30,7 @@ use crate::domain::{
 use self::minecraft::get_lwjgl_meta;
 
 use super::{
-    instance::log::{GameLog, LogEntry},
+    instance::log::{format_message_as_log4j_event, GameLog, LogEntry},
     ManagerRef,
 };
 
@@ -92,6 +96,7 @@ impl ManagerRef<'_, MinecraftManager> {
         version_info: VersionInfo,
         java_arch: &JavaArch,
         log: &watch::Sender<GameLog>,
+        mut file: Option<&mut File>,
     ) -> anyhow::Result<(LibraryGroup, Vec<Downloadable>)> {
         let runtime_path = &self.app.settings_manager().runtime_path;
 
@@ -111,12 +116,14 @@ impl ManagerRef<'_, MinecraftManager> {
         )
         .await?;
 
-        log.send_modify(|log| {
-            log.add_entry(LogEntry::system_message(format!(
-                "LWJGL Meta {} - {}",
-                lwjgl.uid, lwjgl.version
-            )))
-        });
+        let msg = format!("LWJGL Meta {} - {}", lwjgl.uid, lwjgl.version);
+
+        log.send_modify(|log| log.add_entry(LogEntry::system_message(msg.clone())));
+
+        if let Some(file) = file.as_mut() {
+            file.write_all(format_message_as_log4j_event(&msg).as_bytes())
+                .await?;
+        }
 
         let mut libs = version_info
             .libraries
@@ -136,17 +143,23 @@ impl ManagerRef<'_, MinecraftManager> {
             .to_string_lossy()
             .to_string();
 
-        log.send_modify(|log| {
-            log.add_entry(LogEntry::system_message(format!(
-                "Libraries: \n\t-> {}",
-                downloadables
-                    .iter()
-                    .map(|v| v.path.to_string_lossy().to_string())
-                    .map(|v| v.strip_prefix(&runtime_path_str).unwrap_or(&v).to_owned())
-                    .collect::<Vec<_>>()
-                    .join("\n\t-> ")
-            )))
-        });
+        let msg = format!(
+            "Libraries ({}): \n\t-> {}",
+            downloadables.len(),
+            downloadables
+                .iter()
+                .map(|v| v.path.to_string_lossy().to_string())
+                .map(|v| v.strip_prefix(&runtime_path_str).unwrap_or(&v).to_owned())
+                .collect::<Vec<_>>()
+                .join("\n\t-> ")
+        );
+
+        log.send_modify(|log| log.add_entry(LogEntry::system_message(msg.clone())));
+
+        if let Some(file) = file.as_mut() {
+            file.write_all(format_message_as_log4j_event(&msg).as_bytes())
+                .await?;
+        }
 
         let client_main_jar = version_download_into_downloadable(
             version_info
@@ -158,12 +171,17 @@ impl ManagerRef<'_, MinecraftManager> {
             runtime_path,
         );
 
-        log.send_modify(|log| {
-            log.add_entry(LogEntry::system_message(format!(
-                "Client Main Jar: {}",
-                client_main_jar.path.to_string_lossy().to_string()
-            )))
-        });
+        let msg = format!(
+            "Client Main Jar: {}",
+            client_main_jar.path.to_string_lossy().to_string()
+        );
+
+        log.send_modify(|log| log.add_entry(LogEntry::system_message(msg.clone())));
+
+        if let Some(file) = file.as_mut() {
+            file.write_all(format_message_as_log4j_event(&msg).as_bytes())
+                .await?;
+        }
 
         let (assets_meta, _) = assets::get_meta(
             Arc::clone(&self.app.prisma_client),
@@ -340,7 +358,7 @@ mod tests {
 
         let (_, vanilla_files) = app
             .minecraft_manager()
-            .get_all_version_info_files(version_info.clone(), &java_component.arch, &log)
+            .get_all_version_info_files(version_info.clone(), &java_component.arch, &log, None)
             .await
             .unwrap();
 

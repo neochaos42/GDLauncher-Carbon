@@ -212,7 +212,7 @@ const LogsContent = (props: Props) => {
   const [columns, setColumns] = createSignal<Columns>({
     timestamp: true,
     logger: true,
-    sourceKind: true,
+    sourceKind: false,
     threadName: true,
     level: true
   });
@@ -254,7 +254,7 @@ const LogsContent = (props: Props) => {
         class="justify-center hidden"
         ref={(el) => props.assignScrollBottomRef(el)}
       >
-        <div class="w-60 z-1 flex justify-center fixed bottom-6">
+        <div class="w-60 z-20 flex justify-center fixed bottom-6">
           <ScrollBottomButton
             onClick={props.scrollToBottom}
             newLogsCount={props.newLogsCount}

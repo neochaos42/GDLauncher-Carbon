@@ -1,5 +1,5 @@
 use carbon_parsing::log::{LogParser, ParsedItem};
-use chrono::{DateTime, Local, NaiveDateTime, TimeZone};
+use chrono::{DateTime, Local, NaiveDateTime, TimeZone, Utc};
 use itertools::Itertools;
 use serde::Serialize;
 use std::{
@@ -294,26 +294,19 @@ impl ManagerRef<'_, InstanceManager> {
                             self.create_log(instance_id, Some(file_as_datetime)).await;
 
                         // read the file and send it to the log
-                        let Ok(file) = tokio::fs::File::open(entry.path()).await else {
+                        let Ok(mut file) = tokio::fs::File::open(entry.path()).await else {
                             tracing::error!({ file_name = ?file_name }, "Failed to open log file");
                             continue;
                         };
-                        let mut reader = tokio::io::BufReader::new(file);
-
-                        let mut buf = [0; 1024];
 
                         let mut stdout_processor =
                             LogProcessor::new(LogEntrySourceKind::StdOut, tx).await;
 
-                        while let Ok(size) = reader.read(&mut buf).await {
-                            if size == 0 {
-                                break;
-                            }
+                        let mut buf = Vec::new();
+                        let _ = file.read_to_end(&mut buf).await;
 
-                            if let Err(e) = stdout_processor.process_data(&buf[..size], None).await
-                            {
-                                tracing::error!({ error = ?e }, "Failed to process stdout data");
-                            }
+                        if let Err(e) = stdout_processor.process_data(&buf, None).await {
+                            tracing::error!({ error = ?e }, "Failed to process stdout data");
                         }
                     }
                 }
@@ -322,6 +315,10 @@ impl ManagerRef<'_, InstanceManager> {
 
         read_logs_from_memory(self.clone(), instance_id).await
     }
+}
+
+pub fn format_message_as_log4j_event(message: &str) -> String {
+    format!("<log4j:Event logger=\"GDLAUNCHER\" timestamp=\"{}\" level=\"INFO\" thread=\"N/A\">\n\t<log4j:Message><![CDATA[{}]]></log4j:Message>\n</log4j:Event>\n", Utc::now().timestamp_millis(), message)
 }
 
 pub struct LogProcessor {
