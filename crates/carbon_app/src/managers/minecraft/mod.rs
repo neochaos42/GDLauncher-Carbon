@@ -130,14 +130,21 @@ impl ManagerRef<'_, MinecraftManager> {
             java_arch,
         );
 
+        let runtime_path_str = runtime_path
+            .get_libraries()
+            .to_path()
+            .to_string_lossy()
+            .to_string();
+
         log.send_modify(|log| {
             log.add_entry(LogEntry::system_message(format!(
-                "Libraries: {}",
+                "Libraries: \n\t-> {}",
                 downloadables
                     .iter()
                     .map(|v| v.path.to_string_lossy().to_string())
+                    .map(|v| v.strip_prefix(&runtime_path_str).unwrap_or(&v).to_owned())
                     .collect::<Vec<_>>()
-                    .join("\n")
+                    .join("\n\t-> ")
             )))
         });
 

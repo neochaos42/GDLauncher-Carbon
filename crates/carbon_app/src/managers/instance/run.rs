@@ -244,6 +244,31 @@ impl ManagerRef<'_, InstanceManager> {
 
         let (log_id, log) = app.instance_manager().create_log(instance_id, None).await;
 
+        app.meta_cache_manager()
+            .watch_and_prioritize(Some(instance_id))
+            .await;
+
+        let result = app.instance_manager().list_mods(instance_id).await?;
+
+        log.send_modify(|log| {
+            log.add_entry(LogEntry::system_message(format!(
+                "Mods: {}",
+                result.into_iter().fold(String::new(), |mut acc, mod_| {
+                    acc.push_str("\n\t [");
+                    if mod_.enabled {
+                        acc.push_str("x]");
+                    } else {
+                        acc.push_str(" ]");
+                    }
+
+                    acc.push(' ');
+                    acc.push_str(&mod_.filename);
+
+                    acc
+                })
+            )))
+        });
+
         let installation_task = tokio::spawn(async move {
             let instance_manager = app.instance_manager();
             let instance_root = instance_path.get_root();
