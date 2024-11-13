@@ -6,6 +6,7 @@ use crate::api::translation::Translation;
 use crate::domain::instance::info::{self, JavaOverride, Modpack, ModpackInfo, StandardVersion};
 use crate::domain::instance::{self as domain, GameLogId};
 use crate::domain::java::{JavaComponent, JavaComponentType, SystemJavaProfileName};
+use crate::domain::metrics::GDLMetricsEvent;
 use crate::domain::modplatforms::curseforge::filters::ModFileParameters;
 use crate::domain::modplatforms::modrinth::search::VersionID;
 use crate::domain::runtime_path::InstancePath;
@@ -1834,12 +1835,63 @@ impl ManagerRef<'_, InstanceManager> {
             };
 
             if is_first_run {
-                // maybe track
+                let res = app
+                    .metrics_manager()
+                    .track_event(GDLMetricsEvent::InstanceInstalled {
+                        mods_count: mods as u32,
+                        modloader_name: instance_details
+                            .modloaders
+                            .get(0)
+                            .cloned()
+                            .map(|v| v.type_.to_string()),
+                        modloader_version: instance_details
+                            .modloaders
+                            .get(0)
+                            .cloned()
+                            .map(|v| v.version),
+                        modplatform: instance_details.modpack.map(|v| v.modpack.to_string()),
+                        version: instance_details.version.unwrap_or(String::from("unknown")),
+                        seconds_taken: (now - initial_time).num_seconds() as u32,
+                    })
+                    .await;
+
+                if let Err(e) = res {
+                    tracing::error!({ error = ?e }, "failed to track instance installed event");
+                }
             } else {
                 let Some(time_at_start) = time_at_start else {
                     tracing::error!("time_at_start is None even though this is not the first run");
                     return;
                 };
+
+                let res = app
+                    .metrics_manager()
+                    .track_event(GDLMetricsEvent::InstanceLaunched {
+                        mods_count: mods as u32,
+                        modloader_name: instance_details
+                            .modloaders
+                            .get(0)
+                            .cloned()
+                            .map(|v| v.type_.to_string()),
+                        modloader_version: instance_details
+                            .modloaders
+                            .get(0)
+                            .cloned()
+                            .map(|v| v.version),
+                        modplatform: instance_details.modpack.map(|v| v.modpack.to_string()),
+                        version: instance_details.version.unwrap_or(String::from("unknown")),
+                        xmx_memory: xmx_memory as u32,
+                        xms_memory: xms_memory as u32,
+                        time_to_start_secs: (now - time_at_start).num_seconds() as u64,
+                        timestamp_start: initial_time.timestamp(),
+                        timestamp_end: now.timestamp(),
+                        timezone_offset: offset_in_sec / 60 / 60,
+                    })
+                    .await;
+
+                if let Err(e) = res {
+                    tracing::error!({ error = ?e }, "failed to track instance installed event");
+                }
             }
         });
 

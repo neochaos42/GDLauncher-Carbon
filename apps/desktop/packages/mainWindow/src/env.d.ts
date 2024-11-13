@@ -3,7 +3,6 @@
 
 interface ImportMetaEnv {
   MODE: string;
-  VITE_POSTHOG_KEY: string;
   VITE_MAIN_DSN: string;
 }
 

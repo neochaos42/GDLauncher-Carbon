@@ -10,7 +10,6 @@ export type Procedures = {
         { key: "account.peekGdlAccount", input: string, result: FEGDLAccount | null } | 
         { key: "echo", input: string, result: string } | 
         { key: "getAppVersion", input: never, result: string } | 
-        { key: "getOs", input: never, result: FEOperatingSystem } | 
         { key: "instance.explore", input: ExploreQuery, result: ExploreEntry[] } | 
         { key: "instance.findModUpdate", input: UpdateMod, result: RemoteVersion | null } | 
         { key: "instance.getAllInstances", input: never, result: ListInstance[] } | 
@@ -112,6 +111,7 @@ export type Procedures = {
         { key: "java.updateJavaProfile", input: FEUpdateJavaProfileArgs, result: null } | 
         { key: "java.validateCustomJavaPath", input: string, result: boolean } | 
         { key: "longRunning", input: never, result: boolean } | 
+        { key: "metrics.sendEvent", input: FEMetricsEvent, result: null } | 
         { key: "settings.setSettings", input: FESettingsUpdate, result: null } | 
         { key: "vtask.dismissTask", input: FETaskId, result: null },
     subscriptions: never
@@ -139,6 +139,8 @@ export type CFFEModSearchParameters = { query: CFFEModSearchParametersQuery }
 
 export type ExploreQuery = { instance_id: FEInstanceId; path: string[] }
 
+export type FEMetricsEvent = { event_name: "page_view"; data: string } | { event_name: "featured_modpack_installed"; data: { campaign_id: string; item_id: string } } | { event_name: "changelog_viewed" } | { event_name: "changelog_twitch_button_clicked" }
+
 export type GameLogId = number
 
 export type MRFEVersion = { name: string; version_number: string; changelog: string | null; dependencies: MRFEDependency[]; game_versions: string[]; version_type: MRFEVersionType; loaders: string[]; featured: boolean; status: MRFEStatus | null; requested_status: MRFERequestedVersionStatus | null; id: string; project_id: string; author_id: string; date_published: string; downloads: number; files: MRFEVersionFile[] }
@@ -160,8 +162,6 @@ export type AccountType = { type: "microsoft"; value: { email: string | null } }
 export type FEModdedManifestVersion = { id: string; stable: boolean; loaders: FEModdedManifestLoaderVersion[] }
 
 export type CFFEFileHash = { value: string; algo: CFFEHashAlgo }
-
-export type FEOperatingSystem = { os: string; os_version: string }
 
 export type FEManagedJavaOsMap = { [key: FEManagedJavaOs]: FEManagedJavaArchMap }
 
@@ -314,8 +314,6 @@ export type InstanceMod = { instance_id: FEInstanceId; mod_id: string }
 export type CFFECategory = { id: number; name: string; slug: string; url: string; iconUrl: string | null; dateModified: string; isClass: boolean | null; classId: number | null; parentCategoryId: number | null; displayIndex: number | null }
 
 export type ExploreEntryType = { File: { size: number } } | "Directory"
-
-export type Set<T> = { Set: T }
 
 export type CreateInstance = { group: FEGroupId; name: string; use_loaded_icon: boolean; version: CreateInstanceVersion; notes: string }
 
@@ -473,6 +471,8 @@ export type FECategoriesResponse = { data: CFFECategory[]; pagination: CFFEPagin
 export type InstancesSortBy = "name" | "lastPlayed" | "lastUpdated" | "created" | "gameVersion" | "mostPlayed"
 
 export type ModrinthMod = { project_id: string; version_id: string }
+
+export type Set<T> = { Set: T }
 
 export type MRFESearchFacetAnd = MRFESearchFacetOr[]
 

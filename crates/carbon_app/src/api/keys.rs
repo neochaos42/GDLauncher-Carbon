@@ -137,6 +137,11 @@ keys! {
         GET_PRIVACY_STATEMENT_BODY                  = "getPrivacyStatementBody";
     }
 
+    metrics {
+        SEND_EVENT                                  = "sendEvent";
+        SEND_PAGEVIEW                               = "sendPageview";
+    }
+
     systeminfo {
         GET_TOTAL_RAM                               = "getTotalRAM";
         GET_USED_RAM                                = "getUsedRAM";

@@ -16,6 +16,7 @@ pub mod instance;
 mod java;
 pub mod keys;
 mod mc;
+mod metrics;
 mod modplatforms;
 pub mod router;
 pub mod settings;
@@ -49,26 +50,6 @@ pub fn build_rspc_router() -> RouterBuilder<App> {
         .query("getAppVersion", |t| {
             t(|_ctx, _: ()| async move { Ok(app_version::APP_VERSION) })
         })
-        .query("getOs", |t| {
-            t(|ctx, _: ()| async move {
-                let os = if cfg!(target_os = "windows") {
-                    "windows"
-                } else if cfg!(target_os = "linux") {
-                    "linux"
-                } else if cfg!(target_os = "macos") {
-                    "macos"
-                } else {
-                    "unknown"
-                };
-
-                let os_version = ctx.system_info_manager().get_os_version().await;
-
-                Ok(FEOperatingSystem {
-                    os: os.to_string(),
-                    os_version: os_version.unwrap_or_default(),
-                })
-            })
-        })
         .mutation("longRunning", |t| {
             t(move |ctx, _: ()| async move {
                 tokio::time::sleep(std::time::Duration::from_secs(10)).await;
@@ -82,6 +63,7 @@ pub fn build_rspc_router() -> RouterBuilder<App> {
         .merge(keys::instance::GROUP_PREFIX, instance::mount())
         .merge(keys::modplatforms::GROUP_PREFIX, modplatforms::mount())
         .merge(keys::settings::GROUP_PREFIX, settings::mount())
+        .merge(keys::metrics::GROUP_PREFIX, metrics::mount())
         .merge(keys::systeminfo::GROUP_PREFIX, system_info::mount())
 }
 

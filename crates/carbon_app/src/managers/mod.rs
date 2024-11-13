@@ -27,6 +27,7 @@ pub mod download;
 pub mod instance;
 pub mod java;
 mod metadata;
+mod metrics;
 mod minecraft;
 pub mod modplatforms;
 mod prisma_client;
@@ -44,6 +45,7 @@ pub enum AppError {
 }
 
 mod app {
+    use metrics::MetricsManager;
     use sentry::capture_error;
     use tracing::error;
 
@@ -68,6 +70,7 @@ mod app {
         download_manager: DownloadManager,
         pub(crate) instance_manager: InstanceManager,
         meta_cache_manager: MetaCacheManager,
+        pub(crate) metrics_manager: MetricsManager,
         pub(crate) modplatforms_manager: ModplatformsManager,
         pub(crate) reqwest_client: reqwest_middleware::ClientWithMiddleware,
         pub(crate) prisma_client: Arc<PrismaClient>,
@@ -126,6 +129,11 @@ mod app {
                     download_manager: DownloadManager::new(),
                     instance_manager: InstanceManager::new(),
                     meta_cache_manager: MetaCacheManager::new(),
+                    metrics_manager: MetricsManager::new(
+                        Arc::clone(&db_client),
+                        http_client.clone(),
+                        gdl_base_api.clone(),
+                    ),
                     invalidation_channel,
                     reqwest_client: http_client.clone(),
                     prisma_client: Arc::clone(&db_client),
@@ -178,11 +186,17 @@ mod app {
                     .get(format!("{}/v1/announcement", gdl_base_api))
                     .send()
                     .await;
+
+                let _ = _app
+                    .metrics_manager()
+                    .track_event(domain::metrics::GDLMetricsEvent::LauncherStarted)
+                    .await;
             });
 
             app
         }
 
+        manager_getter!(metrics_manager: MetricsManager);
         manager_getter!(modplatforms_manager: ModplatformsManager);
         manager_getter!(settings_manager: SettingsManager);
         manager_getter!(java_manager: JavaManager);

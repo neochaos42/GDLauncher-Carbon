@@ -1,6 +1,7 @@
 pub mod account;
 pub mod instance;
 pub mod java;
+pub mod metrics;
 pub mod minecraft;
 pub mod modplatforms;
 pub mod runtime_path;
