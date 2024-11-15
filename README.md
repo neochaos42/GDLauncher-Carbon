@@ -81,8 +81,8 @@ To be able to develop on GDLauncher Carbon locally, you will need to request an 
 To contribute, please see the [contributing](CONTRIBUTING.md) guide.
 
 ### Requirements
-- Node 18.x.x
-- Rust >= 1.73.0
+- Node 22.x.x
+- Rust >= 1.82.0
 
 ### Pnpm
 At this point make sure you have pnpm installed:

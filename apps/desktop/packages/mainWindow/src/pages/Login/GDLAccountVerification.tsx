@@ -2,15 +2,7 @@ import { convertSecondsToHumanTime } from "@/utils/helpers";
 import { rspc } from "@/utils/rspcClient";
 import { Trans } from "@gd/i18n";
 import { Navigate } from "@solidjs/router";
-import {
-  createEffect,
-  createSignal,
-  getOwner,
-  Match,
-  onCleanup,
-  runWithOwner,
-  Switch
-} from "solid-js";
+import { createSignal, Match, Switch } from "solid-js";
 
 interface Props {
   nextStep: () => void;
@@ -22,14 +14,18 @@ interface Props {
 const GDLAccountVerification = (props: Props) => {
   const [cooldown, setCooldown] = createSignal(0);
   const [sentVisible, setSentVisible] = createSignal(false);
-  const owner = getOwner();
 
   const saveGdlAccountMutation = rspc.createMutation(() => ({
     mutationKey: ["account.saveGdlAccount"]
   }));
 
-  const verified = rspc.createQuery(() => ({
+  const peekedUser = rspc.createQuery(() => ({
     queryKey: ["account.peekGdlAccount", props.activeUuid!],
+    enabled: !!props.activeUuid
+  }));
+
+  const verified = rspc.createQuery(() => ({
+    queryKey: ["account.waitForAccountValidation", props.activeUuid!],
     enabled: !!props.activeUuid
   }));
 
@@ -37,59 +33,22 @@ const GDLAccountVerification = (props: Props) => {
     mutationKey: ["account.requestNewVerificationToken"]
   }));
 
-  let latest = Symbol();
-
-  async function invalidateEmailVerification() {
-    const currSymbol = Symbol();
-
-    latest = currSymbol;
-    const res = await verified.refetch();
-
-    if (currSymbol !== latest) {
-      return;
-    }
-
-    if (res.data?.isEmailVerified) {
-      await rspc.createMutation(() => ({
-        mutationKey: ["account.saveGdlAccount"]
-      }));
-    }
-  }
-
-  let interval: ReturnType<typeof setInterval>;
-
-  createEffect(async () => {
-    runWithOwner(owner, async () => {
-      if (props.activeUuid) {
-        if (interval) {
-          clearInterval(interval);
-        }
-
-        interval = setInterval(invalidateEmailVerification, 1000);
-      }
-    });
-  });
-
-  onCleanup(() => {
-    clearInterval(interval);
-  });
-
   let cooldownInterval: ReturnType<typeof setInterval> | undefined;
 
   return (
     <>
       <Switch>
-        <Match when={verified.data?.isEmailVerified}>
+        <Match when={verified.isSuccess}>
           <Navigate href="/library" />
         </Match>
-        <Match when={!verified.data?.isEmailVerified}>
+        <Match when={!verified.isSuccess}>
           <div class="flex-1 w-full text-center gap-5 flex flex-col justify-between items-center">
             <div class="p-10">
               <div class="text-2xl font-bold">
                 <Trans key="login.check_your_email_for_a_verification_link" />
               </div>
               <div class="pt-4 pb-10 text-lightSlate-600">
-                ({verified.data?.email})
+                ({peekedUser.data?.email})
               </div>
               <div
                 onClick={async () => {

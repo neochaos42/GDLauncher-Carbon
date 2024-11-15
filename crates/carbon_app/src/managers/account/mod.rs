@@ -198,6 +198,29 @@ impl<'s> ManagerRef<'s, AccountManager> {
         Ok(Some(account.status))
     }
 
+    pub async fn wait_for_account_validation(self, uuid: String) -> anyhow::Result<()> {
+        let Some(id_token) = self
+            .get_account_entries()
+            .await?
+            .into_iter()
+            .find(|account| account.uuid == uuid)
+            .ok_or(anyhow::anyhow!(
+                "attempted to get an account that does not exist"
+            ))?
+            .id_token
+        else {
+            bail!("attempted to get an account that does not exist");
+        };
+
+        info!("Waiting for account validation");
+
+        self.gdl_account_task
+            .read()
+            .await
+            .wait_for_account_validation(id_token)
+            .await
+    }
+
     pub async fn peek_gdl_account(self, uuid: String) -> anyhow::Result<Option<GDLUser>> {
         let Some(id_token) = self
             .get_account_entries()

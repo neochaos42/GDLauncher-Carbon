@@ -54,6 +54,7 @@ keys! {
         REMOVE_GDL_ACCOUNT                          = "removeGdlAccount";
         SAVE_GDL_ACCOUNT                            = "saveGdlAccount";
         REQUEST_GDL_ACCOUNT_DELETION                = "requestGdlAccountDeletion";
+        WAIT_FOR_ACCOUNT_VALIDATION                 = "waitForAccountValidation";
     }
 
     java {

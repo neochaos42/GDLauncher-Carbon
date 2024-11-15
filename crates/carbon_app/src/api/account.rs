@@ -123,6 +123,14 @@ pub(super) fn mount() -> RouterBuilder<App> {
 
             Ok(FERequestDeletionStatus::from(result))
         }
+
+        query WAIT_FOR_ACCOUNT_VALIDATION[app, uuid: String] {
+            app.account_manager()
+                .wait_for_account_validation(uuid)
+                .await?;
+
+            Ok(())
+        }
     }
 }
 

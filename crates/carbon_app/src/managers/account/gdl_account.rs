@@ -6,6 +6,8 @@ use hyper::{
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
+use crate::domain::instance::info;
+
 pub struct GDLAccountTask {
     client: reqwest_middleware::ClientWithMiddleware,
     base_api: String,
@@ -102,6 +104,33 @@ impl GDLAccountTask {
         let user: GDLUser = resp.json().await?;
 
         Ok(user)
+    }
+
+    pub async fn wait_for_account_validation(&self, id_token: String) -> anyhow::Result<()> {
+        let url = format!("{}/v1/users/wait-for-user-verification", self.base_api);
+
+        // Cloudflare's 524 status code is used to indicate that the request timed out
+        let cloudflare_timeout_status =
+            StatusCode::from_u16(524).expect("524 is a valid status code");
+
+        loop {
+            let resp = self
+                .client
+                .get(&url)
+                .header("avoid-caching", "")
+                .header("Authorization", format!("Bearer {}", id_token))
+                .send()
+                .await?;
+
+            if resp.status() == cloudflare_timeout_status {
+                tracing::warn!("Account validation timed out. Retrying...");
+                continue;
+            }
+
+            resp.bytes().await?;
+
+            return Ok(());
+        }
     }
 
     pub async fn get_account(&self, id_token: String) -> anyhow::Result<Option<GDLUser>> {
