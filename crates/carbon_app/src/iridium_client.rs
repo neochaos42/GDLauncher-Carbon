@@ -18,13 +18,6 @@ pub fn get_client(gdl_base_api: String) -> reqwest_middleware::ClientBuilder {
             _extensions: &mut axum::http::Extensions,
             next: Next<'_>,
         ) -> reqwest_middleware::Result<Response> {
-            let opt_auth = option_env!("GDL_AUTH");
-
-            if req.url().host_str() == self.gdl_api_base_host.host_str() && opt_auth.is_some() {
-                req.headers_mut()
-                    .insert("GDL-Auth", opt_auth.unwrap().parse().unwrap());
-            }
-
             let curseforge_api_base = url::Url::parse(env!(
                 "CURSEFORGE_API_BASE",
                 "missing curseforge env api base"
