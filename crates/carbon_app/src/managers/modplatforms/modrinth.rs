@@ -187,7 +187,7 @@ impl Modrinth {
         Ok(versions)
     }
 
-    #[tracing::instrument(skip(self))]
+    #[tracing::instrument(skip(self, hashes_query))]
     pub async fn get_versions_from_hash(
         &self,
         hashes_query: &VersionHashesQuery,
@@ -196,7 +196,7 @@ impl Modrinth {
 
         let body = serde_json::to_string(hashes_query)?;
 
-        trace!("POST {url} - {body:?}");
+        trace!("POST {url}");
 
         let versions = self
             .client
@@ -380,7 +380,7 @@ mod test {
     async fn test_search_no_query() {
         use super::*;
 
-        let client = iridium_client::get_client(env!("BASE_API").to_string()).build();
+        let client = iridium_client::get_client(crate::util::base_api::get_base_api_env!()).build();
         let modrinth = Modrinth::new(client);
 
         let search_params = ProjectSearchParameters {
@@ -401,7 +401,7 @@ mod test {
     async fn test_search_with_query() -> anyhow::Result<()> {
         use super::*;
 
-        let client = iridium_client::get_client(env!("BASE_API").to_string()).build();
+        let client = iridium_client::get_client(crate::util::base_api::get_base_api_env!()).build();
         let modrinth = Modrinth::new(client);
 
         let facets = vec![
@@ -437,7 +437,7 @@ mod test {
     async fn test_fetch_categories() {
         use super::*;
 
-        let client = iridium_client::get_client(env!("BASE_API").to_string()).build();
+        let client = iridium_client::get_client(crate::util::base_api::get_base_api_env!()).build();
         let modrinth = Modrinth::new(client);
 
         let results = modrinth.get_categories().await.unwrap();
@@ -450,7 +450,7 @@ mod test {
     async fn test_fetch_loaders() {
         use super::*;
 
-        let client = iridium_client::get_client(env!("BASE_API").to_string()).build();
+        let client = iridium_client::get_client(crate::util::base_api::get_base_api_env!()).build();
         let modrinth = Modrinth::new(client);
 
         let results = modrinth.get_loaders().await.unwrap();
@@ -462,7 +462,7 @@ mod test {
     #[traced_test]
     async fn test_get_project() -> anyhow::Result<()> {
         use super::*;
-        let client = iridium_client::get_client(env!("BASE_API").to_string()).build();
+        let client = iridium_client::get_client(crate::util::base_api::get_base_api_env!()).build();
         let modrinth = Modrinth::new(client);
 
         let result = modrinth
@@ -478,7 +478,7 @@ mod test {
     #[traced_test]
     async fn test_get_project_versions() -> anyhow::Result<()> {
         use super::*;
-        let client = iridium_client::get_client(env!("BASE_API").to_string()).build();
+        let client = iridium_client::get_client(crate::util::base_api::get_base_api_env!()).build();
         let modrinth = Modrinth::new(client);
 
         let results = modrinth
@@ -499,7 +499,7 @@ mod test {
     #[traced_test]
     async fn test_get_project_team() -> anyhow::Result<()> {
         use super::*;
-        let client = iridium_client::get_client(env!("BASE_API").to_string()).build();
+        let client = iridium_client::get_client(crate::util::base_api::get_base_api_env!()).build();
         let modrinth = Modrinth::new(client);
 
         let results = modrinth
@@ -514,7 +514,7 @@ mod test {
     #[traced_test]
     async fn test_get_team() -> anyhow::Result<()> {
         use super::*;
-        let client = iridium_client::get_client(env!("BASE_API").to_string()).build();
+        let client = iridium_client::get_client(crate::util::base_api::get_base_api_env!()).build();
         let modrinth = Modrinth::new(client);
 
         let results = modrinth.get_team(TeamID("SfcwZ8an".to_string())).await?;
@@ -527,7 +527,7 @@ mod test {
     #[traced_test]
     async fn test_get_teams() -> anyhow::Result<()> {
         use super::*;
-        let client = iridium_client::get_client(env!("BASE_API").to_string()).build();
+        let client = iridium_client::get_client(crate::util::base_api::get_base_api_env!()).build();
         let modrinth = Modrinth::new(client);
 
         let results = modrinth
@@ -544,7 +544,7 @@ mod test {
     #[traced_test]
     async fn test_get_version() -> anyhow::Result<()> {
         use super::*;
-        let client = iridium_client::get_client(env!("BASE_API").to_string()).build();
+        let client = iridium_client::get_client(crate::util::base_api::get_base_api_env!()).build();
         let modrinth = Modrinth::new(client);
 
         let result = modrinth
@@ -561,7 +561,7 @@ mod test {
     async fn test_get_versions_from_hash() -> anyhow::Result<()> {
         use super::*;
 
-        let client = iridium_client::get_client(env!("BASE_API").to_string()).build();
+        let client = iridium_client::get_client(crate::util::base_api::get_base_api_env!()).build();
         let modrinth = Modrinth::new(client);
 
         let results = modrinth

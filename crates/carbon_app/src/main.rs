@@ -241,7 +241,7 @@ impl TestEnv {
         self.app = AppInner::new(
             invalidation_sender,
             self.tmpdir.clone(),
-            env!("BASE_API").to_string(),
+            crate::util::base_api::get_base_api_env!(),
         )
         .await;
     }
@@ -275,7 +275,12 @@ async fn setup_managers_for_test() -> TestEnv {
         tmpdir: temp_path.clone(),
         // log_guard,
         invalidation_recv,
-        app: AppInner::new(invalidation_sender, temp_path, env!("BASE_API").to_string()).await,
+        app: AppInner::new(
+            invalidation_sender,
+            temp_path,
+            crate::util::base_api::get_base_api_env!(),
+        )
+        .await,
     }
 }
 
@@ -326,7 +331,7 @@ mod test {
         let server = tokio::spawn(async move {
             super::start_router(
                 temp_dir.into_path(),
-                env!("BASE_API").to_string(),
+                crate::util::base_api::get_base_api_env!(),
                 tcp_listener,
             )
             .await;
