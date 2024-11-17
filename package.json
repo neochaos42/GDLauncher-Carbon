@@ -6,8 +6,8 @@
   "author": "killpowa <davide@gdlauncher.com>",
   "license": "ARR",
   "scripts": {
-    "init": "npm i -g pnpm@8.15.0 && npm i -g cross-env && cross-env-shell PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true pnpm i",
-    "sudo-init": "sudo npm i -g pnpm@8.15.0 && PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true pnpm i",
+    "init": "npm i -g pnpm@9.13.2 && npm i -g cross-env && cross-env-shell PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true pnpm i",
+    "sudo-init": "sudo npm i -g pnpm@9.13.2 && PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true pnpm i",
     "codegen": "node iridium_patchfix.js && pnpm prisma:generate && pnpm rspc-bindings:generate",
     "watch:app": "turbo run dev --filter !@gd/website",
     "watch:core": "cargo run -p carbon_app",
@@ -53,15 +53,15 @@
     "sentry-cli": "sentry-cli"
   },
   "devDependencies": {
-    "@aws-sdk/client-s3": "^3.556.0",
-    "@sentry/cli": "^2.31.0",
+    "@aws-sdk/client-s3": "^3.693.0",
+    "@sentry/cli": "^2.38.2",
     "cross-env": "^7.0.3",
-    "semver": "^7.6.0",
+    "semver": "^7.6.3",
     "turbo": "^1.13.2"
   },
   "engines": {
-    "pnpm": ">=8.15.0",
+    "pnpm": ">=9.13.2",
     "node": ">=22.11.0"
   },
-  "packageManager": "pnpm@8.15.0"
+  "packageManager": "pnpm@9.13.2"
 }
