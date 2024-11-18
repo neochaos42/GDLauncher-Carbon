@@ -209,7 +209,7 @@ impl<'s> ManagerRef<'s, AccountManager> {
             ))?
             .id_token
         else {
-            bail!("attempted to get an account that does not exist");
+            bail!("this account is present in the db but the id_token is missing. Presumably offline account. (uuid: {uuid})");
         };
 
         info!("Waiting for account validation");
@@ -232,7 +232,7 @@ impl<'s> ManagerRef<'s, AccountManager> {
             ))?
             .id_token
         else {
-            bail!("attempted to get an account that does not exist");
+            bail!("this account is present in the db but the id_token is missing. Presumably offline account. (uuid: {uuid})");
         };
 
         let account = self.gdl_account_task.read().await;
@@ -257,7 +257,7 @@ impl<'s> ManagerRef<'s, AccountManager> {
             .id_token
         else {
             return Err(RequestGDLAccountDeletionError::RequestFailed(
-                anyhow::anyhow!("attempted to get an account that does not exist"),
+                anyhow::anyhow!("this account is present in the db but the id_token is missing. Presumably offline account. (uuid: {uuid})")
             ));
         };
 
@@ -294,7 +294,7 @@ impl<'s> ManagerRef<'s, AccountManager> {
             ))?
             .id_token
         else {
-            bail!("attempted to get an account that does not exist");
+            bail!("this account is present in the db but the id_token is missing. Presumably offline account. (uuid: {uuid})");
         };
 
         let lock = self.gdl_account_task.write().await;
@@ -354,7 +354,7 @@ impl<'s> ManagerRef<'s, AccountManager> {
             ))?
             .id_token
         else {
-            bail!("attempted to get an account that does not exist");
+            bail!("this account is present in the db but the id_token is missing. Presumably offline account. (uuid: {saved_gdl_account_uuid})")
         };
 
         let Some(user) = self
@@ -386,7 +386,7 @@ impl<'s> ManagerRef<'s, AccountManager> {
             .id_token
         else {
             return Err(RequestNewVerificationTokenError::RequestFailed(
-                anyhow::anyhow!("attempted to get an account that does not exist"),
+                anyhow::anyhow!("this account is present in the db but the id_token is missing. Presumably offline account. (uuid: {uuid})")
             ));
         };
 
@@ -419,7 +419,7 @@ impl<'s> ManagerRef<'s, AccountManager> {
             .id_token
         else {
             return Err(RequestNewEmailChangeError::RequestFailed(anyhow::anyhow!(
-                "attempted to get an account that does not exist"
+                "this account is present in the db but the id_token is missing. Presumably offline account. (uuid: {uuid})"
             )));
         };
 
