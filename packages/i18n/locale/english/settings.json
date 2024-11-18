@@ -56,7 +56,7 @@
   "remove_ms_account_with_gdl_account_removal_description": "This Microsoft account has been linked to a GDLauncher account. If you remove this account, you will also be logged out of the GDLauncher account and data will not continue to be synced.",
   "confirm_removal": "Confirm Removal",
   "cannot_request_deletion_for_time": "Wait {{time}} before requesting again",
-  "add_gdl_account": "Add GDLauncher Account ({{accountName}})",
+  "link_gdl_account": "Link GDLauncher Account",
   "log_out_gdl_account": "Log Out GDLauncher Account",
   "minecraft_accounts": "Minecraft Accounts",
   "uuid": "UUID",

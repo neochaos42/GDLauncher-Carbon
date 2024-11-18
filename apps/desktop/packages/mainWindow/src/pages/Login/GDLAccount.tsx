@@ -1,7 +1,7 @@
-import { createEffect, Show, Suspense } from "solid-js";
+import { createEffect, Match, Show, Suspense, Switch } from "solid-js";
 import { Trans, useTransContext } from "@gd/i18n";
-import { rspc } from "@/utils/rspcClient";
-import { Collapsable } from "@gd/ui";
+import { port, rspc } from "@/utils/rspcClient";
+import { Collapsable, Dropdown } from "@gd/ui";
 
 type Props = {
   activeUuid: string | null | undefined;
@@ -9,6 +9,10 @@ type Props = {
 
 const GDLAccount = (props: Props) => {
   const [t] = useTransContext();
+
+  const setActiveAccountMutation = rspc.createMutation(() => ({
+    mutationKey: ["account.setActiveUuid"]
+  }));
 
   const accounts = rspc.createQuery(() => ({
     queryKey: ["account.getAccounts"]
@@ -41,9 +45,66 @@ const GDLAccount = (props: Props) => {
     }
   });
 
+  const accountOptions = () => {
+    return accounts.data?.map((account) => {
+      return {
+        label: (
+          <div
+            class="flex justify-between items-center gap-4"
+            onClick={() => {
+              setActiveAccountMutation.mutate(account.uuid);
+            }}
+          >
+            <div class="flex items-center gap-4">
+              <img
+                src={`http://127.0.0.1:${port}/account/headImage?uuid=${account.uuid}`}
+                class="w-6 h-6 rounded-md"
+              />
+              <div class="truncate max-w-30">{account.username}</div>
+            </div>
+            <div class="flex items-center gap-2">
+              <Switch>
+                <Match when={account.type.type === "microsoft"}>
+                  <div class="w-4 h-4 i-ri:microsoft-fill" />
+                </Match>
+                <Match when={account.type.type === "offline"}>
+                  <div class="w-4 h-4 i-ri:computer-line" />
+                </Match>
+              </Switch>
+              <Switch>
+                <Match when={account.status === "ok"}>
+                  <div class="w-4 h-4 text-green-500 i-ri:check-fill" />
+                </Match>
+                <Match when={account.status === "expired"}>
+                  <div class="w-4 h-4 text-yellow-500 i-ri:alert-fill" />
+                </Match>
+                <Match when={account.status === "refreshing"}>
+                  <div class="w-4 h-4 text-yellow-500 i-ri:loader-4-fill" />
+                </Match>
+                <Match when={account.status === "invalid"}>
+                  <div class="w-4 h-4 text-red-500 i-ri:close-fill" />
+                </Match>
+              </Switch>
+            </div>
+          </div>
+        ),
+        key: account?.uuid
+      };
+    });
+  };
+
   return (
     <Suspense>
-      <div class="flex flex-col h-full w-full text-center">
+      <div class="flex flex-col h-full w-full text-center pt-2 box-border">
+        <div class="flex items-center justify-center gap-4">
+          <div>
+            <Trans key="login.link_account" />
+          </div>
+          <Dropdown
+            options={accountOptions() || []}
+            value={currentlySelectedAccount()?.uuid}
+          />
+        </div>
         <Show when={gdlUser.data}>
           <div class="flex-1 px-4">
             <h2>
@@ -59,7 +120,6 @@ const GDLAccount = (props: Props) => {
             </p>
           </div>
         </Show>
-
         <Show when={!gdlUser.data}>
           <div class="flex-1 px-4">
             <h2>

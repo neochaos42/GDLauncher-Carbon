@@ -500,7 +500,7 @@ export default function Login() {
                       i() + 1 < step() &&
                       (step() > Steps.CodeStep
                         ? i() + 1 > Steps.CodeStep
-                        : step() > Steps.Auth &&
+                        : step() >= Steps.Auth &&
                             searchParams.addMicrosoftAccount
                           ? false
                           : true)

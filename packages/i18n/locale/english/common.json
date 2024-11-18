@@ -72,6 +72,7 @@
   "login.next": "Next",
   "login.prev": "Prev",
   "login.register": "Register",
+  "login.link_account": "Link Account",
   "login.request_email_change": "Request Email Change",
   "login.sync_gdl_account": "Sync GDL Account",
   "login.manage": "Manage",

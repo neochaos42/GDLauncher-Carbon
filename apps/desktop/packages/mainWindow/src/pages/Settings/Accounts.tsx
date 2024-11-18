@@ -362,16 +362,7 @@ const Accounts = () => {
                       navigate("/");
                     }}
                   >
-                    <Trans
-                      key="settings:add_gdl_account"
-                      options={{
-                        accountName: globalStore.accounts.data?.find(
-                          (account) =>
-                            account.uuid ===
-                            globalStore.currentlySelectedAccountUuid.data
-                        )?.username
-                      }}
-                    />
+                    <Trans key="settings:link_gdl_account" />
                   </Button>
                 </div>
               </Match>
