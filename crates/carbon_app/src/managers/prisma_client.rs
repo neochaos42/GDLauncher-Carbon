@@ -88,7 +88,7 @@ pub(super) async fn load_and_migrate(
         ))),
         M::up(include_str!(concat!(
             env!("CARGO_MANIFEST_DIR"),
-            "/prisma/migrations/20241007094036_gdl_accounts/migration.sql"
+            "/prisma/migrations/20241124163738_gdl_accounts/migration.sql"
         ))),
     ];
 
@@ -190,17 +190,11 @@ async fn seed_init_db(db_client: &PrismaClient, gdl_base_api: String) -> Result<
     if db_client.app_configuration().count(vec![]).exec().await? == 0 {
         trace!("No app configuration found. Creating default one");
 
-        let mut buf = [0; 256];
-
-        let sr = ring::rand::SystemRandom::new();
-        sr.fill(&mut buf).unwrap();
-
         db_client
             .app_configuration()
             .create(
                 release_channel.clone(),
                 find_appropriate_default_xmx().await,
-                Vec::from(buf),
                 vec![app_configuration::last_app_version::set(Some(
                     APP_VERSION.to_string(),
                 ))],
@@ -242,11 +236,6 @@ async fn seed_init_db(db_client: &PrismaClient, gdl_base_api: String) -> Result<
         )));
     }
 
-    let is_metrics_consent_too_old = app_config
-        .metrics_enabled_last_update
-        .map(|last_update| last_update < chrono::Utc::now() - chrono::Duration::days(365))
-        .unwrap_or(true);
-
     let latest_tos_privacy_checksum = TermsAndPrivacy::get_latest_consent_sha(gdl_base_api)
         .await
         .map_err(DatabaseError::TermsAndPrivacy);
@@ -254,13 +243,6 @@ async fn seed_init_db(db_client: &PrismaClient, gdl_base_api: String) -> Result<
     match latest_tos_privacy_checksum {
         Ok(latest_tos_privacy_checksum) => {
             let mut should_empty_tos_privacy = false;
-            let mut should_empty_metrics = false;
-
-            if let Some(metrics_enabled_last_update) = app_config.metrics_enabled_last_update {
-                if metrics_enabled_last_update < chrono::Utc::now() - chrono::Duration::days(365) {
-                    should_empty_metrics = true;
-                }
-            }
 
             if app_config.terms_and_privacy_accepted_checksum
                 != Some(latest_tos_privacy_checksum.clone())
@@ -269,25 +251,17 @@ async fn seed_init_db(db_client: &PrismaClient, gdl_base_api: String) -> Result<
             }
 
             tracing::info!(
-                    "Should empty tos_privacy: {}, should empty metrics: {}, latest tos_privacy checksum: {}, current tos_privacy checksum: {:?}",
+                    "Should empty tos_privacy: {}, latest tos_privacy checksum: {}, current tos_privacy checksum: {:?}",
                     should_empty_tos_privacy,
-                    should_empty_metrics,
                     latest_tos_privacy_checksum,
                     app_config.terms_and_privacy_accepted_checksum
                 );
 
-            if should_empty_tos_privacy || should_empty_metrics {
-                if should_empty_tos_privacy {
-                    updates.push(app_configuration::terms_and_privacy_accepted::set(false));
-                    updates.push(app_configuration::terms_and_privacy_accepted_checksum::set(
-                        None,
-                    ));
-                }
-
-                if should_empty_metrics {
-                    updates.push(app_configuration::metrics_enabled::set(false));
-                    updates.push(app_configuration::metrics_enabled_last_update::set(None));
-                }
+            if should_empty_tos_privacy {
+                updates.push(app_configuration::terms_and_privacy_accepted::set(false));
+                updates.push(app_configuration::terms_and_privacy_accepted_checksum::set(
+                    None,
+                ));
             }
         }
         Err(err) => {
@@ -427,69 +401,6 @@ mod test {
                 .unwrap()
                 .terms_and_privacy_accepted_checksum,
             Some("something else".to_string())
-        );
-    }
-
-    #[tokio::test]
-    async fn test_metrics_consent_too_old() {
-        let mut server = mockito::Server::new_async().await;
-        let mock_url = server.url();
-
-        let mock = server
-            .mock("GET", "/v1/latest_consent_checksum")
-            .with_status(200)
-            .with_body("1234567890")
-            .expect(1)
-            .create_async()
-            .await;
-
-        let temp_dir = tempdir::TempDir::new("carbon_app_test").unwrap();
-        let temp_path = dunce::canonicalize(temp_dir.into_path()).unwrap();
-
-        let db_client = load_and_migrate(temp_path.clone(), mock_url.to_string())
-            .await
-            .unwrap();
-
-        db_client
-            .app_configuration()
-            .update(
-                db::app_configuration::id::equals(0),
-                vec![db::app_configuration::metrics_enabled_last_update::set(
-                    Some((chrono::Utc::now() - chrono::Duration::days(366)).into()),
-                )],
-            )
-            .exec()
-            .await
-            .unwrap();
-
-        drop(db_client);
-
-        let db_client = load_and_migrate(temp_path, mock_url.to_string())
-            .await
-            .unwrap();
-
-        assert_eq!(
-            db_client
-                .app_configuration()
-                .find_unique(db::app_configuration::id::equals(0))
-                .exec()
-                .await
-                .unwrap()
-                .unwrap()
-                .metrics_enabled,
-            false
-        );
-
-        assert_eq!(
-            db_client
-                .app_configuration()
-                .find_unique(db::app_configuration::id::equals(0))
-                .exec()
-                .await
-                .unwrap()
-                .unwrap()
-                .metrics_enabled_last_update,
-            None
         );
     }
 }

@@ -19,6 +19,7 @@ pub(crate) struct MetricsManager {
     client: ClientWithMiddleware,
     prisma_client: Arc<PrismaClient>,
     gdl_base_api: String,
+    random_session_uuid: Uuid,
 }
 
 impl MetricsManager {
@@ -27,10 +28,13 @@ impl MetricsManager {
         http_client: ClientWithMiddleware,
         gdl_base_api: String,
     ) -> Self {
+        let random_session_uuid = Uuid::new_v4();
+
         Self {
             client: http_client,
             prisma_client,
             gdl_base_api,
+            random_session_uuid,
         }
     }
 }
@@ -47,10 +51,10 @@ impl ManagerRef<'_, MetricsManager> {
             .await?
             .and_then(|data| {
                 // TODO: Keep a backlog of events if the user has not accepted the terms yet
-                if !data.terms_and_privacy_accepted || !data.metrics_enabled {
+                if !data.terms_and_privacy_accepted {
                     None
                 } else {
-                    Some(data.random_user_uuid)
+                    Some(self.random_session_uuid.to_string())
                 }
             })
         else {

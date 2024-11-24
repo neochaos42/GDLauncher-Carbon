@@ -504,10 +504,10 @@ const Accounts = () => {
                                       await removeAccountMutation.mutateAsync(
                                         (row.original as AccountEntry).uuid
                                       );
-                                    }
 
-                                    if (accountsLength === 1) {
-                                      navigate("/");
+                                      if (accountsLength === 1) {
+                                        navigate("/");
+                                      }
                                     }
                                   }}
                                 />
@@ -565,3 +565,8 @@ const Accounts = () => {
 };
 
 export default Accounts;
+
+// Handle automatic redirect to gdl login that fails on peek because
+// all accounts are invalid because of the migration.
+// Maybe show special login page for this case?
+// or show gdl login but with all accounts disabled and a special message?

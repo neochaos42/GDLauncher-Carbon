@@ -386,6 +386,19 @@ const loadCoreModule: CoreModule = () =>
           if (rightPart === "true") {
             maybeDisableGPU(true);
           }
+        } else if (row.startsWith("_HASHED_EMAIL_PREFERENCE_CHANGED_:")) {
+          const rightPart = row.split(":")[1];
+          const enabled = rightPart.split("|")[0] === "true";
+          const email = rightPart.split("|")[1];
+          if (enabled) {
+            if ((app as any).overwolf) {
+              (app as any).overwolf.generateUserEmailHashes(email);
+            }
+          } else {
+            if ((app as any).overwolf) {
+              (app as any).overwolf.generateUserEmailHashes({});
+            }
+          }
         }
       }
       console.log(`[CORE] Message: ${dataString}`);

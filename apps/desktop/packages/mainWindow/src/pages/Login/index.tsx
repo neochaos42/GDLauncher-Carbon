@@ -72,11 +72,8 @@ export default function Login() {
 
   const [recoveryEmail, setRecoveryEmail] = createSignal<string | null>(null);
 
-  const [acceptedTOS, setAcceptedTOS] = createSignal(
-    globalStore.settings.data?.termsAndPrivacyAccepted
-  );
-  const [acceptedMetrics, setAcceptedMetrics] = createSignal(
-    globalStore.settings.data?.metricsEnabled
+  const [acceptedHashedEmail, setAcceptedHashedEmail] = createSignal(
+    globalStore.settings.data?.hashedEmailAccepted
   );
 
   const [cooldown, setCooldown] = createSignal(0);
@@ -256,10 +253,7 @@ export default function Login() {
       "account.getActiveUuid"
     ]);
 
-    if (
-      !globalStore.settings.data?.termsAndPrivacyAccepted ||
-      !globalStore.settings.data?.metricsEnabledLastUpdate
-    ) {
+    if (!globalStore.settings.data?.termsAndPrivacyAccepted) {
       setStep(Steps.TermsAndConditions);
       setIsBackButtonVisible(false);
       return;
@@ -436,13 +430,7 @@ export default function Login() {
         <div class="flex flex-1 w-full h-auto overflow-y-auto px-4 box-border">
           <Switch>
             <Match when={step() === Steps.TermsAndConditions}>
-              <TermsAndConditions
-                nextStep={nextStep}
-                acceptedTOS={!!acceptedTOS()}
-                setAcceptedTOS={setAcceptedTOS}
-                acceptedMetrics={!!acceptedMetrics()}
-                setAcceptedMetrics={setAcceptedMetrics}
-              />
+              <TermsAndConditions />
             </Match>
             <Match when={step() === Steps.Auth}>
               <Auth />
@@ -465,6 +453,8 @@ export default function Login() {
                 recoveryEmail={recoveryEmail()}
                 setRecoveryEmail={setRecoveryEmail}
                 cooldown={cooldown()}
+                acceptedHashedEmail={!!acceptedHashedEmail()}
+                setAcceptedHashedEmail={setAcceptedHashedEmail}
               />
             </Match>
             <Match when={step() === Steps.GDLAccountVerification}>
@@ -581,7 +571,6 @@ export default function Login() {
               variant="primary"
               size="large"
               disabled={
-                !acceptedTOS() ||
                 step() === Steps.CodeStep ||
                 step() === Steps.GDLAccountVerification ||
                 (step() === Steps.GDLAccountCompletion && !recoveryEmail())
@@ -599,8 +588,8 @@ export default function Login() {
                       termsAndPrivacyAccepted: {
                         Set: true
                       },
-                      metricsEnabled: {
-                        Set: !!acceptedMetrics()
+                      hashedEmailAccepted: {
+                        Set: !!acceptedHashedEmail()
                       }
                     });
                   } catch (err) {
@@ -749,6 +738,10 @@ export default function Login() {
               }}
             >
               <Switch>
+                <Match when={step() === Steps.TermsAndConditions}>
+                  <Trans key="login.agree_and_continue" />
+                  <i class="i-ri:arrow-right-line" />
+                </Match>
                 <Match
                   when={step() === Steps.GDLAccountCompletion && !gdlUser.data}
                 >

@@ -9,10 +9,13 @@ interface Props {
   recoveryEmail: string | null;
   setRecoveryEmail: (_: string | null) => void;
   cooldown: number;
+  acceptedHashedEmail: boolean;
+  setAcceptedHashedEmail: (_: (_: boolean) => boolean) => void;
 }
 
 const GDLAccountCompletion = (props: Props) => {
   const [t] = useTransContext();
+  // const modalsContext = useModal();
 
   return (
     <div class="flex-1 w-full flex flex-col justify-between items-center text-center gap-5 p-10">
@@ -42,6 +45,31 @@ const GDLAccountCompletion = (props: Props) => {
         <div class="text-sm text-lightSlate-500">
           <Trans key="login.recovery_email_description" />
         </div>
+
+        {/* <div class="flex gap-2">
+          <Checkbox
+            checked={props.acceptedHashedEmail}
+            onChange={() => {
+              props.setAcceptedHashedEmail((prev) => !prev);
+            }}
+          />
+          <p class="m-0 text-lightSlate-400 leading-5 text-xs select-none">
+            <Trans key="login.enable_hashed_email">
+              {""}
+              <span
+                class="cursor-pointer underline text-lightSlate-50"
+                onClick={() => {
+                  modalsContext?.openModal({
+                    name: "privacyStatement"
+                  });
+                }}
+              >
+                {""}
+              </span>
+              {""}
+            </Trans>
+          </p>
+        </div> */}
       </div>
     </div>
   );

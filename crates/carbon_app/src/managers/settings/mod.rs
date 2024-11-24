@@ -7,7 +7,7 @@ use reqwest_middleware::ClientWithMiddleware;
 
 use crate::{
     api::{keys::settings::*, settings::FESettingsUpdate},
-    db::app_configuration::{self, last_app_version},
+    db::app_configuration::{self, hashed_email_accepted, last_app_version},
     domain::{self as domain, modplatforms::ModChannelWithUsage, runtime_path},
 };
 
@@ -20,6 +20,7 @@ pub mod terms_and_privacy;
 pub(crate) struct SettingsManager {
     pub runtime_path: runtime_path::RuntimePath,
     pub terms_and_privacy: TermsAndPrivacy,
+    pub gdl_base_api_url: String,
 }
 
 impl SettingsManager {
@@ -30,7 +31,8 @@ impl SettingsManager {
     ) -> Self {
         Self {
             runtime_path: runtime_path::RuntimePath::new(runtime_path),
-            terms_and_privacy: TermsAndPrivacy::new(http_client, gdl_base_api_url),
+            terms_and_privacy: TermsAndPrivacy::new(http_client, gdl_base_api_url.clone()),
+            gdl_base_api_url,
         }
     }
 }
@@ -49,15 +51,6 @@ impl ManagerRef<'_, SettingsManager> {
     #[tracing::instrument(skip(self))]
     pub async fn set_settings(self, incoming_settings: FESettingsUpdate) -> anyhow::Result<()> {
         let db = &self.app.prisma_client;
-
-        let crate::db::app_configuration::Data {
-            secret,
-            random_user_uuid,
-            ..
-        } = self.get_settings().await?;
-
-        let random_user_uuid = uuid::Uuid::parse_str(&random_user_uuid)?;
-
         let mut queries = vec![];
 
         if let Some(theme) = incoming_settings.theme {
@@ -332,54 +325,28 @@ impl ManagerRef<'_, SettingsManager> {
                 )],
             ));
 
-            let checksum = self
-                .terms_and_privacy
-                .record_consent(
-                    terms_and_privacy::ConsentType::TermsAndPrivacy,
-                    terms_and_privacy_accepted,
-                    &random_user_uuid,
-                    &secret,
-                )
-                .await
-                .with_context(|| {
-                    format!(
-                        "Failed to record terms and privacy consent: {}",
-                        terms_and_privacy_accepted
-                    )
-                })?;
+            let latest_consent_sha =
+                TermsAndPrivacy::get_latest_consent_sha(self.gdl_base_api_url.clone()).await?;
 
             queries.push(self.app.prisma_client.app_configuration().update(
                 app_configuration::id::equals(0),
                 vec![
                     app_configuration::terms_and_privacy_accepted::set(true),
                     app_configuration::terms_and_privacy_accepted_checksum::set(Some(
-                        checksum.to_string(),
+                        latest_consent_sha.to_string(),
                     )),
                 ],
             ));
         }
 
-        if let Some(metrics_enabled) = incoming_settings.metrics_enabled {
-            let metrics_enabled = metrics_enabled.inner();
+        if let Some(hashed_email_accepted) = incoming_settings.hashed_email_accepted {
+            let hashed_email_accepted = hashed_email_accepted.inner();
             queries.push(self.app.prisma_client.app_configuration().update(
                 app_configuration::id::equals(0),
-                vec![
-                    app_configuration::metrics_enabled::set(metrics_enabled),
-                    app_configuration::metrics_enabled_last_update::set(Some(Utc::now().into())),
-                ],
-            ));
-
-            self.terms_and_privacy
-                .record_consent(
-                    terms_and_privacy::ConsentType::Metrics,
-                    metrics_enabled,
-                    &random_user_uuid,
-                    &secret,
-                )
-                .await
-                .with_context(|| {
-                    format!("Failed to record metrics consent: {}", metrics_enabled)
-                })?;
+                vec![app_configuration::hashed_email_accepted::set(
+                    hashed_email_accepted,
+                )],
+            ))
         }
 
         if !queries.is_empty() {

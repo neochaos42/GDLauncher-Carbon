@@ -9,48 +9,45 @@ generator client {
 }
 
 model AppConfiguration {
-  id                              Int       @id @unique @default(0)
-  theme                           String    @default("main")
-  reducedMotion                   Boolean   @default(false)
-  language                        String    @default("english")
-  discordIntegration              Boolean   @default(true)
+  id                              Int      @id @unique @default(0)
+  theme                           String   @default("main")
+  reducedMotion                   Boolean  @default(false)
+  language                        String   @default("english")
+  discordIntegration              Boolean  @default(true)
   releaseChannel                  String
   lastAppVersion                  String?
   activeAccountUuid               String?
-  activeAccountUuidData           Account?  @relation("activeAccount", fields: [activeAccountUuid], references: [uuid])
+  activeAccountUuidData           Account? @relation("activeAccount", fields: [activeAccountUuid], references: [uuid])
   // Instances settings
-  concurrentDownloads             Int       @default(10)
-  downloadDependencies            Boolean   @default(true)
-  instancesTileSize               Int       @default(2) // 1-5
-  instancesGroupBy                String    @default("group")
-  instancesGroupByAsc             Boolean   @default(true)
-  instancesSortBy                 String    @default("name")
-  instancesSortByAsc              Boolean   @default(true)
-  showNews                        Boolean   @default(true)
-  showFeatured                    Boolean   @default(true)
+  concurrentDownloads             Int      @default(10)
+  downloadDependencies            Boolean  @default(true)
+  instancesTileSize               Int      @default(2) // 1-5
+  instancesGroupBy                String   @default("group")
+  instancesGroupByAsc             Boolean  @default(true)
+  instancesSortBy                 String   @default("name")
+  instancesSortByAsc              Boolean  @default(true)
+  showNews                        Boolean  @default(true)
+  showFeatured                    Boolean  @default(true)
   // Other settings
-  deletionThroughRecycleBin       Boolean   @default(true)
+  deletionThroughRecycleBin       Boolean  @default(true)
   gameResolution                  String?
-  launcherActionOnGameLaunch      String    @default("none")
-  showAppCloseWarning             Boolean   @default(true)
-  javaCustomArgs                  String    @default("")
+  launcherActionOnGameLaunch      String   @default("none")
+  showAppCloseWarning             Boolean  @default(true)
+  javaCustomArgs                  String   @default("")
   xmx                             Int
-  xms                             Int       @default(1024)
+  xms                             Int      @default(1024)
   defaultInstanceGroup            Int?
   preLaunchHook                   String?
   wrapperCommand                  String?
   postExitHook                    String?
-  isFirstLaunch                   Boolean   @default(true)
-  autoManageJavaSystemProfiles    Boolean   @default(true)
-  modPlatformBlacklist            String    @default("")
-  modChannels                     String    @default("stable:true,beta:true,alpha:true")
-  // Legal / metrics
-  randomUserUuid                  String    @default(uuid())
-  secret                          Bytes
-  termsAndPrivacyAccepted         Boolean   @default(false)
+  isFirstLaunch                   Boolean  @default(true)
+  autoManageJavaSystemProfiles    Boolean  @default(true)
+  modPlatformBlacklist            String   @default("")
+  modChannels                     String   @default("stable:true,beta:true,alpha:true")
+  // Legal
+  termsAndPrivacyAccepted         Boolean  @default(false)
   termsAndPrivacyAcceptedChecksum String? // Should ask again if this changes
-  metricsEnabled                  Boolean   @default(false)
-  metricsEnabledLastUpdate        DateTime? // should ask again after 12 months
+  hashedEmailAccepted             Boolean  @default(false)
   gdlAccountUuid                  String?
   gdlAccountStatus                Bytes?
 }

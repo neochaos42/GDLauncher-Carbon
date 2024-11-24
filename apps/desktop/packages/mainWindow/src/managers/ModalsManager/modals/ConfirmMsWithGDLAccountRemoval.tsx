@@ -3,6 +3,8 @@ import { ModalProps, useModal } from "..";
 import ModalLayout from "../ModalLayout";
 import { Button } from "@gd/ui";
 import { Trans, useTransContext } from "@gd/i18n";
+import { useGlobalStore } from "@/components/GlobalStoreContext";
+import { useGDNavigate } from "@/managers/NavigationManager";
 
 type Props = {
   uuid: string;
@@ -10,9 +12,13 @@ type Props = {
 
 const ConfirmMsWithGDLAccountRemoval = (props: ModalProps) => {
   const [t] = useTransContext();
+  const navigate = useGDNavigate();
   const data: () => Props = () => props?.data;
 
   const modalsContext = useModal();
+
+  const globalStore = useGlobalStore();
+  const accountsLength = () => globalStore.accounts.data?.length;
 
   const deleteAccountMutation = rspc.createMutation(() => ({
     mutationKey: ["account.deleteAccount"]
@@ -42,6 +48,10 @@ const ConfirmMsWithGDLAccountRemoval = (props: ModalProps) => {
             onClick={async () => {
               await deleteAccountMutation.mutateAsync(data().uuid);
               modalsContext?.closeModal();
+
+              if (accountsLength() === 1) {
+                navigate("/");
+              }
             }}
           >
             {t("settings:confirm_removal")}

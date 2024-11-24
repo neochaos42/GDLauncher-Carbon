@@ -236,9 +236,7 @@ struct FESettings {
     auto_manage_java_system_profiles: bool,
     mod_sources: ModSources,
     terms_and_privacy_accepted: bool,
-    metrics_enabled: bool,
-    metrics_enabled_last_update: Option<chrono::DateTime<chrono::FixedOffset>>,
-    random_user_uuid: String,
+    hashed_email_accepted: bool,
     gdl_account_id: Option<String>,
 }
 
@@ -297,9 +295,7 @@ impl TryFrom<crate::db::app_configuration::Data> for FESettings {
                     .collect::<Result<_, _>>()?,
             },
             terms_and_privacy_accepted: data.terms_and_privacy_accepted,
-            metrics_enabled: data.metrics_enabled,
-            metrics_enabled_last_update: data.metrics_enabled_last_update,
-            random_user_uuid: data.random_user_uuid,
+            hashed_email_accepted: data.hashed_email_accepted,
             gdl_account_id: data.gdl_account_uuid,
         })
     }
@@ -406,7 +402,7 @@ pub struct FESettingsUpdate {
     #[specta(optional)]
     pub terms_and_privacy_accepted: Option<Set<bool>>,
     #[specta(optional)]
-    pub metrics_enabled: Option<Set<bool>>,
+    pub hashed_email_accepted: Option<Set<bool>>,
     #[specta(optional)]
     pub gdl_account_id: Option<Set<Option<String>>>,
 }
