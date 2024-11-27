@@ -25,7 +25,6 @@ pub enum FEMetricsEvent {
         item_id: String,
     },
     ChangelogViewed,
-    ChangelogTwitchButtonClicked,
 }
 
 impl From<FEMetricsEvent> for crate::domain::metrics::GDLMetricsEvent {
@@ -40,7 +39,6 @@ impl From<FEMetricsEvent> for crate::domain::metrics::GDLMetricsEvent {
                 item_id,
             },
             FEMetricsEvent::ChangelogViewed => Self::ChangelogViewed,
-            FEMetricsEvent::ChangelogTwitchButtonClicked => Self::ChangelogTwitchButtonClicked,
         }
     }
 }

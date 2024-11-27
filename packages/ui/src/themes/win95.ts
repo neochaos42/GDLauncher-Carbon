@@ -114,10 +114,7 @@ const win95: Theme = {
   "green-900": "0 32 0", // Very dark green instead of black
   "brands-curseforge": "241 100 54",
   "brands-modrinth": "27 217 106",
-  "brands-twitchPurpleDark": "100 65 165",
-  "brands-twitchPurpleLight": "185 163 227",
-  "brands-twitchWhite": "241 241 241",
-  "brands-twitchBlack": "38 38 38",
+  "brands-discord": "88 101 242",
 
   font: "W95FA",
   "font-mono": "W95FA",

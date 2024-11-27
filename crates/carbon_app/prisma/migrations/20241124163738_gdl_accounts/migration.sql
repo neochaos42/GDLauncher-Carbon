@@ -55,7 +55,8 @@ ALTER TABLE "new_AppConfiguration" RENAME TO "AppConfiguration";
 CREATE UNIQUE INDEX "AppConfiguration_id_key" ON "AppConfiguration"("id");
 
 -- reset since azure app id changed
-UPDATE "Account" SET "accessToken" = "invalid", "msRefreshToken" = "invalid", "idToken" = "invalid";
+TRUNCATE TABLE "Account";
+UPDATE "AppConfiguration" SET "activeAccountUuid" = NULL;
 
 PRAGMA foreign_key_check;
 PRAGMA foreign_keys=ON;

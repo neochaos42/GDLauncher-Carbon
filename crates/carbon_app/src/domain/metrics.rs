@@ -46,5 +46,4 @@ pub enum GDLMetricsEvent {
         item_id: String,
     },
     ChangelogViewed,
-    ChangelogTwitchButtonClicked,
 }

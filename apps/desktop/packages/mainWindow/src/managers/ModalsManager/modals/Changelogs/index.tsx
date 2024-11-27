@@ -144,23 +144,19 @@ const Changelogs = (props: ModalProps) => {
         <Section type="fixed" />
         <div class="rounded-md flex flex-col items-center gap-4">
           <hr class="w-full" />
-          <div class="text-brands-twitchWhite">
-            <Trans key="changelogs.watch_on_twitch_description" />
+          <div class="text-lightSlate-50">
+            <Trans key="changelogs.join_our_discord_description" />
           </div>
 
           <Button
-            backgroundColor="bg-brands-twitchPurpleDark"
+            backgroundColor="bg-brands-discord"
             onClick={() => {
-              sendEvent.mutate({
-                event_name: "changelog_twitch_button_clicked"
-              });
-
-              window.open("https://twitch.tv/blarfoon", "_blank");
+              window.open("https://discord.gdlauncher.com", "_blank");
             }}
           >
             <div class="flex items-center justify-center gap-4 animate-wiggle animate-delay-1400 animate-loop">
-              <div class="i-ri:twitch-fill w-6 h-6 inline-block" />
-              <Trans key="changelogs.watch_on_twitch" />
+              <div class="i-ri:discord-fill w-6 h-6 inline-block" />
+              <Trans key="changelogs.join_our_discord" />
             </div>
           </Button>
         </div>

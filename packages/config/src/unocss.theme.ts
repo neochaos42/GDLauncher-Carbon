@@ -134,10 +134,7 @@ const theme = {
     brands: {
       curseforge: "rgb(var(--brands-curseforge) / <alpha-value>)",
       modrinth: "rgb(var(--brands-modrinth) / <alpha-value>)",
-      twitchPurpleDark: "rgb(var(--brands-twitchPurpleDark) / <alpha-value>)",
-      twitchPurpleLight: "rgb(var(--brands-twitchPurpleLight) / <alpha-value>)",
-      twitchBlack: "rgb(var(--brands-twitchBlack) / <alpha-value>)",
-      twitchWhite: "rgb(var(--brands-twitchWhite) / <alpha-value>)",
+      discord: "rgb(var(--brands-discord) / <alpha-value>)",
     },
     // TODO: Move satisfies to the entire theme when possible
   } satisfies Theme,
