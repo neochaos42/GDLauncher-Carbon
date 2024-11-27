@@ -55,7 +55,7 @@ export const DeviceCode = (props: Props) => {
         }}
       >
         <i class="i-ri:check-fill w-4 h-4 mr-2" />
-        <Trans key="instance.copied_to_clipboard" />
+        <Trans key="genera.copied_to_clipboard" />
       </div>
 
       <span

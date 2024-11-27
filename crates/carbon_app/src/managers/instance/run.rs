@@ -2083,6 +2083,3 @@ async fn process_logs(
         }
     }
 }
-
-// store consents on s3 but keep an index on redis/sqlite for lookup
-// keep hashed data of button of accepted consent
