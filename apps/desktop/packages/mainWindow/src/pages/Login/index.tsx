@@ -24,6 +24,7 @@ import GDLAccountCompletion from "./GDLAccountCompletion";
 import { useGDNavigate } from "@/managers/NavigationManager";
 import GDLAccountVerification from "./GDLAccountVerification";
 import { useGlobalStore } from "@/components/GlobalStoreContext";
+import PrivacyNotice from "./PrivacyNotice";
 
 export type DeviceCodeObjectType = {
   userCode: string;
@@ -33,11 +34,12 @@ export type DeviceCodeObjectType = {
 
 enum Steps {
   TermsAndConditions = 1,
-  Auth = 2,
-  CodeStep = 3,
-  GDLAccount = 4,
-  GDLAccountCompletion = 5,
-  GDLAccountVerification = 6
+  PrivacyNotice = 2,
+  Auth = 3,
+  CodeStep = 4,
+  GDLAccount = 5,
+  GDLAccountCompletion = 6,
+  GDLAccountVerification = 7
 }
 
 export default function Login() {
@@ -329,7 +331,7 @@ export default function Login() {
   }
 
   function handleAnimationBackward() {
-    if (btnRef && isBackButtonVisible() && step() === Steps.Auth) {
+    if (btnRef && isBackButtonVisible() && step() === Steps.PrivacyNotice) {
       setIsBackButtonVisible(false);
 
       btnRef.animate(
@@ -393,7 +395,7 @@ export default function Login() {
             <Match when={step() === Steps.TermsAndConditions}>
               <div>
                 <div>
-                  <Trans key="login.titles.we_value_privacy" />
+                  <Trans key="login.titles.welcome_to_gdlauncher" />
                 </div>
                 <Show when={activeUuid?.data}>
                   <div>
@@ -401,6 +403,9 @@ export default function Login() {
                   </div>
                 </Show>
               </div>
+            </Match>
+            <Match when={step() === Steps.PrivacyNotice}>
+              <Trans key="login.titles.we_value_privacy" />
             </Match>
             <Match when={step() === Steps.Auth}>
               <Trans key="login.titles.sign_in_with_microsoft" />
@@ -431,6 +436,9 @@ export default function Login() {
           <Switch>
             <Match when={step() === Steps.TermsAndConditions}>
               <TermsAndConditions />
+            </Match>
+            <Match when={step() === Steps.PrivacyNotice}>
+              <PrivacyNotice />
             </Match>
             <Match when={step() === Steps.Auth}>
               <Auth />
@@ -474,14 +482,14 @@ export default function Login() {
               <div
                 class="absolute top-0 left-0 bg-darkSlate-400 h-4 w-full rounded-lg"
                 style={{
-                  transform: `translateX(calc((-100% + ${(100 * step()) / 6}%) - ${(step() === Steps.TermsAndConditions ? 8 : 6) - step()}px)`,
+                  transform: `translateX(calc((-100% + ${(100 * step()) / 7}%) - ${(step() === Steps.TermsAndConditions ? 9 : 7) - step()}px)`,
                   transition:
                     "transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
                 }}
               />
             </div>
 
-            <For each={new Array(6)}>
+            <For each={new Array(7)}>
               {(_, i) => (
                 <div
                   class="z-1 h-6 w-4 flex justify-center items-center group"
@@ -608,6 +616,9 @@ export default function Login() {
                   } else {
                     nextStep();
                   }
+                } else if (step() === Steps.PrivacyNotice) {
+                  setLoadingButton(false);
+                  nextStep();
                 } else if (step() === Steps.Auth) {
                   if (!routeData.status.data) {
                     await accountEnrollBeginMutation.mutateAsync(undefined);
@@ -740,6 +751,10 @@ export default function Login() {
               <Switch>
                 <Match when={step() === Steps.TermsAndConditions}>
                   <Trans key="login.agree_and_continue" />
+                  <i class="i-ri:arrow-right-line" />
+                </Match>
+                <Match when={step() === Steps.PrivacyNotice}>
+                  <Trans key="login.accept_all_and_continue" />
                   <i class="i-ri:arrow-right-line" />
                 </Match>
                 <Match
