@@ -101,14 +101,14 @@ const ModpackBrowser = () => {
                 placeholder="Type Here"
                 value={infiniteQuery?.query.searchQuery || ""}
                 icon={<div class="i-ri:search-line" />}
-                class="w-full text-darkSlate-50 rounded-full flex-1 max-w-none"
+                class="w-full text-lightSlate-700 rounded-full flex-1 max-w-none"
                 onInput={(e) => {
                   const target = e.target as HTMLInputElement;
                   infiniteQuery?.setQuery({ searchQuery: target.value });
                 }}
               />
               <div class="flex items-center gap-3">
-                <p class="text-darkSlate-50">
+                <p class="text-lightSlate-700">
                   <Trans key="instance.sort_by" />
                 </p>
                 <Dropdown

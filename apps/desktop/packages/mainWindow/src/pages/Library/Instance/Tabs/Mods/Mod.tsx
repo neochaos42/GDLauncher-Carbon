@@ -350,7 +350,7 @@ const Mod = (props: Props) => {
               placement="top"
               class="flex max-w-38 text-ellipsis overflow-hidden"
             >
-              <i class="w-5 h-5 text-darkSlate-500 i-ri:download-2-fill" />
+              <i class="w-5 h-5 text-lightSlate-700 i-ri:download-2-fill" />
             </Tooltip>
           </Show>
           <Show when={props.mod.has_update && !props.isInstanceLocked}>
@@ -360,7 +360,7 @@ const Mod = (props: Props) => {
               <i
                 class="flex w-5 h-5"
                 classList={{
-                  "i-ri:download-2-fill text-darkSlate-500 hover:text-green-500":
+                  "i-ri:download-2-fill text-lightSlate-700 hover:text-green-500":
                     updateModTaskId() === null,
                   "i-ri:loader-4-line animate-spin text-green-500":
                     updateModTaskId() !== null || updateModMutation.isPending
@@ -394,7 +394,7 @@ const Mod = (props: Props) => {
                 <i
                   class="flex w-5 h-5"
                   classList={{
-                    "i-ri:download-2-fill text-darkSlate-500 hover:text-green-500":
+                    "i-ri:download-2-fill text-lightSlate-700 hover:text-green-500":
                       updateModTaskId() === null,
                     "i-ri:loader-4-line animate-spin text-green-500":
                       updateModTaskId() !== null || updateModMutation.isPending
@@ -447,7 +447,7 @@ const Mod = (props: Props) => {
               class="max-w-38 text-ellipsis overflow-hidden"
             >
               <div
-                class="text-2xl text-darkSlate-500 duration-100 ease-in-out i-ri:delete-bin-2-fill"
+                class="text-2xl text-lightSlate-700 duration-100 ease-in-out i-ri:delete-bin-2-fill"
                 onClick={(e) => {
                   e.stopPropagation();
 
@@ -463,7 +463,7 @@ const Mod = (props: Props) => {
           </Show>
           <Show when={!props.isInstanceLocked}>
             <div
-              class="text-2xl text-darkSlate-500 duration-100 ease-in-out i-ri:delete-bin-2-fill transition-color hover:text-red-500"
+              class="text-2xl text-lightSlate-700 duration-100 ease-in-out i-ri:delete-bin-2-fill transition-color hover:text-red-500"
               onClick={(e) => {
                 e.stopPropagation();
 
@@ -484,7 +484,7 @@ const Mod = (props: Props) => {
               onClose={() => setIsHoveringInfoCard(false)}
               content={() => (
                 <div
-                  class="p-4 text-darkSlate-100 bg-darkSlate-900 rounded-lg border-darkSlate-700 border-solid border-1 shadow-md shadow-darkSlate-90 w-110"
+                  class="p-4 text-lightSlate-700 bg-darkSlate-900 rounded-lg border-darkSlate-700 border-solid border-1 shadow-md shadow-darkSlate-90 w-110"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div class="text-xl text-lightSlate-50 font-bold mb-4">
@@ -694,7 +694,7 @@ const Mod = (props: Props) => {
               color="bg-darkSlate-900"
             >
               <div
-                class="text-2xl text-darkSlate-500 duration-100 ease-in-out cursor-pointer i-ri:information-fill transition-color hover:text-lightSlate-50"
+                class="text-2xl text-lightSlate-700 duration-100 ease-in-out cursor-pointer i-ri:information-fill transition-color hover:text-lightSlate-50"
                 classList={{
                   "text-lightSlate-50": isHoveringInfoCard()
                 }}
@@ -712,7 +712,7 @@ const Mod = (props: Props) => {
                 <>
                   <Show when={!props.isInstanceLocked}>
                     <div
-                      class="flex flex-col text-darkSlate-100 bg-darkSlate-900 rounded-lg border-darkSlate-700 border-solid border-1 shadow-md shadow-darkSlate-90"
+                      class="flex flex-col text-lightSlate-700 bg-darkSlate-900 rounded-lg border-darkSlate-700 border-solid border-1 shadow-md shadow-darkSlate-90"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <div class="p-4 text-md text-lightSlate-50 font-bold max-w-50 truncate whitespace-nowrap">
@@ -769,7 +769,7 @@ const Mod = (props: Props) => {
               color="bg-darkSlate-900"
             >
               <div
-                class="text-2xl text-darkSlate-500 duration-100 ease-in-out cursor-pointer transition-color hover:text-lightSlate-50 i-ri:more-2-fill"
+                class="text-2xl text-lightSlate-700 duration-100 ease-in-out cursor-pointer transition-color hover:text-lightSlate-50 i-ri:more-2-fill"
                 classList={{
                   "text-lightSlate-50": isHoveringOptionsCard()
                 }}

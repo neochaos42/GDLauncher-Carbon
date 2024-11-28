@@ -67,7 +67,7 @@ const LogsCollapsable = (props: LogsCollapsableProps) => {
         <For each={sortedLogs()}>
           {(log) => (
             <div
-              class="relative text-darkSlate-100 py-3.5 px-4 hover:bg-darkSlate-700 rounded-md w-full box-border"
+              class="relative text-lightSlate-700 py-3.5 px-4 hover:bg-darkSlate-700 rounded-md w-full box-border"
               onClick={() => {
                 props.setSelectedLog(log.id);
               }}

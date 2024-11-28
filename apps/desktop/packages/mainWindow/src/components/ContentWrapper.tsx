@@ -10,11 +10,9 @@ const ContentWrapper = (props: Props) => {
         classList={{
           "px-6": !props.zeroPadding
         }}
-        style={
-          {
-            // "scrollbar-gutter": "stable"
-          }
-        }
+        style={{
+          "scrollbar-gutter": "stable"
+        }}
       >
         {props.children}
       </div>

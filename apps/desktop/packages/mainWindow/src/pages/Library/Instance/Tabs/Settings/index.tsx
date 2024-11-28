@@ -365,7 +365,7 @@ const Settings = () => {
         }
       >
         <div class="flex w-full justify-between items-center -mt-8">
-          <h5 class="text-lightSlate-800">
+          <h5 class="text-lightSlate-700">
             <Trans key="instance_settings.prepend_global_java_args" />
           </h5>
           <Switch

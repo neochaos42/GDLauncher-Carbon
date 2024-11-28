@@ -364,7 +364,7 @@ const Java = () => {
                                           }
                                         >
                                           <div
-                                            class="text-lightSlate-800 hover:text-red-400 ease-in-out duration-100 text-lg transition-color i-ri:delete-bin-7-fill"
+                                            class="text-lightSlate-700 hover:text-red-400 ease-in-out duration-100 text-lg transition-color i-ri:delete-bin-7-fill"
                                             onClick={() =>
                                               deleteJavaMutation.mutate(java.id)
                                             }
@@ -456,7 +456,7 @@ const Java = () => {
                                   />
                                   <Show when={i() === 1}>
                                     <div
-                                      class="text-lightSlate-800 hover:text-red-400 ease-in-out duration-100 text-lg transition-color i-ri:delete-bin-7-fill"
+                                      class="text-lightSlate-700 hover:text-red-400 ease-in-out duration-100 text-lg transition-color i-ri:delete-bin-7-fill"
                                       onClick={() => {
                                         deleteProfile.mutate(profile.name);
                                       }}
@@ -478,7 +478,7 @@ const Java = () => {
                                               }
                                             >
                                               {(assignment) => (
-                                                <div class="text-lightSlate-800">
+                                                <div class="text-lightSlate-700">
                                                   {assignment}
                                                 </div>
                                               )}
@@ -487,7 +487,7 @@ const Java = () => {
                                         </div>
                                       )}
                                     >
-                                      <div class="i-ri:information-fill text-lg text-lightSlate-800 hover:text-lightSlate-100 ease-in-out duration-100 transition-color" />
+                                      <div class="i-ri:information-fill text-lg text-lightSlate-700 hover:text-lightSlate-100 ease-in-out duration-100 transition-color" />
                                     </Popover>
                                   </Show>
                                 </div>

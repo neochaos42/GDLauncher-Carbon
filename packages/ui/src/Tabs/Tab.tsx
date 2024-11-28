@@ -27,7 +27,7 @@ const tabStyles = cva(
       },
       isSelected: {
         true: "text-lightSlate-50",
-        false: "text-lightSlate-800",
+        false: "text-lightSlate-700",
       },
       noPadding: {
         true: "flex flex-col justify-center",
@@ -79,7 +79,7 @@ const tabContentStyles = cva("font-500 capitalize flex items-center", {
     {
       variant: "block",
       isSelected: false,
-      class: "text-darkSlate-50",
+      class: "text-lightSlate-700",
     },
     {
       variant: "traditional",

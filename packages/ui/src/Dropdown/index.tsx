@@ -34,13 +34,13 @@ const dropdownButton = cva(
         false: "border-0",
       },
       disabled: {
-        true: "text-darkSlate-50 cursor-not-allowed",
+        true: "text-lightSlate-700 cursor-not-allowed",
         false: "",
       },
       menuOpened: {
         true: "text-lightSlate-50 outline outline-offset-2 outline-darkSlate-500 hover:outline-darkSlate-500",
         false:
-          "text-darkSlate-50 hover:text-lightSlate-50 outline-none hover:outline-darkSlate-600",
+          "text-lightSlate-700 hover:text-lightSlate-50 outline-none hover:outline-darkSlate-600",
       },
       rounded: {
         true: "rounded-full",
@@ -227,7 +227,7 @@ const Dropdown = (props: Props) => {
           <Portal>
             <ul
               ref={setMenuRef}
-              class="absolute h-max max-h-60 bottom-0 overflow-y-auto overflow-x-hidden text-darkSlate-50 shadow-md shadow-darkSlate-900 list-none m-0 p-0 z-100 min-w-32 max-w-200"
+              class="absolute h-max max-h-60 bottom-0 overflow-y-auto overflow-x-hidden text-lightSlate-700 shadow-md shadow-darkSlate-900 list-none m-0 p-0 z-100 min-w-32 max-w-200"
               onMouseOut={() => {
                 setFocusIn(false);
               }}
@@ -244,7 +244,7 @@ const Dropdown = (props: Props) => {
               <For each={props.options}>
                 {(option) => (
                   <li
-                    class="first:rounded-t last:rounded-b hover:bg-darkSlate-800 py-2 px-4 block break-all text-darkSlate-50 no-underline w-full box-border"
+                    class="first:rounded-t last:rounded-b hover:bg-darkSlate-800 py-2 px-4 block break-all text-lightSlate-700 no-underline w-full box-border"
                     classList={{
                       "bg-darkSlate-700": selectedValue()?.key !== option.key,
                       "bg-darkSlate-800": selectedValue()?.key === option.key,

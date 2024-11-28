@@ -58,19 +58,19 @@ const Carousel = (props: Props) => {
         "cursor-pointer"
       );
       (scrollLeftArrow as HTMLElement).classList.add("pointer-events-none");
-      scrollLeftArrowIcon?.classList.add("text-darkSlate-500");
+      scrollLeftArrowIcon?.classList.add("text-lightSlate-700");
     } else {
       (scrollLeftArrowContainer as HTMLElement).classList.add("cursor-pointer");
       (scrollLeftArrow as HTMLElement).classList.remove("pointer-events-none");
-      scrollLeftArrowIcon?.classList.remove("text-darkSlate-500");
+      scrollLeftArrowIcon?.classList.remove("text-lightSlate-700");
     }
 
     if (horizontalSlider.scrollLeft === scrollWitdh) {
       (scrollRightArrow as HTMLElement).classList.add("pointer-events-none");
-      scrollRightArrowIcon?.classList.add("text-darkSlate-500");
+      scrollRightArrowIcon?.classList.add("text-lightSlate-700");
     } else {
       (scrollRightArrow as HTMLElement).classList.remove("pointer-events-none");
-      scrollRightArrowIcon?.classList.remove("text-darkSlate-500");
+      scrollRightArrowIcon?.classList.remove("text-lightSlate-700");
     }
   };
 

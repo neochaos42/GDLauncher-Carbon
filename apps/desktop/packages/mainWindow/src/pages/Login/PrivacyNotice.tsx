@@ -6,7 +6,7 @@ const PrivacyNotice = () => {
   const accountsLength = useGlobalStore().currentlySelectedAccount();
 
   return (
-    <div class="flex-1 flex flex-col justify-between text-left gap-4 leading-5 p-4 text-lightSlate-900">
+    <div class="flex-1 flex flex-col justify-between text-left gap-4 leading-5 p-4 text-lightSlate-700">
       <div class="flex flex-col gap-2 overflow-y-auto">
         <Show when={accountsLength}>
           <div>

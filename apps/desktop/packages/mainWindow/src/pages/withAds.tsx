@@ -94,7 +94,7 @@ function withAdsLayout() {
               </div>
               <div class="flex justify-center">
                 <div
-                  class="text-center hover:text-darkSlate-50 transition-colors duration-200 text-darkSlate-200"
+                  class="text-center hover:text-lightSlate-700 transition-colors duration-200 text-lightSlate-700"
                   onClick={() => {
                     modalContext?.openModal({
                       name: "whyAreAdsNeeded"

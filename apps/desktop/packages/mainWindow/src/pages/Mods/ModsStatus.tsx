@@ -9,7 +9,7 @@ const NoModpacksAvailable = () => {
       <div class="flex justify-center items-center flex-col text-center">
         <img src={skull} class="w-16 h-16" />
 
-        <p class="text-darkSlate-50 max-w-100">
+        <p class="text-lightSlate-700 max-w-100">
           <Trans
             key="instance.fetching_no_modpacks_available"
             options={{
@@ -26,7 +26,7 @@ const FetchingModpacks = () => {
   return (
     <div class="flex flex-col justify-center items-center gap-4 p-5 rounded-xl h-56">
       <div class="flex justify-center items-center flex-col text-center">
-        <p class="text-darkSlate-50 max-w-100">
+        <p class="text-lightSlate-700 max-w-100">
           <Trans
             key="instance.fetching_modpacks_text"
             options={{
@@ -44,7 +44,7 @@ const NoMoreModpacks = () => {
   return (
     <div class="flex flex-col justify-center items-center gap-4 p-5 bg-darkSlate-700 rounded-xl h-56">
       <div class="flex justify-center items-center flex-col text-center">
-        <p class="text-darkSlate-50 max-w-100">
+        <p class="text-lightSlate-700 max-w-100">
           <Trans key="instance.fetching_no_more_modpacks" />
         </p>
       </div>
@@ -58,7 +58,7 @@ const ErrorFetchingMods = (props: { error: RSPCError | null }) => {
   return (
     <div class="w-full flex h-full justify-center items-center min-h-90">
       <div class="flex justify-center items-center flex-col text-center">
-        <p class="text-darkSlate-50 max-w-100">
+        <p class="text-lightSlate-700 max-w-100">
           <Trans key="mods.fetching_mods_error" />
           {parsedError().cause[0].display}
         </p>

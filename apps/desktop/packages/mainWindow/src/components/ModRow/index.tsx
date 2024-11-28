@@ -178,22 +178,22 @@ const ModRow = (props: ModRowProps) => {
           />
         </div>
         <div class="flex gap-4 items-center">
-          <div class="flex items-center gap-2 text-darkSlate-100">
-            <i class="text-darkSlate-100 i-ri:time-fill" />
+          <div class="flex items-center gap-2 text-lightSlate-700">
+            <i class="text-lightSlate-700 i-ri:time-fill" />
             <div class="whitespace-nowrap text-sm">
               {formatDistanceToNowStrict(
                 new Date(getDataCreation(props)).getTime()
               )}
             </div>
           </div>
-          <div class="flex gap-2 items-center text-darkSlate-100">
-            <i class="text-darkSlate-100 i-ri:download-fill" />
+          <div class="flex gap-2 items-center text-lightSlate-700">
+            <i class="text-lightSlate-700 i-ri:download-fill" />
             <div class="text-sm whitespace-nowrap">
               {formatDownloadCount(getDownloads(props))}
             </div>
           </div>
-          <div class="flex gap-2 items-center text-darkSlate-100">
-            <i class="text-darkSlate-100 i-ri:user-fill" />
+          <div class="flex gap-2 items-center text-lightSlate-700">
+            <i class="text-lightSlate-700 i-ri:user-fill" />
             <Authors modProps={props} isRowSmall={isRowSmall} />
           </div>
         </div>
@@ -219,7 +219,7 @@ const ModRow = (props: ModRowProps) => {
           <div class="flex flex-col gap-2 w-full z-10 bg-repeat-none">
             <Title />
             <div class="flex justify-between w-full">
-              <p class="text-sm overflow-hidden text-ellipsis m-0 text-darkSlate-50 max-w-full max-h-15">
+              <p class="text-sm overflow-hidden text-ellipsis m-0 text-lightSlate-700 max-w-full max-h-15">
                 <Switch>
                   <Match when={isRowSmall()}>
                     {truncateText(getSummary(props), 60)}

@@ -245,7 +245,7 @@ const LogsContent = (props: Props) => {
         </div>
       </div>
       <Show when={props.isActive}>
-        <div class="z-1 absolute top-20 right-6 w-fit h-10 bg-darkSlate-700 text-lightSlate-800 flex items-center px-4 rounded-3xl">
+        <div class="z-1 absolute top-20 right-6 w-fit h-10 bg-darkSlate-700 text-lightSlate-700 flex items-center px-4 rounded-3xl">
           <div class="bg-red-400 rounded-full text-red-400 w-3 h-3 mr-2 animate-liveCirclePulse" />
           <div>LIVE</div>
         </div>

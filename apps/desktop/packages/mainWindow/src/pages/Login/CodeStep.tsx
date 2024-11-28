@@ -180,7 +180,7 @@ const CodeStep = (props: Props) => {
             </div>
           )}
         >
-          <div class="flex items-center text-darkSlate-50 hover:text-lightSlate-50 transition-color duration-75 text-sm">
+          <div class="flex items-center text-lightSlate-700 hover:text-lightSlate-50 transition-color duration-75 text-sm">
             <div>
               <Trans key="login.need_help" />
             </div>
@@ -203,7 +203,7 @@ const CodeStep = (props: Props) => {
           </Show>
         </div>
         <Show when={!expired()}>
-          <p class="text-darkSlate-50 text-sm">
+          <p class="text-lightSlate-700 text-sm">
             <span class="text-lightSlate-500 mr-1">{countDown()}</span>
             <Trans key="login.before_expiring" />
           </p>
@@ -216,7 +216,7 @@ const CodeStep = (props: Props) => {
         class="flex flex-col justify-center items-center"
         classList={{ "opacity-0": expired() }}
       >
-        <p class="text-lightSlate-100 font-bold">
+        <p class="text-lightSlate-700 font-bold">
           <Trans key="login.enter_code_in_browser" />
         </p>
         <Button
@@ -247,7 +247,7 @@ const CodeStep = (props: Props) => {
         </p>
       </div>
       <div class="flex flex-col gap-2" classList={{ "opacity-0": !loading() }}>
-        <span class="text-xs text-darkSlate-100">
+        <span class="text-xs text-lightSlate-700">
           <Switch>
             <Match when={(routeData.status.data as any)?.pollingCode}>
               <Trans key="login.polling_microsoft_auth" />

@@ -640,7 +640,7 @@ const Custom = (props: Pick<ModalProps, "data">) => {
                     <div
                       class="flex justify-between w-full"
                       classList={{
-                        "text-darkSlate-500": Boolean(
+                        "text-lightSlate-700": Boolean(
                           !v.hasModloader && loader()
                         )
                       }}
@@ -729,7 +729,7 @@ const Custom = (props: Pick<ModalProps, "data">) => {
             <For each={modloaders}>
               {(modloader) => (
                 <div
-                  class="px-3 py-2 bg-darkSlate-800 rounded-lg border-box text-darkSlate-50 hover:text-lightSlate-50"
+                  class="px-3 py-2 bg-darkSlate-800 rounded-lg border-box text-lightSlate-700 hover:text-lightSlate-50"
                   classList={{
                     "hover:outline-darkSlate-600 outline-none":
                       loader() !== modloader.key,

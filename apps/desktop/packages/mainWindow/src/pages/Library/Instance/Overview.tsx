@@ -205,7 +205,7 @@ const Overview = () => {
 
       <Show when={routeData.instanceDetails.data?.notes}>
         <div class="flex flex-col justify-between gap-2 p-5 bg-darkSlate-700 rounded-xl w-full items-start box-border w-59">
-          <div class="text-darkSlate-50 uppercase">
+          <div class="text-lightSlate-700 uppercase">
             <Trans
               key="instance.notes"
               options={{

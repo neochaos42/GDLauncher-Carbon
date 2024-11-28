@@ -8,8 +8,8 @@ const ManualStep = (props: StepsProps) => {
       <div class="flex flex-col justify-between w-full h-full">
         <div class="flex flex-col justify-center items-center h-13 py-4 border-dashed border-2 border-primary-500">
           <div class="flex flex-col justify-center items-center gap-2">
-            <div class="text-darkSlate-500 text-xl w-6 i-ri:folder-open-fill" />
-            <p class="m-0 text-darkSlate-500">
+            <div class="text-lightSlate-700 text-xl w-6 i-ri:folder-open-fill" />
+            <p class="m-0 text-lightSlate-700">
               <Trans
                 key="java.select_java_zip"
                 options={{
@@ -20,7 +20,7 @@ const ManualStep = (props: StepsProps) => {
             </p>
           </div>
         </div>
-        <p class="text-darkSlate-500 text-center">
+        <p class="text-lightSlate-700 text-center">
           <Trans
             key="java.select_required_java_text"
             options={{

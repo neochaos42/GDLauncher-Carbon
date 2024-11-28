@@ -211,7 +211,7 @@ const ModDetails = (props: ModalProps) => {
                           <h1 class="m-0 h-9">{getName(modDetails())}</h1>
                         </div>
                         <div class="flex flex-col lg:flex-row justify-between cursor-default">
-                          <div class="flex flex-col lg:flex-row text-darkSlate-50 gap-1 items-start lg:items-center lg:gap-0">
+                          <div class="flex flex-col lg:flex-row text-lightSlate-700 gap-1 items-start lg:items-center lg:gap-0">
                             <div class="p-0 lg:pr-4 border-0 lg:border-r-2 border-darkSlate-500">
                               {getLatestVersion(modDetails())}
                             </div>

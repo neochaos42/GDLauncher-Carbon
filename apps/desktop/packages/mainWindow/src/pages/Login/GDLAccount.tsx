@@ -115,7 +115,7 @@ const GDLAccount = (props: Props) => {
                 }}
               />
             </h2>
-            <p class="text-lightSlate-500 text-md">
+            <p class="text-lightSlate-700 text-md">
               <Trans key="login.gdlauncher_account_description" />
             </p>
           </div>
@@ -129,7 +129,7 @@ const GDLAccount = (props: Props) => {
               defaultOpened={false}
               title={t("login.what_is_a_gdlauncher_account")}
             >
-              <p class="text-lightSlate-500 text-md">
+              <p class="text-lightSlate-700 text-md">
                 <Trans key="login.what_is_a_gdlauncher_account_text" />
               </p>
             </Collapsable>
@@ -137,7 +137,7 @@ const GDLAccount = (props: Props) => {
               defaultOpened={false}
               title={t("login.how_does_it_work")}
             >
-              <p class="text-lightSlate-500 text-md">
+              <p class="text-lightSlate-700 text-md">
                 <Trans
                   key="login.how_does_it_work_text"
                   options={{
@@ -154,7 +154,7 @@ const GDLAccount = (props: Props) => {
               defaultOpened={false}
               title={t("login.what_if_i_lose_access_to_my_microsoft_account")}
             >
-              <p class="text-lightSlate-500 text-md">
+              <p class="text-lightSlate-700 text-md">
                 <Trans key="login.what_if_i_lose_access_to_my_microsoft_account_text" />
               </p>
             </Collapsable>
@@ -162,7 +162,7 @@ const GDLAccount = (props: Props) => {
               defaultOpened={false}
               title={t("login.what_happens_if_i_skip_the_account_creation")}
             >
-              <p class="text-lightSlate-500 text-md">
+              <p class="text-lightSlate-700 text-md">
                 <Trans key="login.what_happens_if_i_skip_the_account_creation_text" />
               </p>
             </Collapsable>

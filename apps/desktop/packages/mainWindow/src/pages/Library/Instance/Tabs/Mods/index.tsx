@@ -110,7 +110,7 @@ const Mods = () => {
       <div class="h-full w-full flex justify-center items-center min-h-90">
         <div class="flex flex-col justify-center items-center text-center">
           <img src={skull} class="w-16 h-16" />
-          <p class="text-darkSlate-50 max-w-100">
+          <p class="text-lightSlate-700 max-w-100">
             <Trans key="instance.no_mods_text" />
           </p>
           <Button
@@ -150,12 +150,12 @@ const Mods = () => {
       >
         <div class="flex items-center h-full">
           <div
-            class="flex items-center text-darkSlate-50 hover:text-lightSlate-50 h-full px-6 mr-2"
+            class="flex items-center text-lightSlate-700 hover:text-lightSlate-50 h-full px-6 mr-2"
             onClick={() => setSelectedModsMap(reconcile({}))}
           >
             <div class="text-2xl i-ri:close-fill" />
           </div>
-          <div class="text-darkSlate-50">
+          <div class="text-lightSlate-700">
             <Trans
               key="instance_selected_mods_count"
               options={{
@@ -230,7 +230,7 @@ const Mods = () => {
               placement="top"
               class="max-w-38 text-ellipsis overflow-hidden"
             >
-              <div class="flex items-center gap-2 cursor-pointer text-darkSlate-50">
+              <div class="flex items-center gap-2 cursor-pointer text-lightSlate-700">
                 <span class="text-2xl i-ri:delete-bin-2-fill" />
                 <Trans key="instance.delete_mod" />
               </div>
@@ -238,7 +238,7 @@ const Mods = () => {
           </Show>
           <Show when={!isInstanceLocked()}>
             <div
-              class="flex items-center gap-2 cursor-pointer text-darkSlate-50 hover:text-red-500 duration-100 ease-in-out transition"
+              class="flex items-center gap-2 cursor-pointer text-lightSlate-700 hover:text-red-500 duration-100 ease-in-out transition"
               onClick={() => {
                 Object.keys(selectedModsMap).forEach((mod) => {
                   deleteModMutation.mutate({
@@ -261,7 +261,7 @@ const Mods = () => {
                 placement="top"
                 class="max-w-38 text-ellipsis overflow-hidden"
               >
-                <div class="flex items-center gap-2 text-darkSlate-50">
+                <div class="flex items-center gap-2 text-lightSlate-700">
                   <span class="text-2xl i-ri:download-2-fill" />
                   <Trans key="instance.update_mods" />
                 </div>
@@ -269,7 +269,7 @@ const Mods = () => {
             </Show>
             <Show when={!isInstanceLocked()}>
               <div
-                class="flex items-center gap-2 cursor-pointer text-darkSlate-50 hover:text-green-500 duration-100 ease-in-out transition"
+                class="flex items-center gap-2 cursor-pointer text-lightSlate-700 hover:text-green-500 duration-100 ease-in-out transition"
                 onClick={() => {
                   updateSelectedMods();
                 }}
@@ -312,11 +312,11 @@ const Mods = () => {
               onInput={(e) => setFilter(e.target.value)}
               placeholder={t("instance.mods.search")}
               icon={<div class="i-ri:search-line" />}
-              class="text-darkSlate-50 rounded-full"
+              class="text-lightSlate-700 rounded-full"
             />
           </div>
           <div class="flex items-center gap-4">
-            {/* <p class="text-darkSlate-50">
+            {/* <p class="text-lightSlate-700">
               <Trans key="instance.sort_by" />
             </p>
             <Dropdown
@@ -328,7 +328,7 @@ const Mods = () => {
               rounded
             /> */}
             {/* <div
-              class="flex items-center gap-2 cursor-pointer duration-100 ease-in-out transition hover:text-lightSlate-50 text-darkSlate-50"
+              class="flex items-center gap-2 cursor-pointer duration-100 ease-in-out transition hover:text-lightSlate-50 text-lightSlate-700"
               onClick={() => {
                 openFolderMutation.mutate({
                   folder: "Mods",
@@ -384,7 +384,7 @@ const Mods = () => {
                 class="max-w-38 text-ellipsis overflow-hidden"
               >
                 <div
-                  class="flex items-center gap-2 duration-100 ease-in-out transition hover:text-green-500 text-darkSlate-50"
+                  class="flex items-center gap-2 duration-100 ease-in-out transition hover:text-green-500 text-lightSlate-700"
                   onClick={() => {
                     if (isInstanceLocked()) return;
 
@@ -410,7 +410,7 @@ const Mods = () => {
               class="max-w-38 text-ellipsis overflow-hidden"
             >
               <div
-                class="flex items-center gap-2 cursor-pointer duration-100 ease-in-out transition hover:text-lightSlate-50 text-darkSlate-50"
+                class="flex items-center gap-2 cursor-pointer duration-100 ease-in-out transition hover:text-lightSlate-50 text-lightSlate-700"
                 onClick={() => {
                   openFolderMutation.mutate({
                     folder: "Mods",

@@ -328,7 +328,7 @@ const Accounts = () => {
                   <div class="w-4 h-4 i-ri:alert-fill" />
                   <Trans key="settings:danger_zone" />
                 </div>
-                <div class="flex items-center justify-between gap-12 text-lightSlate-800">
+                <div class="flex items-center justify-between gap-12 text-lightSlate-700">
                   <div>
                     <Trans key="settings:request_account_deletion_description" />
                   </div>

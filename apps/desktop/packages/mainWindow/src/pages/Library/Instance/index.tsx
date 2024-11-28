@@ -512,7 +512,7 @@ const Instance = () => {
                         </h1>
                         <Show when={!editableName()}>
                           <div
-                            class="ease-in-out transition-color duration-100 i-ri:pencil-fill hover:text-darkSlate-50"
+                            class="ease-in-out transition-color duration-100 i-ri:pencil-fill hover:text-lightSlate-700"
                             onClick={() => setEditableName(true)}
                           />
                         </Show>

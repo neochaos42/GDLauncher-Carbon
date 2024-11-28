@@ -64,14 +64,14 @@ const Version = (props: Props) => {
           when={props.mainFileId === props.version.id}
           fallback={<Active />}
         >
-          <div class="group text-darkSlate-300 transition ease-in-out flex items-center gap-2 cursor-pointer hover:text-darkSlate-100">
+          <div class="group text-darkSlate-300 transition ease-in-out flex items-center gap-2 cursor-pointer hover:text-lightSlate-700">
             <Trans
               key="instance.switch_version"
               options={{
                 defaultValue: "Switch Version"
               }}
             />
-            <div class="text-darkSlate-300 text-2xl i-ri:download-2-line group-hover:text-darkSlate-100" />
+            <div class="text-darkSlate-300 text-2xl i-ri:download-2-line group-hover:text-lightSlate-700" />
           </div>
         </Show>
       </div>

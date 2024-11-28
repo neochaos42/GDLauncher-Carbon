@@ -97,7 +97,7 @@ const FeaturedModpackTile = () => {
                     <div class="text-xl font-bold text-nowrap">
                       {hexingTales()?.data.name}
                     </div>
-                    <div class="text-sm text-darkSlate-50">
+                    <div class="text-sm text-lightSlate-700">
                       <For each={hexingTales()?.data.authors}>
                         {(v) => <span>{v.name}</span>}
                       </For>

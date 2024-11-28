@@ -335,7 +335,7 @@ const Modpack = () => {
                     </Switch>
                   </div>
                   <div class="flex flex-col lg:flex-row justify-between cursor-default">
-                    <div class="flex flex-col lg:flex-row text-darkSlate-50 items-start gap-1 lg:items-center lg:gap-0">
+                    <div class="flex flex-col lg:flex-row text-lightSlate-700 items-start gap-1 lg:items-center lg:gap-0">
                       <div class="p-0 border-0 lg:border-r-2 border-darkSlate-500 lg:pr-2">
                         <Switch>
                           <Match when={!isFetching()}>

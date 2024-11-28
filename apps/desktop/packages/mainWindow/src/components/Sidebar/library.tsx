@@ -101,7 +101,7 @@ const Sidebar = () => {
                   inputRef?.focus();
                 }}
               >
-                <div class="duration-100 ease-in-out transition text-darkSlate-500 i-ri:search-line group-hover:text-darkSlate-50" />
+                <div class="duration-100 ease-in-out transition text-lightSlate-700 i-ri:search-line group-hover:text-lightSlate-700" />
               </div>
             }
           >
@@ -212,7 +212,7 @@ const Sidebar = () => {
                 }}
               />
               <Show when={isSidebarOpened()}>
-                <p class="text-darkSlate-50 text-center text-xs max-w-50">
+                <p class="text-lightSlate-700 text-center text-xs max-w-50">
                   <Trans key="instance.no_instances_text" />
                 </p>
               </Show>

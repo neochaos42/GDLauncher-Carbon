@@ -83,7 +83,7 @@ const OverviewPopover = (props: {
         />
       </Show>
       <div class="px-4 z-30">
-        <p class="m-0 text-sm text-darkSlate-50 overflow-hidden text-ellipsis">
+        <p class="m-0 text-sm text-lightSlate-700 overflow-hidden text-ellipsis">
           {getSummary(props.data)}
         </p>
         <div class="flex gap-2 scrollbar-hide mt-4">
@@ -119,7 +119,7 @@ const OverviewPopover = (props: {
           </For>
         </div>
         <div class="flex flex-col gap-2 items-start mt-4">
-          <div class="flex gap-2 items-start text-darkSlate-100">
+          <div class="flex gap-2 items-start text-lightSlate-700">
             <span class="flex gap-2 items-center">
               <div class="text-lightSlate-100 w-4 h-4 i-ri:user-fill" />
               <p class="m-0 text-lightSlate-100 text-sm">
@@ -128,7 +128,7 @@ const OverviewPopover = (props: {
             </span>
             <Authors data={props.data} />
           </div>
-          <div class="flex gap-2 items-center text-darkSlate-100">
+          <div class="flex gap-2 items-center text-lightSlate-700">
             <div class="text-lightSlate-100 i-ri:time-fill" />
             <p class="m-0 text-lightSlate-100 text-sm">
               <Trans key="modpack.last_updated" />
@@ -144,7 +144,7 @@ const OverviewPopover = (props: {
               />
             </div>
           </div>
-          <div class="flex gap-2 items-center text-darkSlate-100">
+          <div class="flex gap-2 items-center text-lightSlate-700">
             <div class="text-lightSlate-100 i-ri:download-fill" />
             <p class="m-0 text-lightSlate-100 text-sm">
               <Trans key="modpack.total_download" />
@@ -153,7 +153,7 @@ const OverviewPopover = (props: {
               {formatDownloadCount(getDownloads(props.data))}
             </div>
           </div>
-          <div class="flex gap-2 items-center text-darkSlate-100">
+          <div class="flex gap-2 items-center text-lightSlate-700">
             <div class="text-lightSlate-100 i-ri:gamepad-fill" />
             <p class="m-0 text-lightSlate-100 text-sm">
               <Trans key="modpack.mcVersion" />

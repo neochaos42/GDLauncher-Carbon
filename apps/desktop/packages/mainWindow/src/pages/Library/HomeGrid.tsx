@@ -344,7 +344,7 @@ const HomeGrid = () => {
         >
           <div class="w-full h-full flex flex-col justify-center items-center mt-12">
             <img src={skull} class="w-16 h-16" />
-            <p class="text-darkSlate-50 text-center max-w-100">
+            <p class="text-lightSlate-700 text-center max-w-100">
               <Trans key="instance.no_instances_text" />
             </p>
           </div>
@@ -441,7 +441,7 @@ const HomeGrid = () => {
                           }}
                         />
                         <div
-                          class="w-6 h-6 text-darkSlate-50 hover:text-lightSlate-50"
+                          class="w-6 h-6 text-lightSlate-700 hover:text-lightSlate-50"
                           classList={{
                             "i-ri:sort-alphabet-asc":
                               globalStore.settings.data?.instancesSortByAsc,
@@ -478,7 +478,7 @@ const HomeGrid = () => {
                           }}
                         />
                         <div
-                          class="w-6 h-6 text-darkSlate-50 hover:text-lightSlate-50"
+                          class="w-6 h-6 text-lightSlate-700 hover:text-lightSlate-50"
                           classList={{
                             "i-ri:sort-alphabet-asc":
                               globalStore.settings.data?.instancesGroupByAsc,
@@ -498,7 +498,7 @@ const HomeGrid = () => {
                     </div>
                     <div class="flex justify-end">
                       <span
-                        class="text-darkSlate-50 hover:text-lightSlate-50 mt-4"
+                        class="text-lightSlate-700 hover:text-lightSlate-50 mt-4"
                         onClick={() => {
                           settingsMutation.mutate({
                             instancesSortBy: {

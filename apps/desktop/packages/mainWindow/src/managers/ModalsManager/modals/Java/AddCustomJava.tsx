@@ -32,7 +32,7 @@ const AddCustomJava = (props: ModalProps) => {
               icon={
                 <Switch>
                   <Match when={validateJavaPath.isPending}>
-                    <div class="flex i-ri:loader-4-line animate-spin text-darkSlate-50" />
+                    <div class="flex i-ri:loader-4-line animate-spin text-lightSlate-700" />
                   </Match>
                   <Match when={value()}>
                     <Switch>

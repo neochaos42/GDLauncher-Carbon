@@ -126,7 +126,7 @@ const NoResourcePacks = () => {
     <div class="h-full min-h-90 w-full flex justify-center items-center">
       <div class="flex flex-col justify-center items-center text-center">
         <img src={skull} class="w-16 h-16" />
-        <p class="text-darkSlate-50 max-w-100">
+        <p class="text-lightSlate-700 max-w-100">
           <Trans
             key="instance.no_resource_packs_text"
             options={{
@@ -157,11 +157,11 @@ const ResourcePacks = () => {
           <Input
             placeholder="Type Here"
             icon={<div class="i-ri:search-line" />}
-            class="w-full rounded-full text-darkSlate-50"
+            class="w-full rounded-full text-lightSlate-700"
             inputClass=""
           />
           <div class="flex gap-3 items-center">
-            <p class="text-darkSlate-50">
+            <p class="text-lightSlate-700">
               <Trans
                 key="instance.sort_by"
                 options={{
@@ -187,7 +187,7 @@ const ResourcePacks = () => {
             />
           </Button>
         </div>
-        <div class="flex justify-between text-darkSlate-50 z-10 mb-6">
+        <div class="flex justify-between text-lightSlate-700 z-10 mb-6">
           <div class="flex gap-4">
             <div class="flex items-center gap-2 cursor-pointer">
               <Checkbox checked={true} disabled={false} />

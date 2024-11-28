@@ -43,7 +43,7 @@ const NoMods = () => {
     <div class="h-full min-h-90 w-full flex justify-center items-center">
       <div class="flex flex-col justify-center items-center text-center">
         <img src={pictureImage} class="w-16 h-16" />
-        <p class="text-darkSlate-50 max-w-100">
+        <p class="text-lightSlate-700 max-w-100">
           <Trans
             key="instance.no_screenshots_text"
             options={{
@@ -105,7 +105,7 @@ const Screenshots = () => {
   return (
     <div>
       <div class="flex flex-col sticky top-30 bg-darkSlate-800 z-10 pt-10 transition-all duration-100 ease-in-out">
-        <div class="flex justify-between text-darkSlate-50 z-10 mb-5">
+        <div class="flex justify-between text-lightSlate-700 z-10 mb-5">
           <div class="flex gap-4">
             <div class="flex items-center gap-2 cursor-pointer">
               <Checkbox checked={true} disabled={false} />
@@ -167,10 +167,10 @@ const Screenshots = () => {
                       <div class="flex flex-col">
                         <img class="w-60 h-32" src={screenshot.img} />
                         <div class="flex justify-between items-center mt-2">
-                          <p class="m-0 text-darkSlate-50 text-md">
+                          <p class="m-0 text-lightSlate-700 text-md">
                             {format(new Date(screenshot.date), "dd-MM-yyyy")}
                           </p>
-                          <div class="text-darkSlate-50 i-ri:more-2-fill" />
+                          <div class="text-lightSlate-700 i-ri:more-2-fill" />
                         </div>
                       </div>
                     )}

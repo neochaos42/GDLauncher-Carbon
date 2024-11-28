@@ -62,7 +62,7 @@ export const DeviceCode = (props: Props) => {
         class="text-2xl font-normal"
         classList={{
           "text-lightSlate-50": !props.expired,
-          "text-darkSlate-50": props.expired
+          "text-lightSlate-700": props.expired
         }}
       >
         {props.value}
@@ -75,7 +75,7 @@ export const DeviceCode = (props: Props) => {
           "i-ri:refresh-line": props.expired,
           "animate-spin": refreshing(),
           "text-lightSlate-50": props.expired,
-          "text-darkSlate-50": !props.expired
+          "text-lightSlate-700": !props.expired
         }}
         onClick={async () => {
           if (props.expired) {

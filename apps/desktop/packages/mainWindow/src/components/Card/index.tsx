@@ -50,7 +50,7 @@ const Card = (props: Props) => {
         <p class="m-0 text-lightSlate-50 font-bold text-xl whitespace-nowrap">
           {mergedProps.text}
         </p>
-        <h5 class="m-0 text-darkSlate-50 font-medium uppercase">
+        <h5 class="m-0 text-lightSlate-700 font-medium uppercase">
           {mergedProps.title}
         </h5>
       </div>

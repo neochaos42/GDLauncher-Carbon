@@ -56,7 +56,7 @@ CREATE UNIQUE INDEX "AppConfiguration_id_key" ON "AppConfiguration"("id");
 
 -- reset since azure app id changed
 UPDATE "AppConfiguration" SET "activeAccountUuid" = NULL;
-TRUNCATE TABLE "Account";
+DELETE FROM "Account";
 
 PRAGMA foreign_key_check;
 PRAGMA foreign_keys=ON;

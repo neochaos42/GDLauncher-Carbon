@@ -13,7 +13,7 @@ const NoVersions = () => {
     <div class="h-full min-h-90 w-full flex justify-center items-center">
       <div class="flex flex-col justify-center items-center text-center">
         <img src={skull} class="w-16 h-16" />
-        <p class="text-darkSlate-50 max-w-100">
+        <p class="text-lightSlate-700 max-w-100">
           <Trans
             key="modpack.no_versions_text"
             options={{

@@ -267,7 +267,7 @@ const Tile = (props: Props) => {
                         <div
                           class="w-6 h-6"
                           classList={{
-                            "text-darkSlate-300 hover:text-lightSlate-100 duration-100 ease-in-out i-ri:file-copy-2-fill":
+                            "text-lightSlate-700 hover:text-lightSlate-100 duration-100 ease-in-out i-ri:file-copy-2-fill":
                               !copiedError(),
                             "text-green-400 i-ri:checkbox-circle-fill":
                               copiedError()

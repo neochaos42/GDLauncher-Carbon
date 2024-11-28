@@ -30,7 +30,7 @@ export const Tag = (props: Props) => {
       </Show>
       <Show when={props.img && typeof props.img !== "string"}>{props.img}</Show>
       <Show when={props.name}>
-        <p class="m-0 text-darkSlate-100 whitespace-nowrap">{props.name}</p>
+        <p class="m-0 text-lightSlate-700 whitespace-nowrap">{props.name}</p>
       </Show>
       <Show when={mergedProps.type === "default"}>
         <div

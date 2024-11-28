@@ -143,7 +143,7 @@ const ExploreVersionsNavbar = (props: Props) => {
             />
             <div class="flex flex-col justify-between">
               <div>{instanceDetails.data?.name}</div>
-              <div class="flex text-darkSlate-50 gap-2">
+              <div class="flex text-lightSlate-700 gap-2">
                 <Checkbox
                   checked={overrideEnabled()}
                   onChange={setOverrideEnabled}
@@ -156,7 +156,7 @@ const ExploreVersionsNavbar = (props: Props) => {
         <Match
           when={props.type === "mod" && (!instanceId || isNaN(instanceId()))}
         >
-          <div class="flex items-center text-darkSlate-100">
+          <div class="flex items-center text-lightSlate-700">
             <Trans key="rowcontainer.no_instance_selected" />
           </div>
         </Match>

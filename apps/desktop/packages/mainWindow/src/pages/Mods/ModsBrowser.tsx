@@ -154,7 +154,7 @@ const ModsBrowser = () => {
                       type="outline"
                       size="small"
                       icon={
-                        <i class="text-darkSlate-50 cursor-pointer hover:text-lightSlate-50 transition i-ri:arrow-left-s-line transition-colors" />
+                        <i class="text-lightSlate-700 cursor-pointer hover:text-lightSlate-50 transition i-ri:arrow-left-s-line transition-colors" />
                       }
                     >
                       <Trans key="instance.go_to_installed_mods" />
@@ -173,7 +173,7 @@ const ModsBrowser = () => {
                     <h2 class="m-0">{instanceDetails.data?.name}</h2>
                   </div>
                   <i
-                    class="w-5 h-5 i-ri:close-fill text-darkSlate-50 cursor-pointer hover:text-lightSlate-50 transition-colors"
+                    class="w-5 h-5 i-ri:close-fill text-lightSlate-700 cursor-pointer hover:text-lightSlate-50 transition-colors"
                     onClick={() => {
                       setSearchParams({
                         instanceId: undefined
@@ -192,7 +192,7 @@ const ModsBrowser = () => {
                 <Input
                   placeholder={t("mods.search_mods")}
                   icon={<div class="i-ri:search-line" />}
-                  class="w-full text-darkSlate-50 rounded-full flex-1 max-w-none"
+                  class="w-full text-lightSlate-700 rounded-full flex-1 max-w-none"
                   value={infiniteQuery.query.searchQuery || ""}
                   onInput={(e) => {
                     const target = e.target as HTMLInputElement;
@@ -200,7 +200,7 @@ const ModsBrowser = () => {
                   }}
                 />
                 <div class="flex items-center gap-3">
-                  <p class="text-darkSlate-50">
+                  <p class="text-lightSlate-700">
                     <Trans key="instance.sort_by" />
                   </p>
                   <Dropdown

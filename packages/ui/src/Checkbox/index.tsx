@@ -78,7 +78,7 @@ function Checkbox(props: Props) {
             class="i-ri:check-line text-lightSlate-50 animation-pulse"
             classList={{
               "text-lightSlate-50": !props.disabled,
-              "text-darkSlate-500": props.disabled,
+              "text-lightSlate-700": props.disabled,
             }}
           />
         </Show>

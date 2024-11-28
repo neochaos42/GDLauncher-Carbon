@@ -134,7 +134,7 @@ const JavaPathAutoComplete = (props: Props) => {
         icon={
           <Switch>
             <Match when={createCustomJavaVersionMutation.isPending}>
-              <div class="flex i-ri:loader-4-line animate-spin text-darkSlate-50" />
+              <div class="flex i-ri:loader-4-line animate-spin text-lightSlate-700" />
             </Match>
             <Match when={javaComponent()}>
               <Switch>
@@ -147,7 +147,7 @@ const JavaPathAutoComplete = (props: Props) => {
               </Switch>
             </Match>
             <Match when={shouldSuggestCreation()}>
-              <div class="flex i-ri:add-fill text-darkSlate-50" />
+              <div class="flex i-ri:add-fill text-lightSlate-700" />
             </Match>
           </Switch>
         }

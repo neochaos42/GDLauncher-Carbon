@@ -98,7 +98,7 @@ const RowContainer = (props: Props & AdditionalProps) => {
               onClose={() => setIsHoveringInfoCard(false)}
               content={() => (
                 <div
-                  class="bg-darkSlate-900 rounded-lg shadow-md p-4 text-darkSlate-100 border-darkSlate-700 border-solid border-1 shadow-darkSlate-90 w-110"
+                  class="bg-darkSlate-900 rounded-lg shadow-md p-4 text-lightSlate-700 border-darkSlate-700 border-solid border-1 shadow-darkSlate-90 w-110"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div class="text-lightSlate-50 font-bold mb-4 text-xl">
@@ -163,7 +163,7 @@ const RowContainer = (props: Props & AdditionalProps) => {
               color="bg-darkSlate-900"
             >
               <div
-                class="duration-100 ease-in-out cursor-pointer hover:text-lightSlate-50 text-2xl text-darkSlate-500 i-ri:information-fill transition-color"
+                class="duration-100 ease-in-out cursor-pointer hover:text-lightSlate-50 text-2xl text-lightSlate-700 i-ri:information-fill transition-color"
                 classList={{
                   "text-lightSlate-50": isHoveringInfoCard()
                 }}

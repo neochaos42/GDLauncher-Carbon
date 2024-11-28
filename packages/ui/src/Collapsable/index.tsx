@@ -28,13 +28,13 @@ const Collapsable = (props: Props) => {
         }}
       >
         <div
-          class="transition ease-in-out i-ri:arrow-down-s-line min-w-4 min-h-4 text-darkSlate-100"
+          class="transition ease-in-out i-ri:arrow-down-s-line min-w-4 min-h-4 text-lightSlate-700"
           classList={{
             "-rotate-180": !opened(),
           }}
         />
         <p
-          class="m-0 text-darkSlate-100 flex items-center uppercase text-ellipsis max-w-full text-left"
+          class="m-0 text-lightSlate-700 flex items-center uppercase text-ellipsis max-w-full text-left"
           classList={{
             "text-md": props.size !== "small",
             "text-xs": props.size === "small",

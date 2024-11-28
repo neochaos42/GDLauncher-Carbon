@@ -50,10 +50,10 @@ const SiderbarWrapper = (props: Props) => {
           <Show
             when={!isSidebarOpened()}
             fallback={
-              <span class="text-darkSlate-500 text-3xl i-ri:arrow-left-s-line" />
+              <span class="text-lightSlate-700 text-3xl i-ri:arrow-left-s-line" />
             }
           >
-            <span class="text-darkSlate-500 text-3xl i-ri:arrow-right-s-line" />
+            <span class="text-lightSlate-700 text-3xl i-ri:arrow-right-s-line" />
           </Show>
         </div>
       </Show>

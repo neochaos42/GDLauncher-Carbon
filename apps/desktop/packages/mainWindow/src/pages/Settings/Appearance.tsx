@@ -82,7 +82,7 @@ const Appearance = () => {
                       />
                     </div>
                     <div class="flex gap-2 items-center w-full box-border px-2 py-4 justify-start">
-                      <p class="m-0 text-darkSlate-50">
+                      <p class="m-0 text-lightSlate-700">
                         <Trans key={`settings:theme_${theme}`} />
                       </p>
                     </div>
