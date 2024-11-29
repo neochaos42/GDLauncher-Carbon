@@ -1,21 +1,19 @@
-use std::sync::Arc;
-
-use axum::extract::{Query, State};
-use chrono::{DateTime, Utc};
-use rspc::RouterBuilder;
-use serde::{Deserialize, Serialize};
-use specta::Type;
-
 use crate::api::keys::account::*;
 use crate::api::router::router;
 use crate::domain::account as domain;
-use crate::error::FeError;
+use crate::error::{AxumError, FeError};
 use crate::managers::account::api::XboxError;
 use crate::managers::account::gdl_account::{
     GDLAccountStatus, GDLUser, RegisterAccountBody, RequestGDLAccountDeletionError,
     RequestNewEmailChangeError, RequestNewVerificationTokenError,
 };
 use crate::managers::{account, App, AppInner};
+use axum::extract::{Query, State};
+use chrono::{DateTime, Utc};
+use rspc::RouterBuilder;
+use serde::{Deserialize, Serialize};
+use specta::Type;
+use std::sync::Arc;
 
 pub(super) fn mount() -> RouterBuilder<App> {
     router! {
@@ -123,14 +121,6 @@ pub(super) fn mount() -> RouterBuilder<App> {
 
             Ok(FERequestDeletionStatus::from(result))
         }
-
-        query WAIT_FOR_ACCOUNT_VALIDATION[app, uuid: String] {
-            app.account_manager()
-                .wait_for_account_validation(uuid)
-                .await?;
-
-            Ok(())
-        }
     }
 }
 
@@ -140,18 +130,38 @@ pub(super) fn mount_axum_router() -> axum::Router<Arc<AppInner>> {
         uuid: String,
     }
 
-    axum::Router::new().route(
-        "/headImage",
-        axum::routing::get(
-            |State(app): State<Arc<AppInner>>, Query(query): Query<HeadQuery>| async move {
-                app.account_manager()
-                    .skin_manager()
-                    .make_head(query.uuid)
-                    .await
-                    .map_err(|e| FeError::from_anyhow(&e).make_axum())
-            },
-        ),
-    )
+    #[derive(Deserialize)]
+    struct WaitForVerificationQuery {
+        uuid: String,
+    }
+
+    axum::Router::new()
+        .route(
+            "/headImage",
+            axum::routing::get(
+                |State(app): State<Arc<AppInner>>, Query(query): Query<HeadQuery>| async move {
+                    app.account_manager()
+                        .skin_manager()
+                        .make_head(query.uuid)
+                        .await
+                        .map_err(|e| FeError::from_anyhow(&e).make_axum())
+                },
+            ),
+        )
+        .route(
+            "/awaitForAccountVerification",
+            axum::routing::get(
+                |State(app): State<Arc<AppInner>>,
+                 Query(query): Query<WaitForVerificationQuery>| async move {
+                    app.account_manager()
+                        .wait_for_account_verification(query.uuid)
+                        .await
+                        .map_err(|e| FeError::from_anyhow(&e).make_axum())?;
+
+                    Ok::<_, AxumError>("ok".to_string())
+                },
+            ),
+        )
 }
 
 #[derive(Type, Serialize)]

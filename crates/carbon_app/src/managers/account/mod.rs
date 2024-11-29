@@ -6,6 +6,7 @@ use crate::{
     db::{self, read_filters::StringFilter},
     managers::account::{api::GetProfileError, enroll::InvalidateCtx},
 };
+use anyhow::{anyhow, bail};
 use anyhow::{ensure, Context};
 use async_trait::async_trait;
 use axum::extract;
@@ -29,11 +30,8 @@ use std::{
     time::{Duration, Instant},
 };
 use thiserror::Error;
-use tracing::{debug, error, info, trace, warn};
-
 use tokio::sync::{Mutex, RwLock};
-
-use anyhow::{anyhow, bail};
+use tracing::{debug, error, info, trace, warn};
 
 pub use self::enroll::{EnrollmentError, EnrollmentStatus};
 use self::{enroll::EnrollmentTask, skin::SkinManager};
@@ -52,7 +50,7 @@ pub(crate) struct AccountManager {
     refreshloop_sleep: Mutex<Option<Instant>>,
     skin_manager: SkinManager,
 
-    gdl_account_task: RwLock<GDLAccountTask>,
+    gdl_account_task: GDLAccountTask,
 }
 
 impl AccountManager {
@@ -63,7 +61,7 @@ impl AccountManager {
             refreshloop_sleep: Mutex::new(None),
             skin_manager: SkinManager {},
 
-            gdl_account_task: RwLock::new(GDLAccountTask::new(client, gdl_base_api)),
+            gdl_account_task: GDLAccountTask::new(client, gdl_base_api),
         }
     }
 }
@@ -198,7 +196,7 @@ impl<'s> ManagerRef<'s, AccountManager> {
         Ok(Some(account.status))
     }
 
-    pub async fn wait_for_account_validation(self, uuid: String) -> anyhow::Result<()> {
+    pub async fn wait_for_account_verification(self, uuid: String) -> anyhow::Result<()> {
         let Some(id_token) = self
             .get_account_entries()
             .await?
@@ -215,8 +213,6 @@ impl<'s> ManagerRef<'s, AccountManager> {
         info!("Waiting for account validation");
 
         self.gdl_account_task
-            .read()
-            .await
             .wait_for_account_validation(id_token)
             .await
     }
@@ -235,8 +231,7 @@ impl<'s> ManagerRef<'s, AccountManager> {
             bail!("this account is present in the db but the id_token is missing. Presumably offline account. (uuid: {uuid})");
         };
 
-        let account = self.gdl_account_task.read().await;
-        Ok(account.get_account(id_token).await?)
+        Ok(self.gdl_account_task.get_account(id_token).await?)
     }
 
     pub async fn request_gdl_account_deletion(
@@ -263,8 +258,6 @@ impl<'s> ManagerRef<'s, AccountManager> {
 
         let deletion = self
             .gdl_account_task
-            .write()
-            .await
             .request_deletion(id_token)
             .await
             .with_context(|| format!("failed to request account deletion: {}", uuid))
@@ -297,9 +290,8 @@ impl<'s> ManagerRef<'s, AccountManager> {
             bail!("this account is present in the db but the id_token is missing. Presumably offline account. (uuid: {uuid})");
         };
 
-        let lock = self.gdl_account_task.write().await;
-
-        let user = lock
+        let user = self
+            .gdl_account_task
             .register_account(body, id_token)
             .await
             .with_context(|| format!("failed to register account: {uuid}"))?;
@@ -357,13 +349,7 @@ impl<'s> ManagerRef<'s, AccountManager> {
             bail!("this account is present in the db but the id_token is missing. Presumably offline account. (uuid: {saved_gdl_account_uuid})")
         };
 
-        let Some(user) = self
-            .gdl_account_task
-            .read()
-            .await
-            .get_account(id_token)
-            .await?
-        else {
+        let Some(user) = self.gdl_account_task.get_account(id_token).await? else {
             return Ok(GDLAccountStatus::Invalid);
         };
 
@@ -390,8 +376,10 @@ impl<'s> ManagerRef<'s, AccountManager> {
             ));
         };
 
-        let lock = self.gdl_account_task.write().await;
-        let request = lock.request_new_verification_token(id_token).await;
+        let request = self
+            .gdl_account_task
+            .request_new_verification_token(id_token)
+            .await;
 
         self.app
             .invalidate(PEEK_GDL_ACCOUNT, Some(uuid.clone().into()));
@@ -423,8 +411,10 @@ impl<'s> ManagerRef<'s, AccountManager> {
             )));
         };
 
-        let lock = self.gdl_account_task.write().await;
-        let request = lock.request_email_change(id_token, email).await;
+        let request = self
+            .gdl_account_task
+            .request_email_change(id_token, email)
+            .await;
 
         self.app
             .invalidate(PEEK_GDL_ACCOUNT, Some(uuid.clone().into()));

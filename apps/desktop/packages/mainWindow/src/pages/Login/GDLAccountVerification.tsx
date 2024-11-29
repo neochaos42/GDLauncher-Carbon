@@ -1,8 +1,8 @@
 import { convertSecondsToHumanTime } from "@/utils/helpers";
-import { rspc } from "@/utils/rspcClient";
+import { port, rspc } from "@/utils/rspcClient";
 import { Trans } from "@gd/i18n";
 import { Navigate } from "@solidjs/router";
-import { createSignal, Match, Switch } from "solid-js";
+import { createResource, createSignal, Match, Switch } from "solid-js";
 
 interface Props {
   nextStep: () => void;
@@ -15,17 +15,26 @@ const GDLAccountVerification = (props: Props) => {
   const [cooldown, setCooldown] = createSignal(0);
   const [sentVisible, setSentVisible] = createSignal(false);
 
+  const [verified] = createResource(props.activeUuid, async () => {
+    const res = await fetch(
+      `http://127.0.0.1:${port}/account/awaitForAccountVerification?uuid=${props.activeUuid}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    return await res.text();
+  });
+
   const saveGdlAccountMutation = rspc.createMutation(() => ({
     mutationKey: ["account.saveGdlAccount"]
   }));
 
   const peekedUser = rspc.createQuery(() => ({
     queryKey: ["account.peekGdlAccount", props.activeUuid!],
-    enabled: !!props.activeUuid
-  }));
-
-  const verified = rspc.createQuery(() => ({
-    queryKey: ["account.waitForAccountValidation", props.activeUuid!],
     enabled: !!props.activeUuid
   }));
 
@@ -38,10 +47,12 @@ const GDLAccountVerification = (props: Props) => {
   return (
     <>
       <Switch>
-        <Match when={verified.isSuccess}>
+        <Match
+          when={!verified.loading && !verified.error && verified() === "ok"}
+        >
           <Navigate href="/library" />
         </Match>
-        <Match when={!verified.isSuccess}>
+        <Match when={verified.loading}>
           <div class="flex-1 w-full text-center gap-5 flex flex-col justify-between items-center">
             <div class="p-10">
               <div class="text-2xl font-bold">
@@ -123,7 +134,12 @@ const GDLAccountVerification = (props: Props) => {
             <div
               onClick={async () => {
                 await props.transitionToLibrary?.();
+
+                console.log("saving account");
+
                 await saveGdlAccountMutation.mutateAsync(props.activeUuid!);
+
+                console.log("account saved");
               }}
               class="underline text-lightSlate-400 hover:text-lightSlate-50 transition-all duration-100 ease-in-out"
             >
