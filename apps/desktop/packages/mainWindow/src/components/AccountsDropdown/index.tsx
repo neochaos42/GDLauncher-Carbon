@@ -51,6 +51,7 @@ export const AccountsDropdown = (props: Props) => {
 
   let gdlAccountRef: HTMLDivElement;
   let mcAccountsRef: HTMLDivElement;
+  let settingsButtonRef: HTMLDivElement;
 
   return (
     <Popover
@@ -94,6 +95,25 @@ export const AccountsDropdown = (props: Props) => {
               duration: 500,
               easing: "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
               fill: "forwards",
+              delay: 50
+            }
+          );
+        }
+
+        if (settingsButtonRef) {
+          settingsButtonRef.animate(
+            [
+              {
+                opacity: 0
+              },
+              {
+                opacity: 100
+              }
+            ],
+            {
+              duration: 500,
+              easing: "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+              fill: "forwards",
               delay: 100
             }
           );
@@ -103,12 +123,12 @@ export const AccountsDropdown = (props: Props) => {
         setShowAccountsDropdown(false);
       }}
       content={(close) => (
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-1">
           <div
             class="bg-darkSlate-700 w-70 h-auto p-2 rounded-lg mr-2 opacity-0 shadow-lg shadow-darkSlate-900 transition-opacity"
             ref={gdlAccountRef}
           >
-            <div class="p-4 text-xl flex items-center gap-4">
+            <div class="py-2 px-4 text-xl flex items-center gap-4">
               <img src={gdlLogo} class="w-6 h-6" />
               <div>
                 <Trans key="GDLauncher_account" />
@@ -117,7 +137,7 @@ export const AccountsDropdown = (props: Props) => {
             <hr class="w-full border-darkSlate-50 opacity-20" />
             <Switch
               fallback={
-                <div class="flex items-center gap-4 p-4 rounded-lg">
+                <div class="flex items-center gap-4 py-2 px-4 rounded-lg">
                   <div class="w-6 h-6 rounded-md bg-darkSlate-600" />
                   <div>
                     <Trans key="No_account_synced" />
@@ -126,7 +146,7 @@ export const AccountsDropdown = (props: Props) => {
               }
             >
               <Match when={validGDLUser()}>
-                <div class="flex items-center gap-4 p-4 rounded-lg">
+                <div class="flex items-center gap-4 py-2 px-4 rounded-lg">
                   <img
                     src={`http://127.0.0.1:${port}/account/headImage?uuid=${
                       globalStore.accounts.data?.find(
@@ -154,7 +174,7 @@ export const AccountsDropdown = (props: Props) => {
             class="bg-darkSlate-700 w-70 h-auto p-2 rounded-lg mr-2 opacity-0 shadow-lg shadow-darkSlate-900 transition-opacity"
             ref={mcAccountsRef}
           >
-            <div class="p-4 text-xl flex items-center gap-4">
+            <div class="py-2 px-4 text-xl flex items-center gap-4">
               <img src={defaultInstanceImg} class="w-6 h-6" />
               <div>
                 <Trans key="Minecraft_accounts" />
@@ -164,7 +184,7 @@ export const AccountsDropdown = (props: Props) => {
             <For each={globalStore.accounts.data || []}>
               {(account) => (
                 <div
-                  class="flex justify-between items-center gap-4 p-4 hover:bg-darkSlate-600 rounded-lg"
+                  class="flex justify-between items-center gap-4 px-4 py-2 hover:bg-darkSlate-600 rounded-lg"
                   classList={{
                     "bg-darkSlate-600":
                       account.uuid ===
@@ -208,11 +228,14 @@ export const AccountsDropdown = (props: Props) => {
                 </div>
               )}
             </For>
-
-            <hr class="w-full border-darkSlate-50 opacity-20 my-4" />
+          </div>
+          <div
+            class="bg-darkSlate-700 w-70 h-auto p-2 rounded-lg mr-2 opacity-0 shadow-lg shadow-darkSlate-900 transition-opacity"
+            ref={settingsButtonRef}
+          >
             <Button
               type="outline"
-              class="flex items-center justify-center gap-4 mb-2"
+              class="flex items-center justify-center gap-4"
               fullWidth
               onClick={() => {
                 if (props.disabled) return;
