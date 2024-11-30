@@ -26,6 +26,9 @@ importers:
 
   apps/desktop:
     devDependencies:
+      '@electron/notarize':
+        specifier: ^2.5.0
+        version: 2.5.0
       '@formkit/auto-animate':
         specifier: ^0.8.2
         version: 0.8.2
@@ -42,8 +45,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@overwolf/ow-electron':
-        specifier: ^31.4.0
-        version: 31.4.0
+        specifier: ^31.7.3
+        version: 31.7.3
       '@overwolf/ow-electron-builder':
         specifier: ^25.0.6
         version: 25.0.6(electron-builder-squirrel-windows@25.0.5)
@@ -108,17 +111,14 @@ importers:
         specifier: ^16.3.1
         version: 16.4.0
       electron:
-        specifier: ^31.4.0
-        version: 31.6.0
+        specifier: ^31.7.3
+        version: 31.7.5
       electron-log:
         specifier: ^5.1.1
         version: 5.1.1
-      electron-notarize:
-        specifier: ^1.2.2
-        version: 1.2.2
       electron-updater:
-        specifier: ^6.3.7
-        version: 6.3.7
+        specifier: ^6.3.9
+        version: 6.3.9
       eslint:
         specifier: ^8.31.0
         version: 8.57.0
@@ -1570,6 +1570,10 @@ packages:
     resolution: {integrity: sha512-zfayxCe19euNwRycCty1C7lF7snk9YwfRpB5M8GLr1a4ICH63znxaPNAubrMvj0yDvVozqfgsdYpXVUnpWBDpg==}
     engines: {node: '>= 10.0.0'}
 
+  '@electron/notarize@2.5.0':
+    resolution: {integrity: sha512-jNT8nwH1f9X5GEITXaQ8IF/KdskvIkOFfB2CvwumsveVidzpSc+mvhhTMdAGSYF3O+Nq49lJ7y+ssODRXu06+A==}
+    engines: {node: '>= 10.0.0'}
+
   '@electron/osx-sign@1.3.1':
     resolution: {integrity: sha512-BAfviURMHpmb1Yb50YbCxnOY0wfwaLXH5KJ4+80zS0gUkzDX3ec23naTlEqKsN+PwYn+a1cCzM7BJ4Wcd3sGzw==}
     engines: {node: '>=12.0.0'}
@@ -2369,8 +2373,8 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  '@overwolf/ow-electron@31.4.0':
-    resolution: {integrity: sha512-dzzPu5dTFu6pnoiMhmy40xQM1oYlLR4wma7bPV+/3dCPM1DiA1tNVIEkwkMiVdwNkA8bOkQMoB5Nacu3++DMvw==}
+  '@overwolf/ow-electron@31.7.3':
+    resolution: {integrity: sha512-mRsIztRTpqCTqXXAwcvBfwIbapm4hZZGLHtaHMpyt+qJd9cProIW3K5IHnPCXltjT/FjSDguIVfXp2OIfs4g5A==}
     engines: {node: '>= 10.17.0'}
     hasBin: true
 
@@ -3249,11 +3253,11 @@ packages:
   '@storybook/builder-manager@7.6.10':
     resolution: {integrity: sha512-f+YrjZwohGzvfDtH8BHzqM3xW0p4vjjg9u7uzRorqUiNIAAKHpfNrZ/WvwPlPYmrpAHt4xX/nXRJae4rFSygPw==}
 
-  '@storybook/builder-vite@8.5.0-alpha.5':
-    resolution: {integrity: sha512-LWDq3mbqWsagWwHYzgLo2/qtDnfSEpGgc77d5bg6JtgsOdAXlEd29DMB8u6x19Ryn9Z3lYHa5amLMdh0QDkodg==}
+  '@storybook/builder-vite@8.5.0-alpha.13':
+    resolution: {integrity: sha512-s303yxXatH1x++OppU5+ujN1JM3q17nkqkCoz7l+7obVbmf3wXv0CAaqkI8AagzpeFeNhDT6Ejz3Oexm17HqKA==}
     peerDependencies:
-      storybook: ^8.5.0-alpha.5
-      vite: ^4.0.0 || ^5.0.0
+      storybook: ^8.5.0-alpha.13
+      vite: ^4.0.0 || ^5.0.0 || ^6.0.0
 
   '@storybook/channels@7.6.10':
     resolution: {integrity: sha512-ITCLhFuDBKgxetuKnWwYqMUWlU7zsfH3gEKZltTb+9/2OAWR7ez0iqU7H6bXP1ridm0DCKkt2UMWj2mmr9iQqg==}
@@ -3286,10 +3290,10 @@ packages:
   '@storybook/csf-plugin@7.6.10':
     resolution: {integrity: sha512-Sc+zZg/BnPH2X28tthNaQBnDiFfO0QmfjVoOx0fGYM9SvY3P5ehzWwp5hMRBim6a/twOTzePADtqYL+t6GMqqg==}
 
-  '@storybook/csf-plugin@8.5.0-alpha.5':
-    resolution: {integrity: sha512-Ydeh+QPvqLpHzlxYTdHUPLCk9fsFAbbzJji4fD6HXCOhh28nmtcP5LedV0/W8QJUUJsaI9Nt5W5QssAeWswtNw==}
+  '@storybook/csf-plugin@8.5.0-alpha.13':
+    resolution: {integrity: sha512-6vVRZBt54KzgvA+U8A5J0IwWfPgakpgqW0Vi9FbUHLnndHfkN28kfbDN72UXsrFTxrRpaogum8+qkt+VaW5koQ==}
     peerDependencies:
-      storybook: ^8.5.0-alpha.5
+      storybook: ^8.5.0-alpha.13
 
   '@storybook/csf-tools@7.6.10':
     resolution: {integrity: sha512-TnDNAwIALcN6SA4l00Cb67G02XMOrYU38bIpFJk5VMDX2dvgPjUtJNBuLmEbybGcOt7nPyyFIHzKcY5FCVGoWA==}
@@ -4329,6 +4333,7 @@ packages:
 
   boolean@3.2.0:
     resolution: {integrity: sha512-d0II/GO9uf9lfUHH2BQsjxzRJZBdsjgsBiW4BvhWk/3qoKwQFjIDVN19PfX8F2D/r9PCMTtLWjYVCFrpeYUzsw==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   bowser@2.11.0:
     resolution: {integrity: sha512-AlcaJBi/pqqJBIQ8U9Mcpc9i8Aqxn88Skv5d+xBX006BY5u8N3mGLHa5Lgppa7L/HfwgwLgZ6NYs+Ag6uUmJRA==}
@@ -4382,12 +4387,12 @@ packages:
   buffer@6.0.3:
     resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
 
-  builder-util-runtime@9.2.5:
-    resolution: {integrity: sha512-HjIDfhvqx/8B3TDN4GbABQcgpewTU4LMRTQPkVpKYV3lsuxEJoIfvg09GyWTNmfVNSUAYf+fbTN//JX4TH20pg==}
+  builder-util-runtime@9.2.10:
+    resolution: {integrity: sha512-6p/gfG1RJSQeIbz8TK5aPNkoztgY1q5TgmGFMAXcY8itsGW6Y2ld1ALsZ5UJn8rog7hKF3zHx5iQbNQ8uLcRlw==}
     engines: {node: '>=12.0.0'}
 
-  builder-util-runtime@9.2.8:
-    resolution: {integrity: sha512-zsrY5P0qFy51NoulD0PUpwL/XkO42ndI6QSgK0pMFRE6e/R8hsajGdybMGpdGW00PPCqv7QvbxMOvXr3qkV9ww==}
+  builder-util-runtime@9.2.5:
+    resolution: {integrity: sha512-HjIDfhvqx/8B3TDN4GbABQcgpewTU4LMRTQPkVpKYV3lsuxEJoIfvg09GyWTNmfVNSUAYf+fbTN//JX4TH20pg==}
     engines: {node: '>=12.0.0'}
 
   builder-util@25.0.3:
@@ -5071,11 +5076,6 @@ packages:
     resolution: {integrity: sha512-If7HU4Slbh2xfjOXOLxifkbgu6HmWDNJyXPLW+XNTOHMfFKisg0trA3d/7syyu25S+lHosfsd0VMfDSjGn1+Pw==}
     engines: {node: '>= 14'}
 
-  electron-notarize@1.2.2:
-    resolution: {integrity: sha512-ZStVWYcWI7g87/PgjPJSIIhwQXOaw4/XeXU+pWqMMktSLHaGMLHdyPPN7Cmao7+Cr7fYufA16npdtMndYciHNw==}
-    engines: {node: '>= 10.0.0'}
-    deprecated: Please use @electron/notarize moving forward.  There is no API change, just a package name change
-
   electron-publish@25.0.3:
     resolution: {integrity: sha512-wSGm+TFK2lArswIFBPLuIRHbo945s3MCvG5y1xVC57zL/PsrElUkaGH2ERtRrcKNpaDNq77rDA9JnMJhAFJjUg==}
 
@@ -5085,11 +5085,11 @@ packages:
   electron-to-chromium@1.5.18:
     resolution: {integrity: sha512-1OfuVACu+zKlmjsNdcJuVQuVE61sZOLbNM4JAQ1Rvh6EOj0/EUKhMJjRH73InPlXSh8HIJk1cVZ8pyOV/FMdUQ==}
 
-  electron-updater@6.3.7:
-    resolution: {integrity: sha512-pCX7f1vAWsje5KVbMak4Xfy+rq/J4pFsfHhmwsPfdiX1cHsjCEJAwTxI6YyE6pb61VS/pWdOACc9ElD7aZDTUg==}
+  electron-updater@6.3.9:
+    resolution: {integrity: sha512-2PJNONi+iBidkoC5D1nzT9XqsE8Q1X28Fn6xRQhO3YX8qRRyJ3mkV4F1aQsuRnYPqq6Hw+E51y27W75WgDoofw==}
 
-  electron@31.6.0:
-    resolution: {integrity: sha512-J64VtIF8DI/zsGgoYd3p5LbxAWjt59tk2cBSHJNzVhzgiVgDyPFkBwsqmN4gUvyv+6l6+WoYpYmYdapr2o4bPw==}
+  electron@31.7.5:
+    resolution: {integrity: sha512-8zFzVJdhxTRmoPcRiKkEmPW0bJHAUsTQJwEX2YJ8X0BVFIJLwSvHkSlpCjEExVbNCAk+gHnkIYX+2OyCXrRwHQ==}
     engines: {node: '>= 12.20.55'}
     hasBin: true
 
@@ -9650,7 +9650,7 @@ snapshots:
   '@astrojs/telemetry@3.0.4':
     dependencies:
       ci-info: 3.9.0
-      debug: 4.3.4
+      debug: 4.3.7
       dlv: 1.1.3
       dset: 3.1.3
       is-docker: 3.0.0
@@ -10199,7 +10199,7 @@ snapshots:
       '@babel/traverse': 7.23.7
       '@babel/types': 7.23.6
       convert-source-map: 1.9.0
-      debug: 4.3.4
+      debug: 4.3.7
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -11209,7 +11209,7 @@ snapshots:
       '@babel/helper-split-export-declaration': 7.22.6
       '@babel/parser': 7.23.6
       '@babel/types': 7.23.6
-      debug: 4.3.4
+      debug: 4.3.7
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -11328,6 +11328,14 @@ snapshots:
       - supports-color
 
   '@electron/notarize@2.3.2':
+    dependencies:
+      debug: 4.3.7
+      fs-extra: 9.1.0
+      promise-retry: 2.0.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@electron/notarize@2.5.0':
     dependencies:
       debug: 4.3.7
       fs-extra: 9.1.0
@@ -12064,7 +12072,7 @@ snapshots:
       - electron-builder-squirrel-windows
       - supports-color
 
-  '@overwolf/ow-electron@31.4.0':
+  '@overwolf/ow-electron@31.7.3':
     dependencies:
       '@electron/get': 1.14.1
       '@types/node': 16.18.75
@@ -13200,9 +13208,9 @@ snapshots:
       - encoding
       - supports-color
 
-  '@storybook/builder-vite@8.5.0-alpha.5(storybook@7.6.10(encoding@0.1.13))(vite@4.5.2(@types/node@20.11.6)(less@4.2.0)(terser@5.27.0))':
+  '@storybook/builder-vite@8.5.0-alpha.13(storybook@7.6.10(encoding@0.1.13))(vite@4.5.2(@types/node@20.11.6)(less@4.2.0)(terser@5.27.0))':
     dependencies:
-      '@storybook/csf-plugin': 8.5.0-alpha.5(storybook@7.6.10(encoding@0.1.13))
+      '@storybook/csf-plugin': 8.5.0-alpha.13(storybook@7.6.10(encoding@0.1.13))
       browser-assert: 1.2.1
       storybook: 7.6.10(encoding@0.1.13)
       ts-dedent: 2.2.0
@@ -13395,7 +13403,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@storybook/csf-plugin@8.5.0-alpha.5(storybook@7.6.10(encoding@0.1.13))':
+  '@storybook/csf-plugin@8.5.0-alpha.13(storybook@7.6.10(encoding@0.1.13))':
     dependencies:
       storybook: 7.6.10(encoding@0.1.13)
       unplugin: 1.6.0
@@ -13940,7 +13948,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/typescript-estree': 8.4.0(typescript@5.6.3)
       '@typescript-eslint/utils': 8.4.0(eslint@8.57.0)(typescript@5.6.3)
-      debug: 4.3.4
+      debug: 4.3.7
       ts-api-utils: 1.3.0(typescript@5.6.3)
     optionalDependencies:
       typescript: 5.6.3
@@ -13958,7 +13966,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 5.62.0
       '@typescript-eslint/visitor-keys': 5.62.0
-      debug: 4.3.4
+      debug: 4.3.7
       globby: 11.1.0
       is-glob: 4.0.3
       semver: 7.6.3
@@ -15032,14 +15040,14 @@ snapshots:
       base64-js: 1.5.1
       ieee754: 1.2.1
 
-  builder-util-runtime@9.2.5:
+  builder-util-runtime@9.2.10:
     dependencies:
       debug: 4.3.7
       sax: 1.3.0
     transitivePeerDependencies:
       - supports-color
 
-  builder-util-runtime@9.2.8:
+  builder-util-runtime@9.2.5:
     dependencies:
       debug: 4.3.7
       sax: 1.3.0
@@ -15785,13 +15793,6 @@ snapshots:
 
   electron-log@5.1.1: {}
 
-  electron-notarize@1.2.2:
-    dependencies:
-      debug: 4.3.4
-      fs-extra: 9.1.0
-    transitivePeerDependencies:
-      - supports-color
-
   electron-publish@25.0.3:
     dependencies:
       '@types/fs-extra': 9.0.13
@@ -15808,9 +15809,9 @@ snapshots:
 
   electron-to-chromium@1.5.18: {}
 
-  electron-updater@6.3.7:
+  electron-updater@6.3.9:
     dependencies:
-      builder-util-runtime: 9.2.8
+      builder-util-runtime: 9.2.10
       fs-extra: 10.1.0
       js-yaml: 4.1.0
       lazy-val: 1.0.5
@@ -15821,7 +15822,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  electron@31.6.0:
+  electron@31.7.5:
     dependencies:
       '@electron/get': 2.0.3
       '@types/node': 20.11.6
@@ -19909,7 +19910,7 @@ snapshots:
 
   storybook-solidjs-vite@1.0.0-beta.2(storybook@7.6.10(encoding@0.1.13))(vite@4.5.2(@types/node@20.11.6)(less@4.2.0)(terser@5.27.0)):
     dependencies:
-      '@storybook/builder-vite': 8.5.0-alpha.5(storybook@7.6.10(encoding@0.1.13))(vite@4.5.2(@types/node@20.11.6)(less@4.2.0)(terser@5.27.0))
+      '@storybook/builder-vite': 8.5.0-alpha.13(storybook@7.6.10(encoding@0.1.13))(vite@4.5.2(@types/node@20.11.6)(less@4.2.0)(terser@5.27.0))
     transitivePeerDependencies:
       - storybook
       - vite
@@ -20057,7 +20058,7 @@ snapshots:
 
   sumchecker@3.0.1:
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.7
     transitivePeerDependencies:
       - supports-color
 
@@ -20776,7 +20777,7 @@ snapshots:
   vite-node@0.32.4(@types/node@20.11.6)(less@4.2.0)(terser@5.27.0):
     dependencies:
       cac: 6.7.14
-      debug: 4.3.4
+      debug: 4.3.7
       mlly: 1.5.0
       pathe: 1.1.2
       picocolors: 1.0.0
