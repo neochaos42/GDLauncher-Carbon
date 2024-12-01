@@ -18,7 +18,7 @@ import os, { platform, release } from "os";
 import path, { join, resolve } from "path";
 import fs from "fs/promises";
 import fss from "fs";
-import fse from "fs-extra";
+import fse, { ensureDirSync } from "fs-extra";
 import glob from "glob";
 import type { ChildProcessWithoutNullStreams } from "child_process";
 import { spawn } from "child_process";
@@ -134,7 +134,21 @@ if (app.isPackaged) {
   const overrideCLIDataPath = validateArgument("--runtime_path");
   const overrideEnvDataPath = process.env.GDL_RUNTIME_PATH;
 
-  initRTPath(overrideCLIDataPath?.value || overrideEnvDataPath);
+  const isSnapshot = __APP_VERSION__.includes("snapshot");
+
+  const appPackagePath = path.join(app.getPath("exe"), "gdl_data");
+
+  let snapshotDataPath = null;
+
+  if (isSnapshot && !overrideCLIDataPath?.value && !overrideEnvDataPath) {
+    snapshotDataPath = appPackagePath;
+
+    ensureDirSync(appPackagePath);
+  }
+
+  initRTPath(
+    overrideCLIDataPath?.value || overrideEnvDataPath || snapshotDataPath
+  );
 } else {
   const rtPath = import.meta.env.RUNTIME_PATH;
   if (!rtPath) {
