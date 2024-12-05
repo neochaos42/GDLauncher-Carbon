@@ -139,11 +139,16 @@ if (app.isPackaged) {
   let snapshotDataPath = null;
 
   if (isSnapshot && !overrideCLIDataPath?.value && !overrideEnvDataPath) {
+    const isDeepBinary = app
+      .getPath("exe")
+      .endsWith("Contents/MacOS/GDLauncher");
     const isMacOS = process.platform === "darwin";
     const appPackagePath = path.resolve(
       app.getPath("exe"),
       // MacOS .app are compressed folders, the actual executable is in Contents/MacOS/[Binary]
-      isMacOS ? "../../../../" : "../",
+      // but depending on whether you double-click the .app or run it from the terminal,
+      // the path will be different
+      isMacOS && isDeepBinary ? "../../../../" : "../",
       "gdl_data"
     );
     snapshotDataPath = appPackagePath;
