@@ -136,11 +136,16 @@ if (app.isPackaged) {
 
   const isSnapshot = __APP_VERSION__.includes("snapshot");
 
-  const appPackagePath = path.join(app.getPath("exe"), "gdl_data");
-
   let snapshotDataPath = null;
 
   if (isSnapshot && !overrideCLIDataPath?.value && !overrideEnvDataPath) {
+    const isMacOS = process.platform === "darwin";
+    const appPackagePath = path.resolve(
+      app.getPath("exe"),
+      // MacOS .app are compressed folders, the actual executable is in Contents/MacOS/[Binary]
+      isMacOS ? "../../../../" : "../",
+      "gdl_data"
+    );
     snapshotDataPath = appPackagePath;
 
     ensureDirSync(appPackagePath);
