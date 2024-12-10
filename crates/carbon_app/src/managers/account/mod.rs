@@ -444,6 +444,36 @@ impl<'s> ManagerRef<'s, AccountManager> {
         Ok(())
     }
 
+    pub async fn change_nickname(self, uuid: String, nickname: String) -> anyhow::Result<()> {
+        let Some(id_token) = self
+            .get_account_entries()
+            .await?
+            .into_iter()
+            .find(|account| account.uuid == uuid)
+            .ok_or(anyhow::anyhow!(
+                "attempted to get an account that does not exist"
+            ))?
+            .id_token
+        else {
+            return Err(anyhow::anyhow!(
+                "this account is present in the db but the id_token is missing. Presumably offline account. (uuid: {uuid})"
+            ));
+        };
+
+        let request = self
+            .gdl_account_task
+            .change_nickname(id_token, nickname)
+            .await;
+
+        self.app
+            .invalidate(PEEK_GDL_ACCOUNT, Some(uuid.clone().into()));
+        self.app.invalidate(GET_GDL_ACCOUNT, None);
+
+        request?;
+
+        Ok(())
+    }
+
     /// Add or update an account
     async fn add_account(self, account: FullAccount) -> anyhow::Result<()> {
         use db::account::{SetParam, UniqueWhereParam};

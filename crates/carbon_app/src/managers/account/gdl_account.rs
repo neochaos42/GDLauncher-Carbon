@@ -1,3 +1,4 @@
+use crate::domain::instance::info;
 use chrono::{DateTime, Utc};
 use hyper::{
     header::{InvalidHeaderValue, AUTHORIZATION, CONTENT_TYPE},
@@ -5,8 +6,6 @@ use hyper::{
 };
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
-
-use crate::domain::instance::info;
 
 pub struct GDLAccountTask {
     client: reqwest_middleware::ClientWithMiddleware,
@@ -16,6 +15,7 @@ pub struct GDLAccountTask {
 #[derive(Serialize)]
 pub struct RegisterAccountBody {
     pub email: String,
+    pub nickname: String,
 }
 
 #[derive(Serialize)]
@@ -62,6 +62,9 @@ pub enum GDLAccountStatus {
 pub struct GDLUser {
     pub email: String,
     pub microsoft_oid: String,
+    pub nickname: String,
+    pub friend_code: String,
+    pub profile_icon_url: String,
     pub microsoft_email: Option<String>,
     pub is_verified: bool,
     pub has_pending_verification: bool,
@@ -81,7 +84,7 @@ impl GDLAccountTask {
         body: RegisterAccountBody,
         id_token: String,
     ) -> anyhow::Result<GDLUser> {
-        let url = format!("{}/v1/users/sign-up", self.base_api);
+        let url = format!("{}/v1/users/user", self.base_api);
 
         let authorization = format!("Bearer {}", id_token);
 
@@ -208,9 +211,7 @@ impl GDLAccountTask {
             CONTENT_TYPE,
             "application/json"
                 .parse()
-                .map_err(|err: InvalidHeaderValue| {
-                    RequestNewEmailChangeError::RequestFailed(anyhow::anyhow!(err))
-                })?,
+                .expect("failed to parse content type"),
         );
 
         let resp = self
@@ -249,7 +250,7 @@ impl GDLAccountTask {
         &self,
         id_token: String,
     ) -> Result<(), RequestGDLAccountDeletionError> {
-        let url = format!("{}/v1/users/request-account-deletion", self.base_api);
+        let url = format!("{}/v1/users/user", self.base_api);
 
         let authorization = format!("Bearer {}", id_token);
         let mut headers = HeaderMap::new();
@@ -257,7 +258,7 @@ impl GDLAccountTask {
 
         let resp = self
             .client
-            .post(url)
+            .delete(url)
             .headers(headers)
             .send()
             .await
@@ -282,6 +283,32 @@ impl GDLAccountTask {
         resp.bytes()
             .await
             .map_err(|err| RequestGDLAccountDeletionError::RequestFailed(err.into()))?;
+
+        Ok(())
+    }
+
+    pub async fn change_nickname(&self, id_token: String, nickname: String) -> anyhow::Result<()> {
+        let url = format!("{}/v1/users/user/nickname", self.base_api);
+
+        let authorization = format!("Bearer {}", id_token);
+        let mut headers = HeaderMap::new();
+        headers.insert(AUTHORIZATION, authorization.parse()?);
+        headers.insert(
+            CONTENT_TYPE,
+            "application/json"
+                .parse()
+                .expect("failed to parse content type"),
+        );
+
+        let body = serde_json::to_string(&serde_json::json!({ "new_nickname": nickname }))?;
+
+        let resp = self
+            .client
+            .put(url)
+            .headers(headers)
+            .body(reqwest::Body::from(body))
+            .send()
+            .await?;
 
         Ok(())
     }

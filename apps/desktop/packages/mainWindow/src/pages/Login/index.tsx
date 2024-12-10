@@ -73,6 +73,7 @@ export default function Login() {
   });
 
   const [recoveryEmail, setRecoveryEmail] = createSignal<string | null>(null);
+  const [nickname, setNickname] = createSignal<string | null>(null);
 
   const [acceptedHashedEmail, setAcceptedHashedEmail] = createSignal(
     globalStore.settings.data?.hashedEmailAccepted
@@ -98,6 +99,10 @@ export default function Login() {
 
   const registerGdlAccountMutation = rspc.createMutation(() => ({
     mutationKey: ["account.registerGdlAccount"]
+  }));
+
+  const changeGDLAccountNicknameMutation = rspc.createMutation(() => ({
+    mutationKey: ["account.changeGdlAccountNickname"]
   }));
 
   const [isBackButtonVisible, setIsBackButtonVisible] = createSignal(false);
@@ -220,8 +225,6 @@ export default function Login() {
           "settings.getSettings"
         ]);
 
-        console.log(settings);
-
         // Already has GDL account
         if (
           settings.gdlAccountId !== null &&
@@ -238,6 +241,7 @@ export default function Login() {
 
         if (gdlUserPeek?.email) {
           setRecoveryEmail(gdlUserPeek.email);
+          setNickname(gdlUserPeek.nickname);
         }
 
         setStep(Steps.GDLAccount);
@@ -460,6 +464,8 @@ export default function Login() {
                 prevStep={prevStep}
                 recoveryEmail={recoveryEmail()}
                 setRecoveryEmail={setRecoveryEmail}
+                nickname={nickname()}
+                setNickname={setNickname}
                 cooldown={cooldown()}
                 acceptedHashedEmail={!!acceptedHashedEmail()}
                 setAcceptedHashedEmail={setAcceptedHashedEmail}
@@ -581,7 +587,8 @@ export default function Login() {
               disabled={
                 step() === Steps.CodeStep ||
                 step() === Steps.GDLAccountVerification ||
-                (step() === Steps.GDLAccountCompletion && !recoveryEmail())
+                (step() === Steps.GDLAccountCompletion &&
+                  (!recoveryEmail() || !nickname()))
               }
               loading={
                 loadingButton() || step() === Steps.GDLAccountVerification
@@ -649,6 +656,7 @@ export default function Login() {
                       !existingGDLUser.isEmailVerified
                     ) {
                       setRecoveryEmail(existingGDLUser.email);
+                      setNickname(existingGDLUser.nickname);
                       setStep(Steps.GDLAccountVerification);
                       return;
                     }
@@ -680,6 +688,23 @@ export default function Login() {
 
                     if (
                       existingGDLUser &&
+                      existingGDLUser.nickname &&
+                      existingGDLUser.nickname !== nickname()
+                    ) {
+                      try {
+                        await changeGDLAccountNicknameMutation.mutateAsync({
+                          uuid,
+                          nickname: nickname()!
+                        });
+                      } catch (e) {
+                        console.error(e);
+                        setLoadingButton(false);
+                        return;
+                      }
+                    }
+
+                    if (
+                      existingGDLUser &&
                       existingGDLUser.email &&
                       existingGDLUser.email !== recoveryEmail()
                     ) {
@@ -687,7 +712,6 @@ export default function Login() {
                         const result =
                           await requestEmailChangeMutation.mutateAsync({
                             uuid,
-                            // button is disabled if the email is the same as the recovery email or is empty
                             email: recoveryEmail()!
                           });
 
@@ -730,10 +754,12 @@ export default function Login() {
                       !existingGDLUser.isEmailVerified
                     ) {
                       setRecoveryEmail(existingGDLUser.email);
+                      setNickname(existingGDLUser.nickname);
                       setStep(Steps.GDLAccountVerification);
                     } else {
                       await registerGdlAccountMutation.mutateAsync({
                         email: recoveryEmail()!,
+                        nickname: nickname()!,
                         uuid
                       });
 

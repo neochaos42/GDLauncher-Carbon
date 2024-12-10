@@ -148,23 +148,11 @@ export const AccountsDropdown = (props: Props) => {
               <Match when={validGDLUser()}>
                 <div class="flex items-center gap-4 py-2 px-4 rounded-lg">
                   <img
-                    src={`http://127.0.0.1:${port}/account/headImage?uuid=${
-                      globalStore.accounts.data?.find(
-                        (account) =>
-                          account.uuid ===
-                          globalStore.settings.data?.gdlAccountId
-                      )?.uuid
-                    }`}
+                    src={validGDLUser()?.profileIconUrl}
                     class="w-6 h-6 rounded-md"
                   />
-                  <div class="truncate max-w-30">
-                    {
-                      globalStore.accounts.data?.find(
-                        (account) =>
-                          account.uuid ===
-                          globalStore.settings.data?.gdlAccountId
-                      )?.username
-                    }
+                  <div class="truncate max-w-50">
+                    {validGDLUser()?.nickname}
                   </div>
                 </div>
               </Match>

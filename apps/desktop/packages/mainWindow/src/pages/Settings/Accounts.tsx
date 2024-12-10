@@ -24,12 +24,29 @@ const GDLAccountRowItem = (props: {
   children?: JSX.Element;
   onEdit?: () => void;
 }) => {
+  const addNotification = createNotification();
+
   return (
-    <div class="flex justify-between items-center">
+    <div
+      class="flex justify-between items-center group"
+      onClick={() => {
+        if (!props.value) return;
+
+        navigator.clipboard.writeText(props.value);
+
+        addNotification({
+          name: "Copied to clipboard",
+          type: "success"
+        });
+      }}
+    >
       <div class="flex flex-col gap-2 justify-center">
         <Show when={props.title}>
-          <div class="text-md font-bold text-lightSlate-600 uppercase">
+          <div class="flex gap-4 items-center text-base font-light text-lightSlate-700 uppercase group-hover:text-lightSlate-50">
             {props.title}
+            <div class="hidden group-hover:block">
+              <div class="i-ri:clipboard-fill text-lightSlate-50" />
+            </div>
           </div>
         </Show>
         <Show when={props.value}>
@@ -292,15 +309,17 @@ const Accounts = () => {
                     </div>
                   </Show>
                   <div class="grid grid-cols-2 gap-4">
+                    <div class="flex items-center gap-4">
+                      <img
+                        src={validGDLUser()?.profileIconUrl}
+                        class="w-12 h-12 rounded-md"
+                      />
+                      {validGDLUser()?.nickname}
+                    </div>
                     <GDLAccountRowItem
-                      title={t("settings:minecraft_uuid")}
-                      value={
-                        globalStore.accounts.data?.find(
-                          (account) =>
-                            account.uuid ===
-                            globalStore.settings.data?.gdlAccountId
-                        )?.uuid
-                      }
+                      title={t("settings:friend_code")}
+                      value={validGDLUser()?.friendCode}
+                      onEdit={() => {}}
                     />
                     <GDLAccountRowItem
                       title={t("settings:microsoft_username")}
@@ -311,6 +330,11 @@ const Accounts = () => {
                             globalStore.settings.data?.gdlAccountId
                         )?.username
                       }
+                      onEdit={() => {}}
+                    />
+                    <GDLAccountRowItem
+                      title={t("settings:microsoft_oid")}
+                      value={validGDLUser()?.microsoftOid}
                     />
                     <GDLAccountRowItem
                       title={t("settings:recovery_email")}
