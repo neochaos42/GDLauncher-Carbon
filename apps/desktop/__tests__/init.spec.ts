@@ -86,6 +86,10 @@ test.describe("Init Tests", () => {
 
     page = await electronApp.firstWindow()
 
+    electronApp.on("console", (msg) => {
+      console.log(msg.text())
+    })
+
     // capture errors
     page.on("pageerror", (error) => {
       console.error(JSON.stringify(error, null, 2))
