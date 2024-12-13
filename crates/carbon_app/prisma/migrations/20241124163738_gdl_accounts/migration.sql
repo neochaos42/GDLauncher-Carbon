@@ -49,7 +49,10 @@ CREATE TABLE "new_AppConfiguration" (
     "gdlAccountStatus" BLOB,
     CONSTRAINT "AppConfiguration_activeAccountUuid_fkey" FOREIGN KEY ("activeAccountUuid") REFERENCES "Account" ("uuid") ON DELETE SET NULL ON UPDATE CASCADE
 );
+-- Temporarily remove foreign key constraints to avoid errors during data migration
+PRAGMA defer_foreign_keys=ON;
 INSERT INTO "new_AppConfiguration" ("activeAccountUuid", "autoManageJavaSystemProfiles", "concurrentDownloads", "defaultInstanceGroup", "deletionThroughRecycleBin", "discordIntegration", "downloadDependencies", "gameResolution", "id", "instancesGroupBy", "instancesGroupByAsc", "instancesSortBy", "instancesSortByAsc", "instancesTileSize", "isFirstLaunch", "javaCustomArgs", "language", "lastAppVersion", "launcherActionOnGameLaunch", "modChannels", "modPlatformBlacklist", "postExitHook", "preLaunchHook", "reducedMotion", "releaseChannel", "showAppCloseWarning", "showNews", "termsAndPrivacyAccepted", "termsAndPrivacyAcceptedChecksum", "theme", "wrapperCommand", "xms", "xmx") SELECT "activeAccountUuid", "autoManageJavaSystemProfiles", "concurrentDownloads", "defaultInstanceGroup", "deletionThroughRecycleBin", "discordIntegration", "downloadDependencies", "gameResolution", "id", "instancesGroupBy", "instancesGroupByAsc", "instancesSortBy", "instancesSortByAsc", "instancesTileSize", "isFirstLaunch", "javaCustomArgs", "language", "lastAppVersion", "launcherActionOnGameLaunch", "modChannels", "modPlatformBlacklist", "postExitHook", "preLaunchHook", "reducedMotion", "releaseChannel", "showAppCloseWarning", "showNews", "termsAndPrivacyAccepted", "termsAndPrivacyAcceptedChecksum", "theme", "wrapperCommand", "xms", "xmx" FROM "AppConfiguration";
+PRAGMA defer_foreign_keys=OFF;
 DROP TABLE "AppConfiguration";
 ALTER TABLE "new_AppConfiguration" RENAME TO "AppConfiguration";
 CREATE UNIQUE INDEX "AppConfiguration_id_key" ON "AppConfiguration"("id");
