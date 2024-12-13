@@ -1,29 +1,29 @@
-import { Button } from "@gd/ui";
-import { ModalProps, useModal } from "../..";
-import ModalLayout from "../../ModalLayout";
-import { Show } from "solid-js";
-import { useTransContext } from "@gd/i18n";
-import { queryClient, rspc } from "@/utils/rspcClient";
-import { instanceId } from "@/utils/browser";
+import { Button } from "@gd/ui"
+import { ModalProps, useModal } from "../.."
+import ModalLayout from "../../ModalLayout"
+import { Show } from "solid-js"
+import { useTransContext } from "@gd/i18n"
+import { queryClient, rspc } from "@/utils/rspcClient"
+import { instanceId } from "@/utils/browser"
 
 // const [instanceState, setInstanceState] = createSignal<"unlock" | "unpair">(
 //   "unlock"
 // );
 // export { instanceState, setInstanceState };
 interface Props {
-  instanceState: "unlock" | "unpair";
+  instanceState: "unlock" | "unpair"
 }
 const Confirmation = (props: ModalProps) => {
-  const data: () => Props = () => props.data;
-  const modalContext = useModal();
-  const [t] = useTransContext();
+  const data: () => Props = () => props.data
+  const modalContext = useModal()
+  const [t] = useTransContext()
   const updateInstanceMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.updateInstance"],
 
     onMutate: (newData) => {
-      queryClient.setQueryData(["instance.getInstanceDetails"], newData);
+      queryClient.setQueryData(["instance.getInstanceDetails"], newData)
     }
-  }));
+  }))
 
   return (
     <ModalLayout noHeader={props.noHeader} title={props.title} noPadding={true}>
@@ -39,7 +39,7 @@ const Confirmation = (props: ModalProps) => {
           <Button
             type="primary"
             onClick={() => {
-              modalContext?.closeModal();
+              modalContext?.closeModal()
             }}
           >
             {t("instance_cancel")}
@@ -52,17 +52,17 @@ const Confirmation = (props: ModalProps) => {
                   modpackLocked: {
                     Set: false
                   },
-                  instance: instanceId() as number
-                });
+                  instance: instanceId()!
+                })
               } else {
                 updateInstanceMutation.mutate({
                   modpackLocked: {
                     Set: null
                   },
-                  instance: instanceId() as number
-                });
+                  instance: instanceId()!
+                })
               }
-              modalContext?.closeModal();
+              modalContext?.closeModal()
             }}
           >
             {t("instance_confirm")}
@@ -70,7 +70,7 @@ const Confirmation = (props: ModalProps) => {
         </div>
       </div>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default Confirmation;
+export default Confirmation

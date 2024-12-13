@@ -1,10 +1,10 @@
-import { rspc } from "@/utils/rspcClient";
+import { rspc } from "@/utils/rspcClient"
 
 const SettingsJavaData = () => {
-  let data = rspc.createQuery(() => ({
+  const data = rspc.createQuery(() => ({
     queryKey: ["settings.getSettings"]
-  }));
-  return { data };
-};
+  }))
+  return { data }
+}
 
-export default SettingsJavaData;
+export default SettingsJavaData

@@ -1,7 +1,7 @@
-import { Trans } from "@gd/i18n";
-import { Spinner } from "@gd/ui";
-import skull from "/assets/images/icons/skull.png";
-import { RSPCError } from "@rspc/client";
+import { Trans } from "@gd/i18n"
+import { Spinner } from "@gd/ui"
+import skull from "/assets/images/icons/skull.png"
+import { RSPCError } from "@rspc/client"
 
 const NoModpacksAvailable = () => {
   return (
@@ -19,8 +19,8 @@ const NoModpacksAvailable = () => {
         </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const FetchingModpacks = () => {
   return (
@@ -37,8 +37,8 @@ const FetchingModpacks = () => {
         <Spinner />
       </div>
     </div>
-  );
-};
+  )
+}
 
 const NoMoreModpacks = () => {
   return (
@@ -49,12 +49,12 @@ const NoMoreModpacks = () => {
         </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const ErrorFetchingMods = (props: { error: RSPCError | null }) => {
   const parsedError = () =>
-    props.error?.message && JSON.parse(props.error?.message);
+    props.error?.message && JSON.parse(props.error?.message)
   return (
     <div class="w-full flex h-full justify-center items-center min-h-90">
       <div class="flex justify-center items-center flex-col text-center">
@@ -64,12 +64,12 @@ const ErrorFetchingMods = (props: { error: RSPCError | null }) => {
         </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export {
   NoMoreModpacks,
   NoModpacksAvailable,
   FetchingModpacks,
   ErrorFetchingMods
-};
+}

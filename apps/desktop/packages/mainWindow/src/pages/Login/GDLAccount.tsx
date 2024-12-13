@@ -1,49 +1,49 @@
-import { createEffect, Match, Show, Suspense, Switch } from "solid-js";
-import { Trans, useTransContext } from "@gd/i18n";
-import { port, rspc } from "@/utils/rspcClient";
-import { Collapsable, Dropdown } from "@gd/ui";
+import { createEffect, Match, Show, Suspense, Switch } from "solid-js"
+import { Trans, useTransContext } from "@gd/i18n"
+import { port, rspc } from "@/utils/rspcClient"
+import { Collapsable, Dropdown } from "@gd/ui"
 
-type Props = {
-  activeUuid: string | null | undefined;
-};
+interface Props {
+  activeUuid: string | null | undefined
+}
 
 const GDLAccount = (props: Props) => {
-  const [t] = useTransContext();
+  const [t] = useTransContext()
 
   const setActiveAccountMutation = rspc.createMutation(() => ({
     mutationKey: ["account.setActiveUuid"]
-  }));
+  }))
 
   const accounts = rspc.createQuery(() => ({
     queryKey: ["account.getAccounts"]
-  }));
+  }))
 
   const currentlySelectedAccount = () =>
-    accounts.data?.find((v) => v.uuid === props.activeUuid);
+    accounts.data?.find((v) => v.uuid === props.activeUuid)
 
   const gdlUser = rspc.createQuery(() => ({
     queryKey: ["account.peekGdlAccount", props.activeUuid!],
     enabled: !!props.activeUuid
-  }));
+  }))
 
   const currentlySelectedAccountEmail = () => {
-    const account = currentlySelectedAccount();
+    const account = currentlySelectedAccount()
 
-    if (!account) return "";
+    if (!account) return ""
 
     const email =
       account.type.type === "microsoft"
         ? account.type.value.email
-        : account.username;
+        : account.username
 
-    return " - " + email;
-  };
+    return " - " + email
+  }
 
   createEffect(() => {
     if (props.activeUuid) {
-      gdlUser.refetch();
+      gdlUser.refetch()
     }
-  });
+  })
 
   const accountOptions = () => {
     return accounts.data?.map((account) => {
@@ -52,7 +52,7 @@ const GDLAccount = (props: Props) => {
           <div
             class="flex justify-between items-center gap-4"
             onClick={() => {
-              setActiveAccountMutation.mutate(account.uuid);
+              setActiveAccountMutation.mutate(account.uuid)
             }}
           >
             <div class="flex items-center gap-4">
@@ -89,9 +89,9 @@ const GDLAccount = (props: Props) => {
           </div>
         ),
         key: account?.uuid
-      };
-    });
-  };
+      }
+    })
+  }
 
   return (
     <Suspense>
@@ -170,7 +170,7 @@ const GDLAccount = (props: Props) => {
         </Show>
       </div>
     </Suspense>
-  );
-};
+  )
+}
 
-export default GDLAccount;
+export default GDLAccount

@@ -1,8 +1,8 @@
 /* eslint-disable solid/no-innerhtml */
-import SiderbarWrapper from "./wrapper";
-import { Checkbox, Collapsable, Dropdown, Radio, Skeleton } from "@gd/ui";
-import fetchData from "@/pages/Mods/modsBrowser.data";
-import { useRouteData, useSearchParams } from "@solidjs/router";
+import SiderbarWrapper from "./wrapper"
+import { Checkbox, Collapsable, Dropdown, Radio, Skeleton } from "@gd/ui"
+import fetchData from "@/pages/Mods/modsBrowser.data"
+import { useRouteData, useSearchParams } from "@solidjs/router"
 import {
   createMemo,
   For,
@@ -11,35 +11,35 @@ import {
   runWithOwner,
   Show,
   Switch
-} from "solid-js";
+} from "solid-js"
 import {
   CFFECategory,
   FESearchAPI,
   FEUnifiedModLoaderType,
   MRFECategory,
   McType
-} from "@gd/core_module/bindings";
-import { ModpackPlatforms } from "@/utils/constants";
-import { capitalize } from "@/utils/helpers";
+} from "@gd/core_module/bindings"
+import { ModpackPlatforms } from "@/utils/constants"
+import { capitalize } from "@/utils/helpers"
 import {
   CategoryIcon,
   getInstanceImageUrl,
   PlatformIcon
-} from "@/utils/instances";
-import { Trans, useTransContext } from "@gd/i18n";
-import { useInfiniteModsQuery } from "../InfiniteScrollModsQueryWrapper";
-import DefaultImg from "/assets/images/default-instance-img.png";
+} from "@/utils/instances"
+import { Trans, useTransContext } from "@gd/i18n"
+import { useInfiniteModsQuery } from "../InfiniteScrollModsQueryWrapper"
+import DefaultImg from "/assets/images/default-instance-img.png"
 import {
   curseforgeCategories,
   getCategoryId,
   ModloaderIcon,
   modrinthCategories,
   supportedModloaders
-} from "@/utils/sidebar";
-import { createStore } from "solid-js/store";
-import { mappedMcVersions, mcVersions } from "@/utils/mcVersion";
-import { instanceId, setInstanceId } from "@/utils/browser";
-import { rspc } from "@/utils/rspcClient";
+} from "@/utils/sidebar"
+import { createStore } from "solid-js/store"
+import { mappedMcVersions, mcVersions } from "@/utils/mcVersion"
+import { instanceId, setInstanceId } from "@/utils/browser"
+import { rspc } from "@/utils/rspcClient"
 
 const mapTypeToColor = (type: McType) => {
   return (
@@ -57,25 +57,25 @@ const mapTypeToColor = (type: McType) => {
         <span class="text-red-500">{`[${type}]`}</span>
       </Match>
     </Switch>
-  );
-};
+  )
+}
 
 const Sidebar = () => {
-  let owner = getOwner();
-  const routeData: ReturnType<typeof fetchData> = useRouteData();
-  const rspcContext = rspc.useContext();
+  const owner = getOwner()
+  const routeData: ReturnType<typeof fetchData> = useRouteData()
+  const rspcContext = rspc.useContext()
   const [gameVersionFilters, setGameVersionFilters] = createStore({
     snapshot: false,
     oldAlpha: false,
     oldBeta: false
-  });
-  const infiniteQuery = useInfiniteModsQuery();
-  const [_searchParams, setSearchParams] = useSearchParams();
+  })
+  const infiniteQuery = useInfiniteModsQuery()
+  const [_searchParams, setSearchParams] = useSearchParams()
 
   const filteredGameVersions = createMemo(() => {
-    const snapshot = gameVersionFilters.snapshot;
-    const oldAlpha = gameVersionFilters.oldAlpha;
-    const oldBeta = gameVersionFilters.oldBeta;
+    const snapshot = gameVersionFilters.snapshot
+    const oldAlpha = gameVersionFilters.oldAlpha
+    const oldBeta = gameVersionFilters.oldBeta
 
     return mcVersions().filter(
       (item) =>
@@ -83,14 +83,14 @@ const Sidebar = () => {
         (item.type === "snapshot" && snapshot) ||
         (item.type === "old_beta" && oldBeta) ||
         (item.type === "old_alpha" && oldAlpha)
-    );
-  });
+    )
+  })
 
   const filteredMappedGameVersions = () => {
     const allVersionsLabel = {
       label: <span>{t("minecraft_all_versions")}</span>,
       key: ""
-    };
+    }
 
     return [
       allVersionsLabel,
@@ -103,13 +103,13 @@ const Sidebar = () => {
         ),
         key: item.id
       }))
-    ];
-  };
+    ]
+  }
 
   function updateGameVersionsFilter(
     newValue: Partial<typeof gameVersionFilters>
   ) {
-    setGameVersionFilters(newValue);
+    setGameVersionFilters(newValue)
 
     if (
       infiniteQuery.query.gameVersions?.[0] &&
@@ -119,44 +119,44 @@ const Sidebar = () => {
     ) {
       infiniteQuery?.setQuery({
         gameVersions: null
-      });
+      })
     }
   }
 
-  const [t] = useTransContext();
+  const [t] = useTransContext()
 
-  const isCurseforge = () => infiniteQuery?.query?.searchApi === "curseforge";
+  const isCurseforge = () => infiniteQuery?.query?.searchApi === "curseforge"
 
   const categories = () =>
     isCurseforge()
       ? curseforgeCategories().filter((category) => category.classId === 6)
       : modrinthCategories().filter(
           (category) => category.project_type === "mod"
-        );
+        )
 
   const modloaders = () => {
-    const searchApi = infiniteQuery?.query?.searchApi;
+    const searchApi = infiniteQuery?.query?.searchApi
 
     if (searchApi === "modrinth") {
-      const results = supportedModloaders[searchApi];
+      const results = supportedModloaders[searchApi]
       return results.filter((modloader) =>
         modloader.supported_project_types.includes("modpack")
-      );
+      )
     } else if (searchApi === "curseforge") {
       const results = supportedModloaders[searchApi].filter(
         (modloader) => modloader !== "unknown"
-      );
+      )
 
-      return results;
+      return results
     }
-  };
+  }
 
   const filteredInstances = () =>
     routeData.instancesUngrouped.data?.filter((instance) => {
       const validInstance =
-        instance.status.status === "valid" ? instance.status.value : undefined;
-      return validInstance?.modloader;
-    });
+        instance.status.status === "valid" ? instance.status.value : undefined
+      return validInstance?.modloader
+    })
 
   return (
     <SiderbarWrapper collapsable={false} noPadding>
@@ -170,41 +170,41 @@ const Sidebar = () => {
                     return rspcContext.client.query([
                       "instance.getInstanceDetails",
                       val as number
-                    ]);
-                  });
+                    ])
+                  })
 
                   setSearchParams({
                     instanceId: val as number
-                  });
-                  setInstanceId(val as number);
+                  })
+                  setInstanceId(val as number)
 
                   const modloaders =
-                    details?.modloaders.map((v: any) => v.type_) || [];
+                    details?.modloaders.map((v: any) => v.type_) || []
 
-                  const gameVersion = details?.version;
+                  const gameVersion = details?.version
 
                   if (!gameVersion) {
-                    throw new Error("This instance has no game version set.");
+                    throw new Error("This instance has no game version set.")
                   }
 
-                  let newModloaders = [];
+                  let newModloaders = []
                   if (modloaders) {
                     if (modloaders?.includes("forge")) {
-                      newModloaders.push("forge");
+                      newModloaders.push("forge")
                     } else if (modloaders?.includes("quilt")) {
-                      newModloaders.push("fabric");
-                      newModloaders.push("quilt");
+                      newModloaders.push("fabric")
+                      newModloaders.push("quilt")
                     } else {
-                      newModloaders = [...modloaders!] as any;
+                      newModloaders = [...modloaders] as any
                     }
                   }
 
-                  console.log(newModloaders, [gameVersion]);
+                  console.log(newModloaders, [gameVersion])
 
                   infiniteQuery.setQuery({
                     modloaders: newModloaders,
                     gameVersions: [gameVersion]
-                  });
+                  })
                 }}
                 value={instanceId()}
                 options={(filteredInstances() || []).map((instance) => ({
@@ -237,7 +237,7 @@ const Sidebar = () => {
                 infiniteQuery.setQuery({
                   searchApi: (val as string).toLowerCase() as FESearchAPI,
                   categories: []
-                });
+                })
               }}
               value={infiniteQuery?.query?.searchApi}
               options={ModpackPlatforms.map((platform) => ({
@@ -301,7 +301,7 @@ const Sidebar = () => {
               onChange={(val) => {
                 infiniteQuery?.setQuery({
                   gameVersions: val.key ? [val.key as string] : null
-                });
+                })
               }}
             />
           </Show>
@@ -318,28 +318,28 @@ const Sidebar = () => {
                     <Checkbox
                       onChange={(checked) => {
                         const prevModloaders =
-                          infiniteQuery?.query.modloaders || [];
+                          infiniteQuery?.query.modloaders || []
 
                         const modloaderName =
                           typeof modloader === "string"
                             ? modloader
-                            : modloader.name;
+                            : modloader.name
 
                         const filteredModloaders = prevModloaders.filter(
                           (_modloader: any) => _modloader !== modloaderName
-                        );
+                        )
 
                         const newModloaders = checked
                           ? [
                               ...prevModloaders,
                               modloaderName as FEUnifiedModLoaderType
                             ]
-                          : filteredModloaders;
+                          : filteredModloaders
 
                         infiniteQuery.setQuery({
                           modloaders:
                             newModloaders.length === 0 ? null : newModloaders
-                        });
+                        })
                       }}
                       checked={infiniteQuery.query.modloaders?.includes(
                         ((modloader as any)?.name ||
@@ -356,7 +356,7 @@ const Sidebar = () => {
                       </p>
                     </Checkbox>
                   </div>
-                );
+                )
               }}
             </For>
           </div>
@@ -370,12 +370,12 @@ const Sidebar = () => {
                     const categoryObj = () =>
                       isCurseforge()
                         ? { curseforge: (category as CFFECategory).id }
-                        : { modrinth: (category as MRFECategory).name };
+                        : { modrinth: (category as MRFECategory).name }
 
                     const categoryId = () =>
                       isCurseforge()
                         ? (category as CFFECategory).id
-                        : (category as MRFECategory).name;
+                        : (category as MRFECategory).name
 
                     const isCategoryIncluded = () =>
                       infiniteQuery?.query.categories?.some(
@@ -384,7 +384,7 @@ const Sidebar = () => {
                             item[0].curseforge === categoryId()) ||
                           ("modrinth" in item[0] &&
                             item[0].modrinth === categoryId())
-                      );
+                      )
 
                     return (
                       <div class="flex items-center gap-3">
@@ -392,7 +392,7 @@ const Sidebar = () => {
                           checked={isCategoryIncluded()}
                           onChange={(checked) => {
                             const prevCategories =
-                              infiniteQuery?.query.categories || [];
+                              infiniteQuery?.query.categories || []
 
                             const newCategories = checked
                               ? [...prevCategories, [categoryObj()]]
@@ -400,11 +400,11 @@ const Sidebar = () => {
                                   (categ) =>
                                     getCategoryId(categ[0]) !==
                                     getCategoryId(categoryObj())
-                                );
+                                )
 
                             infiniteQuery.setQuery({
                               categories: newCategories
-                            });
+                            })
                           }}
                         >
                           <div class="flex items-center gap-2 max-w-32">
@@ -413,7 +413,7 @@ const Sidebar = () => {
                           </div>
                         </Checkbox>
                       </div>
-                    );
+                    )
                   }}
                 </For>
               </div>
@@ -425,7 +425,7 @@ const Sidebar = () => {
         </Switch>
       </div>
     </SiderbarWrapper>
-  );
-};
+  )
+}
 
-export default Sidebar;
+export default Sidebar

@@ -1,7 +1,7 @@
-import { rspc } from "@/utils/rspcClient";
+import { rspc } from "@/utils/rspcClient"
 
 const fetchData = ({ params }: { params: any }) => {
-  const isCurseforge = params.platform === "curseforge";
+  const isCurseforge = params.platform === "curseforge"
 
   if (isCurseforge) {
     const curseforgeGetMod = rspc.createQuery(() => ({
@@ -9,16 +9,16 @@ const fetchData = ({ params }: { params: any }) => {
         "modplatforms.curseforge.getMod",
         { modId: parseInt(params.id, 10) }
       ]
-    }));
+    }))
 
-    return { curseforgeGetMod, isCurseforge };
+    return { curseforgeGetMod, isCurseforge }
   } else {
     const modrinthGetProject = rspc.createQuery(() => ({
       queryKey: ["modplatforms.modrinth.getProject", params.id]
-    }));
+    }))
 
-    return { modrinthGetProject, isCurseforge };
+    return { modrinthGetProject, isCurseforge }
   }
-};
+}
 
-export default fetchData;
+export default fetchData

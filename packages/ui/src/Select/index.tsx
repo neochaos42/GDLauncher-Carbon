@@ -1,11 +1,11 @@
-import { children } from "solid-js";
+import { children } from "solid-js"
 interface Props {
-  children: HTMLElement | string;
+  children: HTMLElement | string
 }
 
 function Select(props: Props) {
-  const c = children(() => props.children);
-  return <div>{c()}</div>;
+  const c = children(() => props.children)
+  return <div>{c()}</div>
 }
 
-export { Select };
+export { Select }

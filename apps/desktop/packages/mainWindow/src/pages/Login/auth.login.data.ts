@@ -1,11 +1,11 @@
-import { rspc } from "@/utils/rspcClient";
+import { rspc } from "@/utils/rspcClient"
 
 const fetchData = () => {
   const status = rspc.createQuery(() => ({
     queryKey: ["account.enroll.getStatus"]
-  }));
+  }))
 
-  return { status };
-};
+  return { status }
+}
 
-export default fetchData;
+export default fetchData

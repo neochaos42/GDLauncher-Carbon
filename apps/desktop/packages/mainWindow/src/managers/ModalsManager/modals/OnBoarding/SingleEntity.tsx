@@ -1,10 +1,10 @@
-import { rspc, queryClient } from "@/utils/rspcClient";
+import { rspc, queryClient } from "@/utils/rspcClient"
 import {
   ImportEntityStatus,
   ImportableInstance,
   InvalidImportEntry
-} from "@gd/core_module/bindings";
-import { Button, Checkbox, Input, Spinner, Tooltip } from "@gd/ui";
+} from "@gd/core_module/bindings"
+import { Button, Checkbox, Input, Spinner, Tooltip } from "@gd/ui"
 import {
   For,
   Match,
@@ -13,126 +13,126 @@ import {
   Switch,
   createEffect,
   createSignal
-} from "solid-js";
-import { createStore } from "solid-js/store";
-import SingleCheckBox from "./SingleCheckBox";
-import BeginImportStep from "./BeginImportStep";
-import { Trans, useTransContext } from "@gd/i18n";
-import { setTaskIds } from "@/utils/import";
+} from "solid-js"
+import { createStore } from "solid-js/store"
+import SingleCheckBox from "./SingleCheckBox"
+import BeginImportStep from "./BeginImportStep"
+import { Trans, useTransContext } from "@gd/i18n"
+import { setTaskIds } from "@/utils/import"
 
-const [step, setStep] = createSignal("selectionStep");
-const [instances, setInstances] = createSignal([]);
-const [globalInstances, setGlobalInstances] = createSignal<any[]>([]);
-export { step, setStep, instances, setInstances, globalInstances };
+const [step, setStep] = createSignal("selectionStep")
+const [instances, setInstances] = createSignal([])
+const [globalInstances, setGlobalInstances] = createSignal<any[]>([])
+export { step, setStep, instances, setInstances, globalInstances }
 
 const SingleEntity = (props: {
-  entity: ImportEntityStatus;
-  setEntity: Setter<ImportEntityStatus | undefined>;
+  entity: ImportEntityStatus
+  setEntity: Setter<ImportEntityStatus | undefined>
 }) => {
-  const [t] = useTransContext();
-  const [path, setPath] = createSignal<string | undefined>(undefined);
-  const [inputValue, setInputValue] = createSignal(path());
+  const [t] = useTransContext()
+  const [path, setPath] = createSignal<string | undefined>(undefined)
+  const [inputValue, setInputValue] = createSignal(path())
 
   const [instance, setInstance] = createStore<{
-    noResult: string | undefined;
-    singleResult: ImportableInstance | undefined;
-    multiResult: (ImportableInstance | InvalidImportEntry)[] | undefined;
-    isLoading?: boolean;
+    noResult: string | undefined
+    singleResult: ImportableInstance | undefined
+    multiResult: (ImportableInstance | InvalidImportEntry)[] | undefined
+    isLoading?: boolean
   }>({
     noResult: undefined,
     singleResult: undefined,
     multiResult: undefined,
     isLoading: false
-  });
+  })
 
   const entityDefaultPath = rspc.createQuery(() => ({
     queryKey: ["instance.getImportEntityDefaultPath", props.entity.entity]
-  }));
+  }))
   const scanImportableInstancesMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.setImportScanTarget"]
-  }));
+  }))
 
   const importScanStatus = rspc.createQuery(() => ({
     queryKey: ["instance.getImportScanStatus"]
-  }));
+  }))
 
   createEffect(() => {
     if (!entityDefaultPath.data) {
-      setPath("");
+      setPath("")
     }
 
-    setPath(entityDefaultPath.data!);
-  });
+    setPath(entityDefaultPath.data!)
+  })
 
   createEffect(async () => {
     if (path()) {
       await scanImportableInstancesMutation.mutateAsync([
         props.entity.entity,
-        path() as string
-      ]);
+        path()!
+      ])
 
       queryClient.invalidateQueries({
         queryKey: ["instance.getImportScanStatus"]
-      });
+      })
     } else {
       await scanImportableInstancesMutation.mutateAsync([
         props.entity.entity,
         ""
-      ]);
+      ])
 
       queryClient.invalidateQueries({
         queryKey: ["instance.getImportScanStatus"]
-      });
+      })
     }
-  });
+  })
 
   createEffect(() => {
-    const status = importScanStatus.data;
+    const status = importScanStatus.data
     if (status) {
-      const data = status.status;
+      const data = status.status
       if (status.scanning) {
         setInstance({
           isLoading: true,
           noResult: undefined,
           singleResult: undefined,
           multiResult: undefined
-        });
+        })
       }
       if (typeof data === "object") {
         if ("SingleResult" in data) {
           if ("Valid" in data.SingleResult) {
-            const res = data.SingleResult;
-            setGlobalInstances([res.Valid]);
+            const res = data.SingleResult
+            setGlobalInstances([res.Valid])
             setInstance({
               singleResult: res.Valid,
               multiResult: undefined,
               noResult: undefined,
               isLoading: false
-            });
+            })
           }
         } else if ("MultiResult" in data) {
-          const res = data.MultiResult;
+          const res = data.MultiResult
           setGlobalInstances(
             res.map((e) => {
               if ("Valid" in e) {
-                return e.Valid;
+                return e.Valid
               } else {
-                return e.Invalid;
+                return e.Invalid
               }
             })
-          );
+          )
           setInstance({
             multiResult: res.map((e) => {
               if ("Valid" in e) {
-                return e.Valid;
+                return e.Valid
               } else {
-                return e.Invalid;
+                return e.Invalid
               }
             }),
             singleResult: undefined,
             noResult: undefined,
             isLoading: false
-          });
+          })
         }
       } else {
         setInstance({
@@ -140,10 +140,10 @@ const SingleEntity = (props: {
           singleResult: undefined,
           multiResult: undefined,
           isLoading: false
-        });
+        })
       }
     }
-  });
+  })
 
   return (
     <>
@@ -156,11 +156,11 @@ const SingleEntity = (props: {
             <Input
               value={path()}
               onInput={(e) => {
-                setInputValue(e.currentTarget.value);
+                setInputValue(e.currentTarget.value)
               }}
               onBlur={() => {
                 if (inputValue() && inputValue() !== path()) {
-                  setPath(inputValue());
+                  setPath(inputValue())
                 }
               }}
               class="flex-1"
@@ -168,7 +168,7 @@ const SingleEntity = (props: {
               icon={
                 <div
                   onClick={() => {
-                    setPath("");
+                    setPath("")
                   }}
                   class="i-ri:close-line bg-darkSlate-50 hover:bg-white"
                 />
@@ -180,7 +180,7 @@ const SingleEntity = (props: {
                   <div class="flex items-center justify-center p-2 bg-darkSlate-800 rounded-lg text-lightSlate-700 hover:text-lightSlate-50">
                     <div
                       onClick={async () => {
-                        setPath(entityDefaultPath.data!);
+                        setPath(entityDefaultPath.data!)
                       }}
                       class="text-xl i-ri:arrow-go-back-fill"
                     />
@@ -196,13 +196,13 @@ const SingleEntity = (props: {
                           title: t("instance.select_path"),
                           defaultPath: path() || "",
                           properties: ["openFile", "openDirectory"]
-                        });
+                        })
 
                         if (result.canceled) {
-                          return;
+                          return
                         }
 
-                        setPath(result.filePaths[0]);
+                        setPath(result.filePaths[0])
                       }}
                       class="text-xl i-ri:folder-line"
                     />
@@ -228,13 +228,13 @@ const SingleEntity = (props: {
                             },
                             { name: "All Files", extensions: ["*"] }
                           ]
-                        });
+                        })
 
                         if (result.canceled) {
-                          return;
+                          return
                         }
 
-                        setPath(result.filePaths[0]);
+                        setPath(result.filePaths[0])
                       }}
                       class="text-xl i-ri:file-zip-line"
                     />
@@ -292,9 +292,9 @@ const SingleEntity = (props: {
                                   (e: any) => e.instance_name
                                 ) as never[])
                               : []
-                          );
+                          )
                         } else {
-                          setInstances([]);
+                          setInstances([])
                         }
                       }}
                     />
@@ -304,7 +304,7 @@ const SingleEntity = (props: {
                           <SingleCheckBox
                             title={(() => {
                               if ("instance_name" in entry) {
-                                return entry.instance_name;
+                                return entry.instance_name
                               }
                             })()}
                             setList={setInstances}
@@ -341,9 +341,9 @@ const SingleEntity = (props: {
         <Button
           type="secondary"
           onClick={() => {
-            props.setEntity(undefined);
-            setStep("selectionStep");
-            setInstances([]);
+            props.setEntity(undefined)
+            setStep("selectionStep")
+            setInstances([])
           }}
         >
           <Trans key="onboarding.go_back" />
@@ -354,8 +354,8 @@ const SingleEntity = (props: {
             disabled={instances().length === 0}
             type="primary"
             onClick={() => {
-              setTaskIds([]);
-              setStep("importStep");
+              setTaskIds([])
+              setStep("importStep")
             }}
           >
             <Trans key="onboarding.begin_import" />
@@ -363,9 +363,9 @@ const SingleEntity = (props: {
         </Show>
       </div>
     </>
-  );
-};
-export default SingleEntity;
+  )
+}
+export default SingleEntity
 
 // GET_IMPORT_ENTITY_DEFAULT_PATH => returns an Option<String> of the default search path for the given import type
 // SET_IMPORT_SCAN_TARGET => begins scanning at the given (path, import type). if GET_IMPORT_ENTITY_DEFAULT_PATH returns some you can call this immediately

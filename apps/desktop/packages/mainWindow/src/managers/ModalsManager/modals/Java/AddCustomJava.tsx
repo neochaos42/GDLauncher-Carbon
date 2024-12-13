@@ -1,23 +1,23 @@
-import { Trans } from "@gd/i18n";
-import { ModalProps, useModal } from "@/managers/ModalsManager";
-import ModalLayout from "@/managers/ModalsManager/ModalLayout";
-import { Button, Input, createNotification } from "@gd/ui";
-import { rspc } from "@/utils/rspcClient";
-import { Match, Switch, createSignal } from "solid-js";
+import { Trans } from "@gd/i18n"
+import { ModalProps, useModal } from "@/managers/ModalsManager"
+import ModalLayout from "@/managers/ModalsManager/ModalLayout"
+import { Button, Input, createNotification } from "@gd/ui"
+import { rspc } from "@/utils/rspcClient"
+import { Match, Switch, createSignal } from "solid-js"
 
 const AddCustomJava = (props: ModalProps) => {
-  const [value, setValue] = createSignal("");
-  const [validPath, setValidPath] = createSignal<boolean | null>(null);
-  const modalsContext = useModal();
-  const addNotification = createNotification();
+  const [value, setValue] = createSignal("")
+  const [validPath, setValidPath] = createSignal<boolean | null>(null)
+  const modalsContext = useModal()
+  const addNotification = createNotification()
 
   const createCustomJavaVersionMutation = rspc.createMutation(() => ({
     mutationKey: ["java.createCustomJavaVersion"]
-  }));
+  }))
 
   const validateJavaPath = rspc.createMutation(() => ({
     mutationKey: ["java.validateCustomJavaPath"]
-  }));
+  }))
 
   return (
     <ModalLayout width="w-100" noHeader={props.noHeader} title={props?.title}>
@@ -52,11 +52,11 @@ const AddCustomJava = (props: ModalProps) => {
               onInput={(e) => setValue(e.currentTarget.value)}
               onBlur={async () => {
                 if (!value()) {
-                  setValidPath(null);
-                  return;
+                  setValidPath(null)
+                  return
                 }
-                const res = await validateJavaPath.mutateAsync(value());
-                setValidPath(res);
+                const res = await validateJavaPath.mutateAsync(value())
+                setValidPath(res)
               }}
             />
           </div>
@@ -68,12 +68,12 @@ const AddCustomJava = (props: ModalProps) => {
                 createCustomJavaVersionMutation.isPending
               }
               onClick={() => {
-                createCustomJavaVersionMutation.mutate(value());
+                createCustomJavaVersionMutation.mutate(value())
                 addNotification({
                   name: "Custom Java Path added successfully",
                   type: "success"
-                });
-                modalsContext?.closeModal();
+                })
+                modalsContext?.closeModal()
               }}
             >
               <Trans key="add_custom_java_path" />
@@ -82,7 +82,7 @@ const AddCustomJava = (props: ModalProps) => {
         </div>
       </div>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default AddCustomJava;
+export default AddCustomJava

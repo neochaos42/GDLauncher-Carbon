@@ -1,26 +1,26 @@
-import { useLocation } from "@solidjs/router";
-import { Show, children } from "solid-js";
-import { JSX } from "solid-js/jsx-runtime";
-import { ModalProps, useModal } from ".";
-import { useGDNavigate } from "../NavigationManager";
+import { useLocation } from "@solidjs/router"
+import { Show, children } from "solid-js"
+import { JSX } from "solid-js/jsx-runtime"
+import { ModalProps, useModal } from "."
+import { useGDNavigate } from "../NavigationManager"
 
 interface Props extends ModalProps {
-  children: JSX.Element | Element;
-  class?: string;
-  preventClose?: boolean;
-  noPadding?: boolean;
-  overflowHiddenDisabled?: boolean;
-  background?: JSX.Element;
-  height?: string;
-  width?: string;
-  scrollable?: string;
+  children: JSX.Element | Element
+  class?: string
+  preventClose?: boolean
+  noPadding?: boolean
+  overflowHiddenDisabled?: boolean
+  background?: JSX.Element
+  height?: string
+  width?: string
+  scrollable?: string
 }
 
 const ModalLayout = (props: Props) => {
-  const c = children(() => props.children);
-  const navigate = useGDNavigate();
-  const location = useLocation();
-  const modalsContext = useModal();
+  const c = children(() => props.children)
+  const navigate = useGDNavigate()
+  const location = useLocation()
+  const modalsContext = useModal()
 
   return (
     <div
@@ -30,7 +30,7 @@ const ModalLayout = (props: Props) => {
         "h-auto": !props.width
       }}
       onClick={(e) => {
-        e.stopPropagation();
+        e.stopPropagation()
       }}
     >
       <div
@@ -49,8 +49,8 @@ const ModalLayout = (props: Props) => {
               class="h-5 w-5 text-darkSlate-300 i-ri:close-fill hover:text-lightSlate-100 duration-100 ease-in-out"
               onClick={() => {
                 if (!props.preventClose) {
-                  navigate(location.pathname);
-                  modalsContext?.closeModal();
+                  navigate(location.pathname)
+                  modalsContext?.closeModal()
                 }
               }}
             />
@@ -68,7 +68,7 @@ const ModalLayout = (props: Props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ModalLayout;
+export default ModalLayout

@@ -6,53 +6,52 @@ import {
   Skeleton,
   Switch,
   Tooltip
-} from "@gd/ui";
-import { For, Show, createMemo, createSignal } from "solid-js";
-import { Trans, useTransContext } from "@gd/i18n";
-import Mod from "./Mod";
-import skull from "/assets/images/icons/skull.png";
-import { useParams, useRouteData } from "@solidjs/router";
-import { rspc } from "@/utils/rspcClient";
-import { createStore, produce, reconcile } from "solid-js/store";
-import fetchData from "../../instance.data";
-import { Mod as Modtype } from "@gd/core_module/bindings";
-import { useGDNavigate } from "@/managers/NavigationManager";
-import { setLastType } from "@/components/InfiniteScrollModsQueryWrapper";
-import { useModal } from "@/managers/ModalsManager";
+} from "@gd/ui"
+import { For, Show, createMemo, createSignal } from "solid-js"
+import { Trans, useTransContext } from "@gd/i18n"
+import Mod from "./Mod"
+import skull from "/assets/images/icons/skull.png"
+import { useParams, useRouteData } from "@solidjs/router"
+import { rspc } from "@/utils/rspcClient"
+import { createStore, produce, reconcile } from "solid-js/store"
+import fetchData from "../../instance.data"
+import { Mod as Modtype } from "@gd/core_module/bindings"
+import { useGDNavigate } from "@/managers/NavigationManager"
+import { setLastType } from "@/components/InfiniteScrollModsQueryWrapper"
+import { useModal } from "@/managers/ModalsManager"
 
 const Mods = () => {
-  const [t] = useTransContext();
-  const params = useParams();
-  const navigate = useGDNavigate();
-  const modalsContext = useModal();
+  const [t] = useTransContext()
+  const params = useParams()
+  const navigate = useGDNavigate()
+  const modalsContext = useModal()
 
-  const [filter, setFilter] = createSignal("");
-  const [selectedModsMap, setSelectedModsMap] = createStore<{
-    [id: string]: boolean;
-  }>({});
+  const [filter, setFilter] = createSignal("")
+  const [selectedModsMap, setSelectedModsMap] = createStore<
+    Record<string, boolean>
+  >({})
   const [isModStatusToggleLoading, setIsModStatusToggleLoading] =
-    createSignal(false);
-  const routeData: ReturnType<typeof fetchData> = useRouteData();
+    createSignal(false)
+  const routeData: ReturnType<typeof fetchData> = useRouteData()
 
-  const isInstanceLocked = () =>
-    routeData.instanceDetails.data?.modpack?.locked;
+  const isInstanceLocked = () => routeData.instanceDetails.data?.modpack?.locked
 
   const deleteModMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.deleteMod"]
-  }));
+  }))
   const disableModMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.disableMod"]
-  }));
+  }))
   const enableModMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.enableMod"]
-  }));
+  }))
 
   const openFolderMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.openInstanceFolder"]
-  }));
+  }))
 
   const filteredMods = createMemo(() => {
-    const filterName = filter().replaceAll(" ", "").toLowerCase();
+    const filterName = filter().replaceAll(" ", "").toLowerCase()
 
     return filter()
       ? routeData.instanceMods?.filter(
@@ -74,12 +73,12 @@ const Mods = () => {
               .replaceAll(" ", "")
               .includes(filterName)
         )
-      : routeData.instanceMods;
-  });
+      : routeData.instanceMods
+  })
 
   const selectedMods = createMemo(() => {
-    return routeData.instanceMods?.filter((mod) => selectedModsMap[mod.id]);
-  });
+    return routeData.instanceMods?.filter((mod) => selectedModsMap[mod.id])
+  })
 
   const updateAllMods = () => {
     modalsContext?.openModal(
@@ -90,8 +89,8 @@ const Mods = () => {
         mods: routeData.instanceMods.filter((mod) => mod.has_update),
         instanceId: parseInt(params.id, 10)
       }
-    );
-  };
+    )
+  }
 
   const updateSelectedMods = () => {
     modalsContext?.openModal(
@@ -102,8 +101,8 @@ const Mods = () => {
         mods: selectedMods().filter((mod) => mod.has_update),
         instanceId: parseInt(params.id, 10)
       }
-    );
-  };
+    )
+  }
 
   const NoMods = () => {
     return (
@@ -117,28 +116,28 @@ const Mods = () => {
             type="outline"
             size="medium"
             onClick={() => {
-              navigate(`/mods?instanceId=${params.id}`);
+              navigate(`/mods?instanceId=${params.id}`)
             }}
           >
             <Trans key="instance.add_mod" />
           </Button>
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   const sortAlphabetically = (a: Modtype, b: Modtype) => {
-    if (a.filename < b.filename) return -1;
-    if (a.filename > b.filename) return 1;
-    return 0;
-  };
+    if (a.filename < b.filename) return -1
+    if (a.filename > b.filename) return 1
+    return 0
+  }
 
   const isSelectAllIndeterminate = () => {
     return (
       (selectedMods()?.length || 0) > 0 &&
       selectedMods()?.length !== routeData.instanceMods?.length
-    );
-  };
+    )
+  }
 
   return (
     <div>
@@ -187,40 +186,40 @@ const Mods = () => {
               isLoading={isModStatusToggleLoading()}
               checked={selectedMods()?.every((mod) => mod.enabled) || false}
               onChange={async (event) => {
-                if (isModStatusToggleLoading()) return;
+                if (isModStatusToggleLoading()) return
 
-                setIsModStatusToggleLoading(true);
+                setIsModStatusToggleLoading(true)
 
-                let action = event.target.checked;
+                let action = event.target.checked
 
                 if (
                   selectedMods()?.some((mod) => mod.enabled) &&
                   selectedMods()?.some((mod) => !mod.enabled)
                 ) {
-                  action = true;
+                  action = true
                 }
 
                 const modsThatNeedApply = selectedMods()?.filter(
                   (mod) => mod.enabled !== action
-                );
+                )
 
                 for (const mod of modsThatNeedApply || []) {
                   if (action) {
                     await enableModMutation.mutateAsync({
                       instance_id: parseInt(params.id, 10),
                       mod_id: mod.id
-                    });
+                    })
                   } else {
                     await disableModMutation.mutateAsync({
                       instance_id: parseInt(params.id, 10),
                       mod_id: mod.id
-                    });
+                    })
                   }
 
-                  await new Promise((resolve) => setTimeout(resolve, 10));
+                  await new Promise((resolve) => setTimeout(resolve, 10))
                 }
 
-                setIsModStatusToggleLoading(false);
+                setIsModStatusToggleLoading(false)
               }}
             />
           </Show>
@@ -244,8 +243,8 @@ const Mods = () => {
                   deleteModMutation.mutate({
                     instance_id: parseInt(params.id, 10),
                     mod_id: mod
-                  });
-                });
+                  })
+                })
               }}
             >
               <span class="text-2xl i-ri:delete-bin-2-fill" />
@@ -271,7 +270,7 @@ const Mods = () => {
               <div
                 class="flex items-center gap-2 cursor-pointer text-lightSlate-700 hover:text-green-500 duration-100 ease-in-out transition"
                 onClick={() => {
-                  updateSelectedMods();
+                  updateSelectedMods()
                 }}
               >
                 <span class="text-2xl i-ri:download-2-fill" />
@@ -291,21 +290,21 @@ const Mods = () => {
                 (selectedMods()?.length || 0) > 0 && !isSelectAllIndeterminate()
               }
               onChange={(checked) => {
-                let action = checked;
+                let action = checked
 
                 if (isSelectAllIndeterminate()) {
-                  action = true;
+                  action = true
                 }
 
                 setSelectedModsMap(
                   produce((prev) => {
                     for (const mod of routeData.instanceMods || []) {
-                      prev[mod.id] = action || undefined!;
+                      prev[mod.id] = action || undefined!
                     }
 
-                    return prev;
+                    return prev
                   })
-                );
+                )
               }}
             />
             <Input
@@ -355,8 +354,8 @@ const Mods = () => {
                 type="outline"
                 size="medium"
                 onClick={() => {
-                  setLastType(null);
-                  navigate(`/mods?instanceId=${params.id}`);
+                  setLastType(null)
+                  navigate(`/mods?instanceId=${params.id}`)
                 }}
               >
                 <Trans key="instance.add_mod" />
@@ -386,9 +385,9 @@ const Mods = () => {
                 <div
                   class="flex items-center gap-2 duration-100 ease-in-out transition hover:text-green-500 text-lightSlate-700"
                   onClick={() => {
-                    if (isInstanceLocked()) return;
+                    if (isInstanceLocked()) return
 
-                    updateAllMods();
+                    updateAllMods()
                   }}
                 >
                   <span class="text-2xl i-ri:download-2-fill" />
@@ -415,7 +414,7 @@ const Mods = () => {
                   openFolderMutation.mutate({
                     folder: "Mods",
                     instance_id: parseInt(params.id, 10)
-                  });
+                  })
                 }}
               >
                 <span class="text-2xl i-ri:folder-open-fill" />
@@ -433,11 +432,7 @@ const Mods = () => {
           }
           fallback={<NoMods />}
         >
-          <For
-            each={
-              [...(filteredMods() || [])].sort(sortAlphabetically) as Modtype[]
-            }
-          >
+          <For each={[...(filteredMods() || [])].sort(sortAlphabetically)}>
             {(mod) => (
               <Mod
                 mod={mod}
@@ -453,7 +448,7 @@ const Mods = () => {
         </Show>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Mods;
+export default Mods

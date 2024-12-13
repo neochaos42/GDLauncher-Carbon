@@ -1,32 +1,32 @@
-import { onCleanup, onMount } from "solid-js";
-import { ModalProps, useModal } from "..";
-import ModalLayout from "../ModalLayout";
-import { Trans } from "@gd/i18n";
-import { Button, Checkbox } from "@gd/ui";
-import { rspc } from "@/utils/rspcClient";
-import { useGDNavigate } from "@/managers/NavigationManager";
+import { onCleanup, onMount } from "solid-js"
+import { ModalProps, useModal } from ".."
+import ModalLayout from "../ModalLayout"
+import { Trans } from "@gd/i18n"
+import { Button, Checkbox } from "@gd/ui"
+import { rspc } from "@/utils/rspcClient"
+import { useGDNavigate } from "@/managers/NavigationManager"
 
-export let windowCloseWarningAcquireLock = true;
+export let windowCloseWarningAcquireLock = true
 
 const WindowCloseWarning = (props: ModalProps) => {
-  const navigate = useGDNavigate();
-  const modalsManager = useModal();
+  const navigate = useGDNavigate()
+  const modalsManager = useModal()
 
   const settings = rspc.createQuery(() => ({
     queryKey: ["settings.getSettings"]
-  }));
+  }))
 
   const settingsMutation = rspc.createMutation(() => ({
     mutationKey: ["settings.setSettings"]
-  }));
+  }))
 
   onMount(() => {
-    windowCloseWarningAcquireLock = false;
-  });
+    windowCloseWarningAcquireLock = false
+  })
 
   onCleanup(() => {
-    windowCloseWarningAcquireLock = true;
-  });
+    windowCloseWarningAcquireLock = true
+  })
 
   return (
     <ModalLayout
@@ -50,16 +50,16 @@ const WindowCloseWarning = (props: ModalProps) => {
                 <span
                   class="text-lightSlate-300 underline hover:text-lightSlate-100 transition-colors ease-in-out duration-100"
                   onClick={() => {
-                    navigate("/settings");
-                    modalsManager?.closeModal();
+                    navigate("/settings")
+                    modalsManager?.closeModal()
                     setTimeout(() => {
                       document
                         .getElementById("launcher_action_on_game_launch")
                         ?.scrollIntoView({
                           behavior: "smooth",
                           block: "center"
-                        });
-                    }, 150);
+                        })
+                    }, 150)
                   }}
                 />
                 {""}
@@ -76,7 +76,7 @@ const WindowCloseWarning = (props: ModalProps) => {
                 showAppCloseWarning: {
                   Set: !checked
                 }
-              });
+              })
             }}
           >
             <Trans key="window_close_never_show" />
@@ -85,7 +85,7 @@ const WindowCloseWarning = (props: ModalProps) => {
             type="secondary"
             class="w-full"
             onClick={() => {
-              window.closeWindow();
+              window.closeWindow()
             }}
           >
             <Trans key="window_close_quit_app" />
@@ -93,7 +93,7 @@ const WindowCloseWarning = (props: ModalProps) => {
         </div>
       </div>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default WindowCloseWarning;
+export default WindowCloseWarning

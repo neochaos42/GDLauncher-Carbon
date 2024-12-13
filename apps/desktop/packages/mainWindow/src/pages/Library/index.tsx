@@ -1,34 +1,34 @@
-import Sidebar from "@/components/Sidebar/library";
-import { Outlet } from "@solidjs/router";
-import ContentWrapper from "@/components/ContentWrapper";
-import { Show, onMount } from "solid-js";
-import { rspc } from "@/utils/rspcClient";
-import { useModal } from "@/managers/ModalsManager";
+import Sidebar from "@/components/Sidebar/library"
+import { Outlet } from "@solidjs/router"
+import ContentWrapper from "@/components/ContentWrapper"
+import { Show, onMount } from "solid-js"
+import { rspc } from "@/utils/rspcClient"
+import { useModal } from "@/managers/ModalsManager"
 
 function Library() {
-  const gridLayout = () => false;
-  const modalsManager = useModal();
+  const gridLayout = () => false
+  const modalsManager = useModal()
   const settings = rspc.createQuery(() => ({
     queryKey: ["settings.getSettings"]
-  }));
+  }))
   const updateSettings = rspc.createMutation(() => ({
     mutationKey: ["settings.setSettings"]
-  }));
+  }))
 
   onMount(() => {
-    console.log(settings.data?.lastAppVersion, __APP_VERSION__);
+    console.log(settings.data?.lastAppVersion, __APP_VERSION__)
     if (settings.data?.lastAppVersion !== __APP_VERSION__) {
       modalsManager?.openModal({
         name: "changelogs"
-      });
+      })
 
       updateSettings.mutate({
         lastAppVersion: {
           Set: __APP_VERSION__
         }
-      });
+      })
     }
-  });
+  })
 
   return (
     <>
@@ -39,7 +39,7 @@ function Library() {
         <Outlet />
       </ContentWrapper>
     </>
-  );
+  )
 }
 
-export default Library;
+export default Library

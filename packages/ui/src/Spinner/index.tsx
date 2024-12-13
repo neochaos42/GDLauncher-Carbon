@@ -1,9 +1,9 @@
-import { JSX, splitProps } from "solid-js";
+import { JSX, splitProps } from "solid-js"
 
-interface Props extends JSX.SvgSVGAttributes<SVGSVGElement> {}
+type Props = JSX.SvgSVGAttributes<SVGSVGElement>
 
 function Spinner(props: Props) {
-  const [local, others] = splitProps(props, ["class"]);
+  const [local, others] = splitProps(props, ["class"])
 
   return (
     <svg
@@ -28,7 +28,7 @@ function Spinner(props: Props) {
         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
       />
     </svg>
-  );
+  )
 }
 
-export { Spinner };
+export { Spinner }

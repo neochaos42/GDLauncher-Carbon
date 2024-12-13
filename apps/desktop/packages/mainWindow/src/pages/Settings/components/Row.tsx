@@ -1,14 +1,14 @@
-import { JSX, children } from "solid-js";
+import { JSX, children } from "solid-js"
 
-type Props = {
-  id?: string;
-  children: JSX.Element;
-  class?: string;
-  forceContentBelow?: boolean;
-};
+interface Props {
+  id?: string
+  children: JSX.Element
+  class?: string
+  forceContentBelow?: boolean
+}
 
 function Row(props: Props) {
-  const c = children(() => props.children);
+  const c = children(() => props.children)
 
   return (
     <div
@@ -21,7 +21,7 @@ function Row(props: Props) {
     >
       {c()}
     </div>
-  );
+  )
 }
 
-export default Row;
+export default Row

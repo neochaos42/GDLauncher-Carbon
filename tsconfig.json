@@ -10,5 +10,9 @@
     {
       "path": "packages/ui"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js"
+  }
 }

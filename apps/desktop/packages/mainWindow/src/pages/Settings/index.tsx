@@ -1,21 +1,21 @@
-import { Outlet, useLocation } from "@solidjs/router";
-import ContentWrapper from "@/components/ContentWrapper";
-import { Tab, TabList, Tabs } from "@gd/ui";
-import { For, JSX } from "solid-js";
-import { useGDNavigate } from "@/managers/NavigationManager";
-import FeatureStatusBadge from "@/components/FeatureStatusBadge";
+import { Outlet, useLocation } from "@solidjs/router"
+import ContentWrapper from "@/components/ContentWrapper"
+import { Tab, TabList, Tabs } from "@gd/ui"
+import { For, JSX } from "solid-js"
+import { useGDNavigate } from "@/managers/NavigationManager"
+import FeatureStatusBadge from "@/components/FeatureStatusBadge"
 
-export type settingsItem = {
-  name: string | JSX.Element;
-  icon: string;
-  path: string;
-};
+export interface settingsItem {
+  name: string | JSX.Element
+  icon: string
+  path: string
+}
 
 function Settings() {
-  const location = useLocation();
-  const navigate = useGDNavigate();
+  const location = useLocation()
+  const navigate = useGDNavigate()
 
-  const settings: Array<settingsItem> = [
+  const settings: settingsItem[] = [
     {
       name: "General",
       icon: "i-ri:home-gear-fill",
@@ -63,7 +63,7 @@ function Settings() {
       icon: "i-ri-folder-fill",
       path: "/settings/runtime-path"
     }
-  ];
+  ]
 
   return (
     <>
@@ -81,7 +81,7 @@ function Settings() {
                   {(item) => (
                     <Tab
                       onClick={() => {
-                        navigate(item.path);
+                        navigate(item.path)
                       }}
                     >
                       <div class="flex flex-col gap-2 justify-center items-center">
@@ -102,7 +102,7 @@ function Settings() {
         <div class="pb-4 h-1 w-1" />
       </ContentWrapper>
     </>
-  );
+  )
 }
 
-export default Settings;
+export default Settings

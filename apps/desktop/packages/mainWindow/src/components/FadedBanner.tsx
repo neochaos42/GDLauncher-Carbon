@@ -1,12 +1,12 @@
-import { JSX, Show, children } from "solid-js";
+import { JSX, Show, children } from "solid-js"
 
-type Props = {
-  children: JSX.Element;
-  imageUrl?: string;
-};
+interface Props {
+  children: JSX.Element
+  imageUrl?: string
+}
 
 const FadedBanner = (props: Props) => {
-  let c = children(() => props.children);
+  const c = children(() => props.children)
 
   return (
     <>
@@ -20,15 +20,15 @@ const FadedBanner = (props: Props) => {
       </Show>
       {c()}
     </>
-  );
-};
+  )
+}
 
 export const FadedBannerSkeleton = () => {
   return (
     <div class="w-full h-full">
       <div class="w-full h-full bg-gray-700" />
     </div>
-  );
-};
+  )
+}
 
-export default FadedBanner;
+export default FadedBanner

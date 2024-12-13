@@ -1,32 +1,32 @@
-import { ModRowProps, isCurseForgeData } from "@/utils/mods";
-import { Accessor, For, Match, Show, Switch } from "solid-js";
-import { Tooltip } from "@gd/ui";
-import { CFFEModAuthor, FEUnifiedSearchResult } from "@gd/core_module/bindings";
+import { ModRowProps, isCurseForgeData } from "@/utils/mods"
+import { Accessor, For, Match, Show, Switch } from "solid-js"
+import { Tooltip } from "@gd/ui"
+import { CFFEModAuthor, FEUnifiedSearchResult } from "@gd/core_module/bindings"
 
-type Props = {
-  modProps: ModRowProps | FEUnifiedSearchResult;
-  isRowSmall?: Accessor<boolean>;
-};
+interface Props {
+  modProps: ModRowProps | FEUnifiedSearchResult
+  isRowSmall?: Accessor<boolean>
+}
 
 export const getAuthors = (prop: ModRowProps | FEUnifiedSearchResult) => {
-  const isModRow = "data" in prop;
+  const isModRow = "data" in prop
   if (isModRow) {
     if (isCurseForgeData(prop.data)) {
-      return prop.data.curseforge.authors;
-    } else return prop.data.modrinth.author;
+      return prop.data.curseforge.authors
+    } else return prop.data.modrinth.author
   } else {
     if (isCurseForgeData(prop)) {
-      return prop.curseforge.authors;
-    } else return prop.modrinth.author;
+      return prop.curseforge.authors
+    } else return prop.modrinth.author
   }
-};
+}
 
 const Authors = (props: Props) => {
-  const isModRow = () => "data" in props.modProps;
+  const isModRow = () => "data" in props.modProps
   const modProps = () =>
     isModRow()
       ? (props.modProps as ModRowProps).data
-      : (props.modProps as FEUnifiedSearchResult);
+      : (props.modProps as FEUnifiedSearchResult)
 
   return (
     <Switch>
@@ -109,7 +109,7 @@ const Authors = (props: Props) => {
         </div>
       </Match>
     </Switch>
-  );
-};
+  )
+}
 
-export default Authors;
+export default Authors

@@ -1,9 +1,9 @@
-import { describe, test, assert } from "vitest";
+import { describe, test, assert } from "vitest"
 
 describe("<Counter />", () => {
   test("Sum", () => {
-    assert.equal(Math.sqrt(4), 2);
-  });
+    assert.equal(Math.sqrt(4), 2)
+  })
 
   // test("renders", () => {
   //   const { container, unmount } = render(() => <Counter count={4} />);
@@ -28,4 +28,4 @@ describe("<Counter />", () => {
   //   expect(container.innerHTML).toMatchSnapshot();
   //   unmount();
   // });
-});
+})

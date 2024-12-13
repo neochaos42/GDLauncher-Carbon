@@ -1,6 +1,6 @@
-import { createEffect, createSignal } from "solid-js";
-import { Input } from "./index.jsx";
-import type { Meta, StoryObj } from "storybook-solidjs";
+import { createEffect, createSignal } from "solid-js"
+import { Input } from "./index.jsx"
+import type { Meta, StoryObj } from "storybook-solidjs"
 
 const meta: Meta<typeof Input> = {
   /* 👇 The title prop is optional.
@@ -8,12 +8,12 @@ const meta: Meta<typeof Input> = {
    * to learn how to generate automatic titles
    */
   title: "Input",
-  component: Input,
-};
+  component: Input
+}
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof Input>;
+type Story = StoryObj<typeof Input>
 
 export const Main: Story = {
   args: {
@@ -21,31 +21,31 @@ export const Main: Story = {
     placeholder: "Type here",
     errorMessage: "",
     disabled: false,
-    icon: <div class="i-ri:refresh-line" />,
-  },
-};
+    icon: <div class="i-ri:refresh-line" />
+  }
+}
 
 const _options = [
   {
     value: "Option 1",
-    label: "Option 1",
+    label: "Option 1"
   },
   {
     value: "Option 2",
-    label: "Option 2",
+    label: "Option 2"
   },
   {
     value: "Option 3",
-    label: "Option 3",
-  },
-];
+    label: "Option 3"
+  }
+]
 
-const [value, setValue] = createSignal("");
-const [options, setOptions] = createSignal(_options);
+const [value, setValue] = createSignal("")
+const [options, setOptions] = createSignal(_options)
 
 createEffect(() => {
-  console.log("OPTIONS", options());
-});
+  console.log("OPTIONS", options())
+})
 
 export const AutoComplete: Story = {
   render: (args) => (
@@ -54,15 +54,15 @@ export const AutoComplete: Story = {
       placeholder="Type here"
       value={value()}
       onSearch={(value: string) => {
-        setValue(value);
+        setValue(value)
 
         const newOptions = _options.filter((option) =>
           option.value.toLowerCase().includes(value.toLowerCase())
-        );
+        )
 
-        setOptions(newOptions);
+        setOptions(newOptions)
       }}
       autoCompleteOptions={options()}
     />
-  ),
-};
+  )
+}

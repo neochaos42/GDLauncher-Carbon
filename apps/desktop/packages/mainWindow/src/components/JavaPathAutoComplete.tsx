@@ -1,5 +1,5 @@
-import { rspc } from "@/utils/rspcClient";
-import { Input, Tooltip } from "@gd/ui";
+import { rspc } from "@/utils/rspcClient"
+import { Input, Tooltip } from "@gd/ui"
 import {
   Match,
   Switch,
@@ -7,40 +7,40 @@ import {
   createSignal,
   getOwner,
   runWithOwner
-} from "solid-js";
-import TruncatedPath from "./TruncatePath";
-import { Trans } from "@gd/i18n";
+} from "solid-js"
+import TruncatedPath from "./TruncatePath"
+import { Trans } from "@gd/i18n"
 
-type Props = {
-  defaultValue?: string;
-  updateValue?: (_id: string | null, _value: string) => void;
-  updateValueOnlyOnBlur?: boolean;
-  disabled?: boolean;
-  inputColor?: string;
-};
+interface Props {
+  defaultValue?: string
+  updateValue?: (_id: string | null, _value: string) => void
+  updateValueOnlyOnBlur?: boolean
+  disabled?: boolean
+  inputColor?: string
+}
 
 const JavaPathAutoComplete = (props: Props) => {
-  const owner = getOwner();
-  const [value, setValue] = createSignal(props.defaultValue || "");
-  let availableJavas = rspc.createQuery(() => ({
+  const owner = getOwner()
+  const [value, setValue] = createSignal(props.defaultValue || "")
+  const availableJavas = rspc.createQuery(() => ({
     queryKey: ["java.getAvailableJavas"]
-  }));
+  }))
 
-  let runOnce = false;
+  let runOnce = false
 
   createEffect(() => {
     if (!runOnce && !value() && props.defaultValue) {
-      setValue(props.defaultValue);
-      runOnce = true;
+      setValue(props.defaultValue)
+      runOnce = true
     }
-  });
+  })
 
   const createCustomJavaVersionMutation = rspc.createMutation(() => ({
     mutationKey: "java.createCustomJavaVersion"
-  }));
+  }))
 
   const _autocompleteOptions = () => {
-    if (!availableJavas.data) return [];
+    if (!availableJavas.data) return []
 
     const values = Object.values(availableJavas.data)
       .flat()
@@ -63,24 +63,24 @@ const JavaPathAutoComplete = (props: Props) => {
             </Tooltip>
           </div>
         )
-      }));
+      }))
 
     if (values.length === 1 && values[0].value === value()) {
-      return [];
+      return []
     }
 
-    return values;
-  };
+    return values
+  }
 
   const javaComponent = () => {
     return Object.values(availableJavas.data || {})
       ?.flat()
-      .find((java) => java.path === value());
-  };
+      .find((java) => java.path === value())
+  }
 
   const shouldSuggestCreation = () => {
-    return !javaComponent() && value() && _autocompleteOptions().length === 0;
-  };
+    return !javaComponent() && value() && _autocompleteOptions().length === 0
+  }
 
   const autocompleteOptions = () => {
     const x = runWithOwner(owner, () => {
@@ -93,7 +93,7 @@ const JavaPathAutoComplete = (props: Props) => {
                   <div
                     class="w-full flex flex-col gap-2"
                     onClick={() => {
-                      createCustomJavaVersionMutation.mutate(value());
+                      createCustomJavaVersionMutation.mutate(value())
                     }}
                   >
                     <div class="flex justify-between">
@@ -112,17 +112,17 @@ const JavaPathAutoComplete = (props: Props) => {
               }
             ]
           : []
-      );
-    });
+      )
+    })
 
-    return x;
-  };
+    return x
+  }
 
   createEffect(() => {
     if (!props.updateValueOnlyOnBlur) {
-      props.updateValue?.(javaComponent()?.id || null, value());
+      props.updateValue?.(javaComponent()?.id || null, value())
     }
-  });
+  })
 
   return (
     <div>
@@ -152,17 +152,17 @@ const JavaPathAutoComplete = (props: Props) => {
           </Switch>
         }
         onSearch={(value) => {
-          setValue(value);
+          setValue(value)
         }}
         onBlur={() => {
           if (props.updateValueOnlyOnBlur) {
-            props.updateValue?.(javaComponent()?.id || null, value());
+            props.updateValue?.(javaComponent()?.id || null, value())
           }
         }}
         autoCompleteOptions={autocompleteOptions() || []}
       />
     </div>
-  );
-};
+  )
+}
 
-export default JavaPathAutoComplete;
+export default JavaPathAutoComplete

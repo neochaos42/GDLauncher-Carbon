@@ -1,15 +1,15 @@
-import { Show, mergeProps, JSX } from "solid-js";
+import { Show, mergeProps, JSX } from "solid-js"
 
-type Props = {
-  name?: string;
-  img?: string | JSX.Element | Element | undefined | null;
-  type?: "fixed" | "default";
-  size?: "medium" | "small";
-  onClose?: (_name: string) => void;
-};
+interface Props {
+  name?: string
+  img?: string | JSX.Element | Element | undefined | null
+  type?: "fixed" | "default"
+  size?: "medium" | "small"
+  onClose?: (_name: string) => void
+}
 
 export const Tag = (props: Props) => {
-  const mergedProps = mergeProps({ type: "default" }, props);
+  const mergedProps = mergeProps({ type: "default" }, props)
 
   return (
     <div
@@ -18,7 +18,7 @@ export const Tag = (props: Props) => {
         "bg-darkSlate-700": mergedProps.type === "default",
         "bg-darkSlate-900": mergedProps.type === "fixed",
         "px-3 py-2": props.size === "medium" || !props.size,
-        "px-2 py-1": props.size === "small",
+        "px-2 py-1": props.size === "small"
       }}
     >
       <Show when={props.img && typeof props.img === "string"}>
@@ -36,10 +36,10 @@ export const Tag = (props: Props) => {
         <div
           class="i-ri:close-fill text-lg text-darkSlate-200 cursor-pointer"
           onClick={() => {
-            if (props.name) props.onClose?.(props.name);
+            if (props.name) props.onClose?.(props.name)
           }}
         />
       </Show>
     </div>
-  );
-};
+  )
+}

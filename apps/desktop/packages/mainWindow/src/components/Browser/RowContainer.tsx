@@ -3,40 +3,40 @@ import {
   InstanceDetails,
   MRFEProject,
   Mod
-} from "@gd/core_module/bindings";
-import { VersionRowTypeData } from "../InfiniteScrollVersionsQueryWrapper";
-import { For, Match, Show, Switch, createSignal } from "solid-js";
-import { Trans } from "@gd/i18n";
-import { Button, Popover, Spinner, Tooltip } from "@gd/ui";
-import { format } from "date-fns";
-import CopyIcon from "../CopyIcon";
-import ModDownloadButton from "../ModDownloadButton";
+} from "@gd/core_module/bindings"
+import { VersionRowTypeData } from "../InfiniteScrollVersionsQueryWrapper"
+import { For, Match, Show, Switch, createSignal } from "solid-js"
+import { Trans } from "@gd/i18n"
+import { Button, Popover, Spinner, Tooltip } from "@gd/ui"
+import { format } from "date-fns"
+import CopyIcon from "../CopyIcon"
+import ModDownloadButton from "../ModDownloadButton"
 
-export type Props = {
-  modVersion: VersionRowTypeData;
-  project: CFFEMod | MRFEProject | undefined;
-  isCurseforge?: boolean;
-  instanceId?: number | null;
-  instanceDetails?: InstanceDetails;
-  instanceMods?: Mod[];
+export interface Props {
+  modVersion: VersionRowTypeData
+  project: CFFEMod | MRFEProject | undefined
+  isCurseforge?: boolean
+  instanceId?: number | null
+  instanceDetails?: InstanceDetails
+  instanceMods?: Mod[]
   installedFile:
     | {
-        id: string;
-        remoteId: string | number;
+        id: string
+        remoteId: string | number
       }
-    | undefined;
-  type: "modpack" | "mod";
-};
+    | undefined
+  type: "modpack" | "mod"
+}
 
-export type AdditionalProps = {
-  loading: boolean;
-  disabled: boolean;
-  isInstalled?: boolean;
-  onPrimaryAction: () => void;
-};
+export interface AdditionalProps {
+  loading: boolean
+  disabled: boolean
+  isInstalled?: boolean
+  onPrimaryAction: () => void
+}
 
 const CopiableEntity = (props: {
-  text: string | undefined | null | number;
+  text: string | undefined | null | number
 }) => {
   return (
     <div class="flex items-center text-lightSlate-200 w-60">
@@ -53,11 +53,11 @@ const CopiableEntity = (props: {
         </div>
       </Show>
     </div>
-  );
-};
+  )
+}
 
 const RowContainer = (props: Props & AdditionalProps) => {
-  const [isHoveringInfoCard, setIsHoveringInfoCard] = createSignal(false);
+  const [isHoveringInfoCard, setIsHoveringInfoCard] = createSignal(false)
 
   return (
     <Switch>
@@ -226,7 +226,7 @@ const RowContainer = (props: Props & AdditionalProps) => {
         <Trans key="loading" />
       </Match>
     </Switch>
-  );
-};
+  )
+}
 
-export default RowContainer;
+export default RowContainer

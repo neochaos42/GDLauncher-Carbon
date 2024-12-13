@@ -1,27 +1,27 @@
-import { lazy } from "solid-js";
-import { RouteDefinition } from "@solidjs/router";
-import SettingsJavaData from "@/pages/Settings/settings.java.data";
-import SettingsGeneralData from "@/pages/Settings/settings.general.data";
-import LoginData from "@/pages/Login/auth.login.data";
-import AppData from "@/pages/app.data";
-import ModpackBrowserData from "@/pages/Modpacks/modpacksBrowser.data";
-import ModsBrowserData from "@/pages/Mods/modsBrowser.data";
-import ModpackData from "@/pages/Modpacks/modpack.overview";
-import ModpackVersionsData from "@/pages/Modpacks/modpack.versions";
-import ModVersionsData from "@/pages/Mods/mods.versions";
-import ModpackScreenshotsData from "@/pages/Modpacks/modpack.screenshots";
-import InstanceData from "@/pages/Library/Instance/instance.data";
-import Login from "@/pages/Login";
-import withAdsLayout from "@/pages/withAds";
-import Library from "@/pages/Library";
-import Home from "@/pages/Library/Home";
-import Instance from "@/pages/Library/Instance";
-import ModpacksLayout from "@/pages/Modpacks";
-import ModpackBrowser from "@/pages/Modpacks/ModpacksBrowser";
-import ModsBrowser from "@/pages/Mods/ModsBrowser";
-import ModsInfiniteScrollQueryWrapper from "@/pages/Mods/Explore";
-import ModpacksInfiniteScrollQueryWrapper from "@/pages/Modpacks/Explore";
-import ModsLayout from "@/pages/Mods";
+import { lazy } from "solid-js"
+import { RouteDefinition } from "@solidjs/router"
+import SettingsJavaData from "@/pages/Settings/settings.java.data"
+import SettingsGeneralData from "@/pages/Settings/settings.general.data"
+import LoginData from "@/pages/Login/auth.login.data"
+import AppData from "@/pages/app.data"
+import ModpackBrowserData from "@/pages/Modpacks/modpacksBrowser.data"
+import ModsBrowserData from "@/pages/Mods/modsBrowser.data"
+import ModpackData from "@/pages/Modpacks/modpack.overview"
+import ModpackVersionsData from "@/pages/Modpacks/modpack.versions"
+import ModVersionsData from "@/pages/Mods/mods.versions"
+import ModpackScreenshotsData from "@/pages/Modpacks/modpack.screenshots"
+import InstanceData from "@/pages/Library/Instance/instance.data"
+import Login from "@/pages/Login"
+import withAdsLayout from "@/pages/withAds"
+import Library from "@/pages/Library"
+import Home from "@/pages/Library/Home"
+import Instance from "@/pages/Library/Instance"
+import ModpacksLayout from "@/pages/Modpacks"
+import ModpackBrowser from "@/pages/Modpacks/ModpacksBrowser"
+import ModsBrowser from "@/pages/Mods/ModsBrowser"
+import ModsInfiniteScrollQueryWrapper from "@/pages/Mods/Explore"
+import ModpacksInfiniteScrollQueryWrapper from "@/pages/Modpacks/Explore"
+import ModsLayout from "@/pages/Mods"
 /* Defining the routes for the application. */
 
 export const routes: RouteDefinition[] = [
@@ -223,4 +223,4 @@ export const routes: RouteDefinition[] = [
       }
     ]
   }
-];
+]

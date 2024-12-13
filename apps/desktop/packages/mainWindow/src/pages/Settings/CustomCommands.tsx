@@ -1,19 +1,19 @@
-import { Trans } from "@gd/i18n";
-import { Input } from "@gd/ui";
-import { rspc } from "@/utils/rspcClient";
-import PageTitle from "./components/PageTitle";
-import Row from "./components/Row";
-import Title from "./components/Title";
-import RowsContainer from "./components/RowsContainer";
+import { Trans } from "@gd/i18n"
+import { Input } from "@gd/ui"
+import { rspc } from "@/utils/rspcClient"
+import PageTitle from "./components/PageTitle"
+import Row from "./components/Row"
+import Title from "./components/Title"
+import RowsContainer from "./components/RowsContainer"
 
 const CustomCommands = () => {
   const settings = rspc.createQuery(() => ({
     queryKey: ["settings.getSettings"]
-  }));
+  }))
 
   const settingsMutation = rspc.createMutation(() => ({
     mutationKey: ["settings.setSettings"]
-  }));
+  }))
 
   return (
     <>
@@ -32,7 +32,7 @@ const CustomCommands = () => {
                 preLaunchHook: {
                   Set: e.currentTarget.value.trim() || null
                 }
-              });
+              })
             }}
           />
         </Row>
@@ -47,7 +47,7 @@ const CustomCommands = () => {
                 postExitHook: {
                   Set: e.currentTarget.value.trim() || null
                 }
-              });
+              })
             }}
           />
         </Row>
@@ -62,13 +62,13 @@ const CustomCommands = () => {
                 wrapperCommand: {
                   Set: e.currentTarget.value.trim() || null
                 }
-              });
+              })
             }}
           />
         </Row>
       </RowsContainer>
     </>
-  );
-};
+  )
+}
 
-export default CustomCommands;
+export default CustomCommands

@@ -1,23 +1,23 @@
-import { createSignal, For, Match, Show, Switch } from "solid-js";
-import { isFullScreen, setIsFullScreen } from ".";
-import { LogEntry, LogEntryLevel, LogEntrySourceKind } from "@/utils/logs";
-import formatDateTime from "./formatDateTime";
-import FullscreenToggle from "./components/FullscreenToggle";
-import LogsOptions, { Columns, LogDensity } from "./components/LogsOptions";
-import { Trans } from "@gd/i18n";
-import { Button } from "@gd/ui";
+import { createSignal, For, Match, Show, Switch } from "solid-js"
+import { isFullScreen, setIsFullScreen } from "."
+import { LogEntry, LogEntryLevel, LogEntrySourceKind } from "@/utils/logs"
+import formatDateTime from "./formatDateTime"
+import FullscreenToggle from "./components/FullscreenToggle"
+import LogsOptions, { Columns, LogDensity } from "./components/LogsOptions"
+import { Trans } from "@gd/i18n"
+import { Button } from "@gd/ui"
 
-type Props = {
-  logs: LogEntry[];
-  isActive: boolean;
-  isLoading: boolean;
-  scrollToBottom: () => void;
-  assignScrollBottomRef: (ref: HTMLDivElement) => void;
-  assignLogsContentRef: (ref: HTMLDivElement) => void;
-  newLogsCount: number;
-  autoFollowPreference: boolean;
-  setAutoFollowPreference: (_: boolean) => void;
-};
+interface Props {
+  logs: LogEntry[]
+  isActive: boolean
+  isLoading: boolean
+  scrollToBottom: () => void
+  assignScrollBottomRef: (ref: HTMLDivElement) => void
+  assignLogsContentRef: (ref: HTMLDivElement) => void
+  newLogsCount: number
+  autoFollowPreference: boolean
+  setAutoFollowPreference: (_: boolean) => void
+}
 
 const color = {
   Trace: "text-purple-500",
@@ -25,11 +25,11 @@ const color = {
   Info: "text-green-500",
   Warn: "text-yellow-500",
   Error: "text-red-500"
-};
+}
 
 function DateTimeFormatter(props: {
-  timestamp: number;
-  fontMultiplier: 0 | 1 | 2;
+  timestamp: number
+  fontMultiplier: 0 | 1 | 2
 }) {
   return (
     <span
@@ -44,7 +44,7 @@ function DateTimeFormatter(props: {
       {/* These absolute dividers are used to interrupt text selection to this column, as it selects the largest continuous block of text it can find */}
       <div class="absolute top-0 bottom-0 right-0 w-2 bg-transparent select-none" />
     </span>
-  );
+  )
 }
 
 function LoggerFormatter(props: { logger: string; fontMultiplier: 0 | 1 | 2 }) {
@@ -61,12 +61,12 @@ function LoggerFormatter(props: { logger: string; fontMultiplier: 0 | 1 | 2 }) {
       {/* These absolute dividers are used to interrupt text selection to this column, as it selects the largest continuous block of text it can find */}
       <div class="absolute top-0 bottom-0 right-0 w-2 bg-transparent select-none" />
     </span>
-  );
+  )
 }
 
 function SourceKindFormatter(props: {
-  sourceKind: LogEntrySourceKind;
-  fontMultiplier: 0 | 1 | 2;
+  sourceKind: LogEntrySourceKind
+  fontMultiplier: 0 | 1 | 2
 }) {
   return (
     <span
@@ -82,12 +82,12 @@ function SourceKindFormatter(props: {
       {/* These absolute dividers are used to interrupt text selection to this column, as it selects the largest continuous block of text it can find */}
       <div class="absolute top-0 bottom-0 right-0 w-2 bg-transparent select-none" />
     </span>
-  );
+  )
 }
 
 function ThreadNameFormatter(props: {
-  threadName: string;
-  fontMultiplier: 0 | 1 | 2;
+  threadName: string
+  fontMultiplier: 0 | 1 | 2
 }) {
   return (
     <span
@@ -102,12 +102,12 @@ function ThreadNameFormatter(props: {
       {/* These absolute dividers are used to interrupt text selection to this column, as it selects the largest continuous block of text it can find */}
       <div class="absolute top-0 bottom-0 right-0 w-2 bg-transparent select-none" />
     </span>
-  );
+  )
 }
 
 function LevelFormatter(props: {
-  level: LogEntryLevel;
-  fontMultiplier: 0 | 1 | 2;
+  level: LogEntryLevel
+  fontMultiplier: 0 | 1 | 2
 }) {
   return (
     <span
@@ -121,22 +121,22 @@ function LevelFormatter(props: {
       [{props.level.toUpperCase()}]
       <div class="absolute top-0 bottom-0 right-0 w-2 bg-transparent select-none" />
     </span>
-  );
+  )
 }
 
 function ContentFormatter(props: {
-  level: LogEntryLevel;
-  sourceKind: LogEntrySourceKind;
-  message: string;
-  fontMultiplier: 0 | 1 | 2;
-  startLogMessageOnNewLine: boolean;
+  level: LogEntryLevel
+  sourceKind: LogEntrySourceKind
+  message: string
+  fontMultiplier: 0 | 1 | 2
+  startLogMessageOnNewLine: boolean
 }) {
   const defaultColor = () =>
     props.level === LogEntryLevel.Info ||
     props.level === LogEntryLevel.Debug ||
-    props.level === LogEntryLevel.Trace;
+    props.level === LogEntryLevel.Trace
 
-  const isSystemLog = () => props.sourceKind === LogEntrySourceKind._System;
+  const isSystemLog = () => props.sourceKind === LogEntrySourceKind._System
 
   return (
     <span
@@ -153,14 +153,14 @@ function ContentFormatter(props: {
     >
       {props.message}
     </span>
-  );
+  )
 }
 
 function ScrollBottomButton(props: {
-  onClick: () => void;
-  newLogsCount: number;
+  onClick: () => void
+  newLogsCount: number
 }) {
-  const [isHovered, setIsHovered] = createSignal(false);
+  const [isHovered, setIsHovered] = createSignal(false)
 
   return (
     <Button
@@ -204,21 +204,21 @@ function ScrollBottomButton(props: {
         </Match>
       </Switch>
     </Button>
-  );
+  )
 }
 
 const LogsContent = (props: Props) => {
-  const [logsDensity, setLogsDensity] = createSignal<LogDensity>("low");
+  const [logsDensity, setLogsDensity] = createSignal<LogDensity>("low")
   const [columns, setColumns] = createSignal<Columns>({
     timestamp: true,
     logger: true,
     sourceKind: false,
     threadName: true,
     level: true
-  });
-  const [fontMultiplier, setFontMultiplier] = createSignal<0 | 1 | 2>(1);
+  })
+  const [fontMultiplier, setFontMultiplier] = createSignal<0 | 1 | 2>(1)
   const [startLogMessageOnNewLine, setStartLogMessageOnNewLine] =
-    createSignal(false);
+    createSignal(false)
 
   return (
     <div class="relative flex-1 min-w-0 flex flex-col border border-darkSlate-700 border-l-solid">
@@ -330,7 +330,7 @@ const LogsContent = (props: Props) => {
         </Switch>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default LogsContent;
+export default LogsContent

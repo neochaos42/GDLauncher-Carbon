@@ -1,17 +1,17 @@
-import { For } from "solid-js";
-import { Button, Tag } from "@gd/ui";
-import { Trans } from "@gd/i18n";
+import { For } from "solid-js"
+import { Button, Tag } from "@gd/ui"
+import { Trans } from "@gd/i18n"
 
-type Tagtype = {
-  name: string;
-  img: string;
-};
+interface Tagtype {
+  name: string
+  img: string
+}
 
-type Props = {
-  tags: Tagtype[];
-  onClose: (_name: string) => void;
-  onClearAll: () => void;
-};
+interface Props {
+  tags: Tagtype[]
+  onClose: (_name: string) => void
+  onClearAll: () => void
+}
 
 const Tags = (props: Props) => {
   return (
@@ -38,7 +38,7 @@ const Tags = (props: Props) => {
         />
       </Button>
     </div>
-  );
-};
+  )
+}
 
-export default Tags;
+export default Tags

@@ -1,4 +1,4 @@
-import { Trans } from "@gd/i18n";
+import { Trans } from "@gd/i18n"
 
 export default function NotFound() {
   return (
@@ -22,5 +22,5 @@ export default function NotFound() {
         </p>
       </section>
     </div>
-  );
+  )
 }

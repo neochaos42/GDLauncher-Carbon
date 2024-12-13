@@ -1,5 +1,5 @@
-import { Slider } from "./index.jsx";
-import type { Meta, StoryObj } from "storybook-solidjs";
+import { Slider } from "./index.jsx"
+import type { Meta, StoryObj } from "storybook-solidjs"
 
 const meta: Meta<typeof Slider> = {
   /* 👇 The title prop is optional.
@@ -7,17 +7,17 @@ const meta: Meta<typeof Slider> = {
    * to learn how to generate automatic titles
    */
   title: "Slider",
-  component: Slider,
-};
+  component: Slider
+}
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof Slider>;
+type Story = StoryObj<typeof Slider>
 
 export const Main: Story = {
   args: {
     min: 0,
     max: 100,
-    onChange: (val) => console.log("onChange", val),
-  },
-};
+    onChange: (val) => console.log("onChange", val)
+  }
+}

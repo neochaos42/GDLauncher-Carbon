@@ -1,18 +1,18 @@
-import { ImportEntityStatus } from "@gd/core_module/bindings";
-import { useTransContext } from "@gd/i18n";
-import { Show } from "solid-js";
+import { ImportEntityStatus } from "@gd/core_module/bindings"
+import { useTransContext } from "@gd/i18n"
+import { Show } from "solid-js"
 
 export interface EntityCardProps {
-  entity: ImportEntityStatus;
-  icon: string;
-  onClick?: [(_entity: ImportEntityStatus) => void, ImportEntityStatus];
-  translation: string;
-  className?: string;
-  selected?: boolean;
+  entity: ImportEntityStatus
+  icon: string
+  onClick?: [(_entity: ImportEntityStatus) => void, ImportEntityStatus]
+  translation: string
+  className?: string
+  selected?: boolean
 }
 
 const EntityCard = (props: EntityCardProps) => {
-  const [t] = useTransContext();
+  const [t] = useTransContext()
   return (
     <li
       class={`rounded-lg p-4 text-center ${
@@ -45,6 +45,6 @@ const EntityCard = (props: EntityCardProps) => {
         {t(props.translation)}
       </span>
     </li>
-  );
-};
-export default EntityCard;
+  )
+}
+export default EntityCard

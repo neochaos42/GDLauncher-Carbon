@@ -1,14 +1,14 @@
 /* eslint-disable solid/no-innerhtml */
-import { Button, Spinner } from "@gd/ui";
-import { ModalProps, useModal } from "../..";
-import ModalLayout from "../../ModalLayout";
-import { FEUnifiedSearchResult } from "@gd/core_module/bindings";
-import { Trans } from "@gd/i18n";
-import { Match, Show, Switch, createEffect, createSignal } from "solid-js";
-import { format } from "date-fns";
-import { rspc } from "@/utils/rspcClient";
-import { getInstanceIdFromPath } from "@/utils/routes";
-import Authors from "@/components/ModRow/Authors";
+import { Button, Spinner } from "@gd/ui"
+import { ModalProps, useModal } from "../.."
+import ModalLayout from "../../ModalLayout"
+import { FEUnifiedSearchResult } from "@gd/core_module/bindings"
+import { Trans } from "@gd/i18n"
+import { Match, Show, Switch, createEffect, createSignal } from "solid-js"
+import { format } from "date-fns"
+import { rspc } from "@/utils/rspcClient"
+import { getInstanceIdFromPath } from "@/utils/routes"
+import Authors from "@/components/ModRow/Authors"
 import {
   getDataCreation,
   getFileId,
@@ -17,74 +17,71 @@ import {
   getName,
   getProjectId,
   isCurseForgeData
-} from "@/utils/mods";
-import { marked } from "marked";
-import sanitizeHtml from "sanitize-html";
-import { useLocation } from "@solidjs/router";
+} from "@/utils/mods"
+import { marked } from "marked"
+import sanitizeHtml from "sanitize-html"
+import { useLocation } from "@solidjs/router"
 
 const ModDetails = (props: ModalProps) => {
-  const [loading, setLoading] = createSignal(false);
-  const modDetails = () => props.data?.mod as FEUnifiedSearchResult;
-  const fileId = () => getFileId(modDetails());
-  const projectId = () => getProjectId(modDetails());
-  const modalsContext = useModal();
-  const rspcContext = rspc.useContext();
-  const [modpackDescription, setModpackDescription] = createSignal("");
-  const [taskId, setTaskId] = createSignal<undefined | number>(undefined);
+  const [loading, setLoading] = createSignal(false)
+  const modDetails = () => props.data?.mod as FEUnifiedSearchResult
+  const fileId = () => getFileId(modDetails())
+  const projectId = () => getProjectId(modDetails())
+  const modalsContext = useModal()
+  const rspcContext = rspc.useContext()
+  const [modpackDescription, setModpackDescription] = createSignal("")
+  const [taskId, setTaskId] = createSignal<undefined | number>(undefined)
 
-  const location = useLocation();
-  const instanceId = () => getInstanceIdFromPath(location.pathname);
+  const location = useLocation()
+  const instanceId = () => getInstanceIdFromPath(location.pathname)
 
   const installModMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.installMod"]
-  }));
+  }))
 
   const mods = rspc.createQuery(() => ({
-    queryKey: ["instance.getInstanceMods", parseInt(instanceId() as string, 10)]
-  }));
+    queryKey: ["instance.getInstanceMods", parseInt(instanceId()!, 10)]
+  }))
 
   createEffect(async () => {
     if (taskId() !== undefined) {
-      const task = await rspcContext.client.query([
-        "vtask.getTask",
-        taskId() as number
-      ]);
+      const task = await rspcContext.client.query(["vtask.getTask", taskId()!])
 
       const isDowloaded = () =>
         (task?.download_total || 0) > 0 &&
-        task?.download_total === task?.downloaded;
+        task?.download_total === task?.downloaded
 
-      if (isDowloaded()) setLoading(false);
+      if (isDowloaded()) setLoading(false)
     }
-  });
+  })
 
   createEffect(async () => {
     if (projectId() && isCurseForgeData(modDetails())) {
       const modpackDescription = await rspcContext.client.query([
         "modplatforms.curseforge.getModDescription",
         { modId: projectId() as number }
-      ]);
+      ])
       if (modpackDescription.data)
-        setModpackDescription(modpackDescription.data);
+        setModpackDescription(modpackDescription.data)
     }
-  });
+  })
 
   createEffect(async () => {
     if (projectId() && !isCurseForgeData(modDetails())) {
       const modpackDescription = await rspcContext.client.query([
         "modplatforms.modrinth.getProject",
         projectId() as string
-      ]);
+      ])
 
       if (modpackDescription?.body)
         setModpackDescription(
-          marked.parse(sanitizeHtml(modpackDescription?.body || ""))
-        );
+          await marked.parse(sanitizeHtml(modpackDescription?.body || ""))
+        )
     }
-  });
+  })
 
-  let refStickyTabs: HTMLDivElement;
-  const [isSticky, setIsSticky] = createSignal(false);
+  let refStickyTabs: HTMLDivElement
+  const [isSticky, setIsSticky] = createSignal(false)
 
   const modSourceObj = () => {
     return isCurseForgeData(modDetails())
@@ -99,8 +96,8 @@ const ModDetails = (props: ModalProps) => {
             project_id: projectId() as string,
             version_id: fileId() as string
           }
-        };
-  };
+        }
+  }
 
   const DownloadBtn = (propss: { size: "large" | "small" }) => {
     const isModInstalled = () =>
@@ -109,7 +106,7 @@ const ModDetails = (props: ModalProps) => {
           (isCurseForgeData(modDetails())
             ? mod.curseforge?.project_id
             : mod.modrinth?.project_id) === projectId()
-      ) !== undefined;
+      ) !== undefined
 
     return (
       <Switch>
@@ -120,20 +117,20 @@ const ModDetails = (props: ModalProps) => {
             type="glow"
             size={propss.size}
             onClick={async () => {
-              const fileId = getFileId(modDetails());
+              const fileId = getFileId(modDetails())
               if (fileId && instanceId()) {
                 try {
-                  setLoading(true);
+                  setLoading(true)
                   await installModMutation.mutateAsync({
                     mod_source: modSourceObj(),
-                    instance_id: parseInt(instanceId() as string, 10),
+                    instance_id: parseInt(instanceId()!, 10),
                     install_deps: true,
                     replaces_mod: null
-                  });
+                  })
 
-                  setTaskId(taskId);
+                  setTaskId(taskId)
                 } catch (err) {
-                  console.error(err);
+                  console.error(err)
                 }
               }
             }}
@@ -157,8 +154,8 @@ const ModDetails = (props: ModalProps) => {
           </Button>
         </Match>
       </Switch>
-    );
-  };
+    )
+  }
 
   return (
     <ModalLayout noHeader={props.noHeader} title={props?.title}>
@@ -171,8 +168,8 @@ const ModDetails = (props: ModalProps) => {
                 "scrollbar-gutter": "stable"
               }}
               onScroll={() => {
-                const rect = refStickyTabs.getBoundingClientRect();
-                setIsSticky(rect.top <= 80);
+                const rect = refStickyTabs.getBoundingClientRect()
+                setIsSticky(rect.top <= 80)
               }}
             >
               <div class="flex flex-col justify-between ease-in-out transition-all h-52 items-stretch">
@@ -187,7 +184,7 @@ const ModDetails = (props: ModalProps) => {
                   <div class="z-10 sticky top-5 left-5 w-fit">
                     <Button
                       onClick={() => {
-                        modalsContext?.closeModal();
+                        modalsContext?.closeModal()
                       }}
                       icon={<div class="text-2xl i-ri:arrow-drop-left-line" />}
                       size="small"
@@ -248,7 +245,7 @@ const ModDetails = (props: ModalProps) => {
                   <Show when={isSticky()}>
                     <Button
                       onClick={() => {
-                        modalsContext?.closeModal();
+                        modalsContext?.closeModal()
                       }}
                       icon={<div class="text-2xl i-ri:arrow-drop-left-line" />}
                       size="small"
@@ -265,7 +262,7 @@ const ModDetails = (props: ModalProps) => {
               <div
                 class="p-4"
                 ref={(el) => {
-                  refStickyTabs = el;
+                  refStickyTabs = el
                 }}
                 innerHTML={modpackDescription()}
               />
@@ -274,7 +271,7 @@ const ModDetails = (props: ModalProps) => {
         </Switch>
       </div>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default ModDetails;
+export default ModDetails

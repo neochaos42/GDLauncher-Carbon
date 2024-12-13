@@ -1,30 +1,30 @@
-import { isSidebarOpened, toggleSidebar } from "@/utils/sidebar";
-import { createEffect, JSXElement, mergeProps, Show } from "solid-js";
+import { isSidebarOpened, toggleSidebar } from "@/utils/sidebar"
+import { createEffect, JSXElement, mergeProps, Show } from "solid-js"
 
 interface Props {
-  children: JSXElement;
-  collapsable?: boolean;
-  noPadding?: boolean;
-  onCollapse?: (_opened: boolean) => void;
+  children: JSXElement
+  collapsable?: boolean
+  noPadding?: boolean
+  onCollapse?: (_opened: boolean) => void
 }
 
 const SiderbarWrapper = (props: Props) => {
-  const mergedProps = mergeProps({ collapsable: true }, props);
+  const mergedProps = mergeProps({ collapsable: true }, props)
 
   const handleOpenAndCloseSidebar = () => {
     if (window.innerWidth < 873 && isSidebarOpened()) {
-      toggleSidebar();
+      toggleSidebar()
     } else if (window.innerWidth >= 873 && !isSidebarOpened()) {
-      toggleSidebar();
+      toggleSidebar()
     }
-  };
+  }
 
   createEffect(() => {
-    window.addEventListener("resize", handleOpenAndCloseSidebar);
+    window.addEventListener("resize", handleOpenAndCloseSidebar)
     return () => {
-      window.removeEventListener("resize", handleOpenAndCloseSidebar);
-    };
-  });
+      window.removeEventListener("resize", handleOpenAndCloseSidebar)
+    }
+  })
 
   return (
     <div
@@ -42,8 +42,8 @@ const SiderbarWrapper = (props: Props) => {
           onClick={() => {
             if (mergedProps.collapsable) {
               if (props?.onCollapse) {
-                props?.onCollapse?.(toggleSidebar());
-              } else toggleSidebar();
+                props?.onCollapse?.(toggleSidebar())
+              } else toggleSidebar()
             }
           }}
         >
@@ -59,7 +59,7 @@ const SiderbarWrapper = (props: Props) => {
       </Show>
       {props.children}
     </div>
-  );
-};
+  )
+}
 
-export default SiderbarWrapper;
+export default SiderbarWrapper

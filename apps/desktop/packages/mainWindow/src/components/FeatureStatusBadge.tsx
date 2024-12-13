@@ -1,31 +1,31 @@
-import { Trans } from "@gd/i18n";
+import { Trans } from "@gd/i18n"
 
-type Props = {
-  type: "new" | "beta" | "soon";
-};
+interface Props {
+  type: "new" | "beta" | "soon"
+}
 
 export default function FeatureStatusBadge(props: Props) {
   const colors = () => {
     switch (props.type) {
       case "new":
-        return "bg-green-400 text-lightSlate-50";
+        return "bg-green-400 text-lightSlate-50"
       case "beta":
-        return "bg-yellow-400 text-darkSlate-900";
+        return "bg-yellow-400 text-darkSlate-900"
       case "soon":
-        return "bg-primary-400 text-lightSlate-50";
+        return "bg-primary-400 text-lightSlate-50"
     }
-  };
+  }
 
   const text = () => {
     switch (props.type) {
       case "new":
-        return <Trans key="badge_new" />;
+        return <Trans key="badge_new" />
       case "beta":
-        return <Trans key="badge_beta" />;
+        return <Trans key="badge_beta" />
       case "soon":
-        return <Trans key="badge_soon" />;
+        return <Trans key="badge_soon" />
     }
-  };
+  }
 
   return (
     <div
@@ -33,5 +33,5 @@ export default function FeatureStatusBadge(props: Props) {
     >
       {text()}
     </div>
-  );
+  )
 }

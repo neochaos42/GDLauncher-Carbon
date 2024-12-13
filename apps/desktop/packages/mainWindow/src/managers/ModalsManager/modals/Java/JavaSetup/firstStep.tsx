@@ -1,7 +1,7 @@
-import { Trans } from "@gd/i18n";
-import { StepsProps } from ".";
-import JavaLogo from "/assets/images/icons/java-logo.svg";
-import { Button } from "@gd/ui";
+import { Trans } from "@gd/i18n"
+import { StepsProps } from "."
+import JavaLogo from "/assets/images/icons/java-logo.svg"
+import { Button } from "@gd/ui"
 
 const FirstStep = (props: StepsProps) => {
   return (
@@ -35,7 +35,7 @@ const FirstStep = (props: StepsProps) => {
             size="large"
             style={{ width: "100%", "max-width": "100%" }}
             onClick={() => {
-              props.nextStep?.("manual");
+              props.nextStep?.("manual")
             }}
           >
             <Trans
@@ -50,7 +50,7 @@ const FirstStep = (props: StepsProps) => {
             size="large"
             style={{ width: "100%", "max-width": "100%" }}
             onClick={() => {
-              props.nextStep?.("automatic");
+              props.nextStep?.("automatic")
             }}
           >
             <Trans
@@ -63,7 +63,7 @@ const FirstStep = (props: StepsProps) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FirstStep;
+export default FirstStep

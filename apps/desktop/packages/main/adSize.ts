@@ -1,12 +1,12 @@
-import { screen, Display } from "electron";
+import { screen, Display } from "electron"
 
 export default function getAdSize(display?: Display) {
-  const primaryDisplay = display || screen.getPrimaryDisplay();
-  const { width, height } = primaryDisplay.size;
+  const primaryDisplay = display || screen.getPrimaryDisplay()
+  const { width, height } = primaryDisplay.size
 
   // only show fallback on macos
   const useFallbackAd =
-    process.platform !== "darwin" && process.platform !== "win32";
+    process.platform !== "darwin" && process.platform !== "win32"
 
   if (width < 1920 || height < 1080) {
     return {
@@ -20,7 +20,7 @@ export default function getAdSize(display?: Display) {
         width: 160,
         height: 600
       }
-    };
+    }
   } else {
     return {
       minWidth: 1280,
@@ -33,6 +33,6 @@ export default function getAdSize(display?: Display) {
         width: 400,
         height: 600
       }
-    };
+    }
   }
 }

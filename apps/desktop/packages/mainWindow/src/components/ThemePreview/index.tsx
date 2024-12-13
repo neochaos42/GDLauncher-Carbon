@@ -1,9 +1,9 @@
-import { mergeProps } from "solid-js";
+import { mergeProps } from "solid-js"
 
 interface Props {
-  shade1?: string;
-  shade2?: string;
-  shade3?: string;
+  shade1?: string
+  shade2?: string
+  shade3?: string
 }
 
 const ThemePreview = (props: Props) => {
@@ -14,7 +14,7 @@ const ThemePreview = (props: Props) => {
       shade3: "fill-darkSlate-600"
     },
     props
-  );
+  )
 
   return (
     <svg
@@ -319,7 +319,7 @@ const ThemePreview = (props: Props) => {
         </clipPath>
       </defs>
     </svg>
-  );
-};
+  )
+}
 
-export default ThemePreview;
+export default ThemePreview

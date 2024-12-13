@@ -1,6 +1,6 @@
-type Props = {
-  class?: string;
-};
+interface Props {
+  class?: string
+}
 
 export const LoadingBar = (props: Props) => {
   return (
@@ -11,5 +11,5 @@ export const LoadingBar = (props: Props) => {
     >
       <div class="w-full h-full origin-[0%_50%] animate-loadingbar bg-primary-500" />
     </div>
-  );
-};
+  )
+}

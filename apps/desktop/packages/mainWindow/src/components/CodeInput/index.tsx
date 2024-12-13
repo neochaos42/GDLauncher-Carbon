@@ -1,48 +1,48 @@
-import { Trans } from "@gd/i18n";
-import { createEffect, createSignal } from "solid-js";
+import { Trans } from "@gd/i18n"
+import { createEffect, createSignal } from "solid-js"
 
 interface Props {
-  value?: string;
-  icon?: string;
-  onClick?: () => void;
-  handleRefresh?: () => void;
-  expired?: boolean;
-  id?: string;
+  value?: string
+  icon?: string
+  onClick?: () => void
+  handleRefresh?: () => void
+  expired?: boolean
+  id?: string
 }
 
 export const DeviceCode = (props: Props) => {
-  let animateDivRef: HTMLDivElement | undefined = undefined;
-  const [copied, setCopied] = createSignal(false);
-  const [refreshing, setRefreshing] = createSignal(false);
+  let animateDivRef: HTMLDivElement | undefined
+  const [copied, setCopied] = createSignal(false)
+  const [refreshing, setRefreshing] = createSignal(false)
 
   function animateCopied() {
-    setCopied(true);
+    setCopied(true)
     if (animateDivRef) {
       animateDivRef.animate([{ opacity: 0 }, { opacity: 100 }], {
         duration: 150,
         easing: "ease-in-out",
         fill: "forwards"
-      });
+      })
 
       setTimeout(() => {
         animateDivRef?.animate([{ opacity: 100 }, { opacity: 0 }], {
           duration: 150,
           easing: "ease-in-out",
           fill: "forwards"
-        });
+        })
 
         setTimeout(() => {
-          setCopied(false);
-        }, 150);
-      }, 1000);
+          setCopied(false)
+        }, 150)
+      }, 1000)
     }
   }
 
   createEffect(() => {
     if (refreshing() && !props.expired) {
-      setRefreshing(false);
+      setRefreshing(false)
     }
-  });
+  })
 
   return (
     <div class="relative h-13 flex justify-center items-center text-lightSlate-50 font-bold gap-2 rounded-md bg-darkSlate-900 opacity-100 w-54 font-ubuntu border-solid border-1 border-lightSlate-900 overflow-hidden">
@@ -80,23 +80,23 @@ export const DeviceCode = (props: Props) => {
         onClick={async () => {
           if (props.expired) {
             if (props.handleRefresh) {
-              setRefreshing(true);
+              setRefreshing(true)
               try {
-                await props.handleRefresh();
+                props.handleRefresh()
               } catch (e) {
-                console.error(e);
+                console.error(e)
               }
             }
           } else {
-            window.copyToClipboard(props.value || "");
-            animateCopied();
+            window.copyToClipboard(props.value || "")
+            animateCopied()
 
             if (props?.onClick && !props.expired) {
-              props.onClick();
+              props.onClick()
             }
           }
         }}
       />
     </div>
-  );
-};
+  )
+}

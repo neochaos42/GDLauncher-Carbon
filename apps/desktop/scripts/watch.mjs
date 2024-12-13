@@ -1,8 +1,8 @@
-import { spawn } from "child_process";
-import { createServer, build } from "vite";
-import electron from "@overwolf/ow-electron";
+import { spawn } from "child_process"
+import { createServer, build } from "vite"
+import electron from "@overwolf/ow-electron"
 
-let electronProcess = null;
+let electronProcess = null
 /**
  * @type {(server: import('vite').ViteDevServer) => Promise<import('rollup').RollupWatcher>}
  */
@@ -10,11 +10,11 @@ function watchMain(mainWindow) {
   /**
    * @type {import('child_process').ChildProcessWithoutNullStreams | null}
    */
-  const addressMainWindow = mainWindow.httpServer.address();
+  const addressMainWindow = mainWindow.httpServer.address()
   const env = Object.assign(process.env, {
     VITE_DEV_SERVER_HOST: "localhost",
     VITE_DEV_MAIN_WINDOW_PORT: addressMainWindow.port
-  });
+  })
 
   return build({
     configFile: "packages/main/vite.config.mjs",
@@ -23,19 +23,20 @@ function watchMain(mainWindow) {
       {
         name: "electron-main-watcher",
         writeBundle() {
-          electronProcess && electronProcess.kill();
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          electronProcess && electronProcess.kill()
           // Add "--inspect-brk=5858",  to debug main process
           electronProcess = spawn(electron, [".", "--test-ad"], {
             stdio: "inherit",
             env
-          });
+          })
         }
       }
     ],
     build: {
       watch: true
     }
-  });
+  })
 }
 
 /**
@@ -49,20 +50,20 @@ function watchPreload(mainWindow) {
       {
         name: "electron-preload-watcher",
         writeBundle() {
-          mainWindow.ws.send({ type: "full-reload" });
+          mainWindow.ws.send({ type: "full-reload" })
         }
       }
     ],
     build: {
       watch: true
     }
-  });
+  })
 }
 
 const mainWindow = await createServer({
   configFile: "packages/mainWindow/vite.config.mjs"
-});
+})
 
-await mainWindow.listen();
-await watchPreload(mainWindow);
-await watchMain(mainWindow);
+await mainWindow.listen()
+await watchPreload(mainWindow)
+await watchMain(mainWindow)

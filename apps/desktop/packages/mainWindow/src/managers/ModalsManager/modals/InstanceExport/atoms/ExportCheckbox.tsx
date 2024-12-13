@@ -1,136 +1,125 @@
-// export default ExportCheckbox;
-import { instanceId } from "@/utils/browser";
-import { rspc } from "@/utils/rspcClient";
-import { Checkbox } from "@gd/ui";
-import { createEffect, createSignal, For, Match, Show, Switch } from "solid-js";
+import { instanceId } from "@/utils/browser"
+import { rspc } from "@/utils/rspcClient"
+import { Checkbox } from "@gd/ui"
+import { createEffect, createSignal, For, Match, Show, Switch } from "solid-js"
 import {
   buildNestedObject,
   checkedFiles,
   setCheckedFiles
-} from "./ExportCheckboxParent";
-import _ from "lodash";
+} from "./ExportCheckboxParent"
+import _ from "lodash"
 
-type FileFolder = {
-  name?: string;
-  type?: "file" | "folder" | "Directory";
-  path?: Array<string>;
-};
-export function isSubsetOf(needle: Array<string>, haystack: Array<string>) {
-  return needle.every((val, idx) => haystack[idx] === val);
+interface FileFolder {
+  name?: string
+  type?: "file" | "folder" | "Directory"
+  path?: string[]
+}
+export function isSubsetOf(needle: string[], haystack: string[]) {
+  return needle.every((val, idx) => haystack[idx] === val)
 }
 
 const FileCheckbox = (props: { file: FileFolder; name: string }) => {
-  const handleChange = (checked: boolean, path: Array<string>) => {
+  const handleChange = (checked: boolean, path: string[]) => {
     if (checked) {
-      setCheckedFiles((prev) => [...prev, path]);
-      return;
+      setCheckedFiles((prev) => [...prev, path])
+      return
     }
     setCheckedFiles((prev) =>
       prev.filter((item) => {
-        return !isSubsetOf(item, path);
+        return !isSubsetOf(item, path)
       })
-    );
-  };
+    )
+  }
 
   createEffect(() => {
-    const path = [...(props.file.path as Array<string>), props.name as string];
+    const path = [...props.file.path!, props.name]
 
-    const isAlreadyInList = checkedFiles().some((item) =>
-      _.isEqual(item, path)
-    );
+    const isAlreadyInList = checkedFiles().some((item) => _.isEqual(item, path))
 
     if (isAlreadyInList) {
-      return;
+      return
     }
 
     const isAreadyChecked = checkedFiles().some((item) =>
       isSubsetOf(item, path)
-    );
+    )
 
     if (isAreadyChecked) {
-      setCheckedFiles((prev) => [...prev, path]);
+      setCheckedFiles((prev) => [...prev, path])
     }
-  });
+  })
 
   return (
     <Checkbox
       checked={checkedFiles().some((item) =>
-        _.isEqual(item, [...(props.file.path as Array<string>), props.name])
+        _.isEqual(item, [...props.file.path!, props.name])
       )}
       onChange={(checked: boolean) => {
-        handleChange(checked, [
-          ...(props.file.path as Array<string>),
-          props.name as string
-        ]);
+        handleChange(checked, [...props.file.path!, props.name])
       }}
       children={<span>{props.name}</span>}
     />
-  );
-};
+  )
+}
 
-const ExportCheckbox = (props: {
-  folder: FileFolder;
-  initialData: any | undefined;
-}) => {
-  const [isOpen, setIsOpen] = createSignal(false);
-  const [contents, setContents] = createSignal<any[]>([]);
-  const rspcContext = rspc.useContext();
+const ExportCheckbox = (props: { folder: FileFolder; initialData: any }) => {
+  const [isOpen, setIsOpen] = createSignal(false)
+  const [contents, setContents] = createSignal<any[]>([])
+  const rspcContext = rspc.useContext()
 
   createEffect(async () => {
     if (!isOpen() && contents().length === 0) {
       const res = await rspcContext.client.query([
         "instance.explore",
         {
-          instance_id: instanceId() as number,
-          path: props.folder.path as Array<string>
+          instance_id: instanceId()!,
+          path: props.folder.path!
         }
-      ]);
+      ])
 
-      setContents(res);
+      setContents(res)
     }
-  });
+  })
 
   createEffect(() => {
-    const obj = buildNestedObject(checkedFiles());
-    console.log(obj);
-  });
+    const obj = buildNestedObject(checkedFiles())
+    console.log(obj)
+  })
 
-  const handleChange = (checked: boolean, path: Array<string>) => {
+  const handleChange = (checked: boolean, path: string[]) => {
     if (checked) {
-      setCheckedFiles((prev) => [...prev, path]);
-      return;
+      setCheckedFiles((prev) => [...prev, path])
+      return
     }
     setCheckedFiles((prev) =>
       prev.filter((item) => !isSubsetOf(item, path) && !isSubsetOf(path, item))
-    );
-  };
+    )
+  }
 
   createEffect(() => {
-    const path = _.cloneDeep(props.folder.path as Array<string>);
+    const path = _.cloneDeep(props.folder.path!)
 
-    const isAlreadyInList = checkedFiles().some((item) =>
-      _.isEqual(item, path)
-    );
+    const isAlreadyInList = checkedFiles().some((item) => _.isEqual(item, path))
 
     if (isAlreadyInList) {
-      return;
+      return
     }
 
     const isAreadyChecked = checkedFiles().some((item) =>
       isSubsetOf(item, path)
-    );
+    )
 
     const isAllChildrenChecked =
       !isAreadyChecked &&
       checkedFiles().filter(
         (item) => item.length - path.length === 1 && isSubsetOf(path, item)
       ).length === contents().length &&
-      contents().length !== 0;
+      contents().length !== 0
 
     if (isAreadyChecked || isAllChildrenChecked) {
-      setCheckedFiles((prev) => [...prev, path]);
+      setCheckedFiles((prev) => [...prev, path])
     }
-  });
+  })
 
   return (
     <div class="flex flex-col p-1">
@@ -138,7 +127,7 @@ const ExportCheckbox = (props: {
         <div class="flex items-center gap-2">
           <div
             onClick={() => {
-              setIsOpen(!isOpen());
+              setIsOpen(!isOpen())
             }}
             class={`${
               isOpen()
@@ -148,13 +137,13 @@ const ExportCheckbox = (props: {
           />
           <Checkbox
             indeterminate={checkedFiles().some((item) =>
-              isSubsetOf(props.folder.path as Array<string>, item)
+              isSubsetOf(props.folder.path!, item)
             )}
             checked={checkedFiles().some((item) =>
-              _.isEqual(item, props.folder.path as Array<string>)
+              _.isEqual(item, props.folder.path!)
             )}
             onChange={(checked: boolean) => {
-              handleChange(checked, props.folder.path as Array<string>);
+              handleChange(checked, props.folder.path!)
             }}
             children={<span>{props.folder.name}</span>}
           />
@@ -171,7 +160,7 @@ const ExportCheckbox = (props: {
               )
             }
           </For> */}
-          <For each={(props.initialData as any) || contents()}>
+          <For each={props.initialData || contents()}>
             {(item) => (
               <div class="flex justify-between items-center flex-row">
                 <Switch>
@@ -181,10 +170,7 @@ const ExportCheckbox = (props: {
                       folder={{
                         name: item.name,
                         type: item.type,
-                        path: [
-                          ...(props.folder.path as Array<string>),
-                          item.name
-                        ]
+                        path: [...props.folder.path!, item.name]
                       }}
                     />
                   </Match>
@@ -216,7 +202,7 @@ const ExportCheckbox = (props: {
         </Show>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ExportCheckbox;
+export default ExportCheckbox

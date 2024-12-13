@@ -1,21 +1,21 @@
-import { Carousel, News, Skeleton } from "@gd/ui";
-import { For, Match, Show, Suspense, Switch, createResource } from "solid-js";
-import { Trans, useTransContext } from "@gd/i18n";
-import InstanceTile from "@/components/InstanceTile";
-import skull from "/assets/images/icons/skull.png";
-import DefaultImg from "/assets/images/default-instance-img.png";
-import UnstableCard from "@/components/UnstableCard";
-import FeaturedModpackTile from "./FeaturedModpackTile";
-import { initNews } from "@/utils/news";
-import { useGlobalStore } from "@/components/GlobalStoreContext";
+import { Carousel, News, Skeleton } from "@gd/ui"
+import { For, Match, Show, Suspense, Switch, createResource } from "solid-js"
+import { Trans, useTransContext } from "@gd/i18n"
+import InstanceTile from "@/components/InstanceTile"
+import skull from "/assets/images/icons/skull.png"
+import DefaultImg from "/assets/images/default-instance-img.png"
+import UnstableCard from "@/components/UnstableCard"
+import FeaturedModpackTile from "./FeaturedModpackTile"
+import { initNews } from "@/utils/news"
+import { useGlobalStore } from "@/components/GlobalStoreContext"
 
 const HomeWithSidebar = () => {
-  const [t] = useTransContext();
-  const routeData = useGlobalStore();
+  const [t] = useTransContext()
+  const routeData = useGlobalStore()
 
-  const newsInitializer = initNews();
+  const newsInitializer = initNews()
 
-  const [news] = createResource(() => newsInitializer);
+  const [news] = createResource(() => newsInitializer)
 
   return (
     <div>
@@ -27,9 +27,9 @@ const HomeWithSidebar = () => {
               <Switch>
                 <Match when={(news()?.length || 0) > 0}>
                   <News
-                    slides={news()!}
+                    slides={news()}
                     onClick={(news) => {
-                      window.openExternalLink(news.url || "");
+                      window.openExternalLink(news.url || "")
                     }}
                     fallBackImg={DefaultImg}
                   />
@@ -89,7 +89,7 @@ const HomeWithSidebar = () => {
                           return (
                             Date.parse(b.last_played || b.date_created) -
                             Date.parse(a.last_played || a.date_created)
-                          );
+                          )
                         })
                         .slice(0, 5)}
                     >
@@ -127,7 +127,7 @@ const HomeWithSidebar = () => {
                           return (
                             Date.parse(a.last_played || a.date_created) -
                             Date.parse(b.last_played || b.date_created)
-                          );
+                          )
                         })
                         .slice(0, 5)}
                     >
@@ -152,7 +152,7 @@ const HomeWithSidebar = () => {
         </Switch>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default HomeWithSidebar;
+export default HomeWithSidebar

@@ -1,5 +1,5 @@
-import { Switch } from "./index";
-import type { Meta, StoryObj } from "storybook-solidjs";
+import { Switch } from "./index"
+import type { Meta, StoryObj } from "storybook-solidjs"
 
 const meta: Meta<typeof Switch> = {
   /* 👇 The title prop is optional.
@@ -7,47 +7,47 @@ const meta: Meta<typeof Switch> = {
    * to learn how to generate automatic titles
    */
   title: "Switch",
-  component: Switch,
-};
+  component: Switch
+}
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof Switch>;
+type Story = StoryObj<typeof Switch>
 
 export const Checked: Story = {
   args: {
-    checked: true,
-  },
-};
+    checked: true
+  }
+}
 
 export const CheckedDisabled: Story = {
   args: {
     checked: true,
-    disabled: true,
-  },
-};
+    disabled: true
+  }
+}
 
 export const UnChecked: Story = {
   args: {
-    checked: false,
-  },
-};
+    checked: false
+  }
+}
 
 export const UnCheckedDisabled: Story = {
   args: {
     checked: false,
-    disabled: true,
-  },
-};
+    disabled: true
+  }
+}
 
 export const Loading: Story = {
   args: {
-    isLoading: true,
-  },
-};
+    isLoading: true
+  }
+}
 
 export const Indeterminate: Story = {
   args: {
-    isIndeterminate: true,
-  },
-};
+    isIndeterminate: true
+  }
+}

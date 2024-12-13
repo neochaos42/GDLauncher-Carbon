@@ -1,41 +1,41 @@
-import { JSX, mergeProps } from "solid-js";
-import vanillaIcon from "/assets/images/icons/vanilla.png";
-import magicBallIcon from "/assets/images/icons/magicBall.png";
-import clockIcon from "/assets/images/icons/clock.png";
-import pickAxeIcon from "/assets/images/icons/pickaxe.png";
-import mapIcon from "/assets/images/icons/map.png";
-import questIcon from "/assets/images/icons/quest.png";
+import { JSX, mergeProps } from "solid-js"
+import vanillaIcon from "/assets/images/icons/vanilla.png"
+import magicBallIcon from "/assets/images/icons/magicBall.png"
+import clockIcon from "/assets/images/icons/clock.png"
+import pickAxeIcon from "/assets/images/icons/pickaxe.png"
+import mapIcon from "/assets/images/icons/map.png"
+import questIcon from "/assets/images/icons/quest.png"
 
-type Icon = "vanilla" | "book" | "cart" | "clock" | "pickaxe" | "sign";
+type Icon = "vanilla" | "book" | "cart" | "clock" | "pickaxe" | "sign"
 
 interface Props {
-  icon?: Icon;
-  title: string;
-  text: JSX.Element | string;
-  class?: string;
+  icon?: Icon
+  title: string
+  text: JSX.Element | string
+  class?: string
 }
 
 const Card = (props: Props) => {
-  const mergedProps = mergeProps({ title: "", text: "" }, props);
+  const mergedProps = mergeProps({ title: "", text: "" }, props)
 
   const getIcon = (icon: Icon) => {
     switch (icon) {
       case "vanilla":
-        return vanillaIcon;
+        return vanillaIcon
       case "book":
-        return magicBallIcon;
+        return magicBallIcon
       case "cart":
-        return questIcon;
+        return questIcon
       case "clock":
-        return clockIcon;
+        return clockIcon
       case "pickaxe":
-        return pickAxeIcon;
+        return pickAxeIcon
       case "sign":
-        return mapIcon;
+        return mapIcon
       default:
-        return vanillaIcon;
+        return vanillaIcon
     }
-  };
+  }
 
   return (
     <div
@@ -55,7 +55,7 @@ const Card = (props: Props) => {
         </h5>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Card;
+export default Card

@@ -1,23 +1,23 @@
-import RightHandSide from "@/pages/Settings/components/RightHandSide";
-import Row from "@/pages/Settings/components/Row";
-import RowsContainer from "@/pages/Settings/components/RowsContainer";
-import Title from "@/pages/Settings/components/Title";
-import { rspc } from "@/utils/rspcClient";
-import { Trans } from "@gd/i18n";
-import { Button, Switch } from "@gd/ui";
+import RightHandSide from "@/pages/Settings/components/RightHandSide"
+import Row from "@/pages/Settings/components/Row"
+import RowsContainer from "@/pages/Settings/components/RowsContainer"
+import Title from "@/pages/Settings/components/Title"
+import { rspc } from "@/utils/rspcClient"
+import { Trans } from "@gd/i18n"
+import { Button, Switch } from "@gd/ui"
 
-type Props = {
-  nextStep: () => void;
-  prevStep: () => void;
-};
+interface Props {
+  nextStep: () => void
+  prevStep: () => void
+}
 
 const SecondStep = (props: Props) => {
-  let settingsMutation = rspc.createMutation(() => ({
+  const settingsMutation = rspc.createMutation(() => ({
     mutationKey: ["settings.setSettings"]
-  }));
-  let settings = rspc.createQuery(() => ({
+  }))
+  const settings = rspc.createQuery(() => ({
     queryKey: ["settings.getSettings"]
-  }));
+  }))
 
   return (
     <div class="flex flex-col justify-between h-full lg:w-160 box-border">
@@ -38,7 +38,7 @@ const SecondStep = (props: Props) => {
                   autoManageJavaSystemProfiles: {
                     Set: e.target.checked
                   }
-                });
+                })
               }}
             />
           </RightHandSide>
@@ -55,7 +55,7 @@ const SecondStep = (props: Props) => {
                   showNews: {
                     Set: e.currentTarget.checked
                   }
-                });
+                })
               }}
             />
           </RightHandSide>
@@ -76,7 +76,7 @@ const SecondStep = (props: Props) => {
                   deletionThroughRecycleBin: {
                     Set: e.currentTarget.checked
                   }
-                });
+                })
               }}
             />
           </RightHandSide>
@@ -90,14 +90,14 @@ const SecondStep = (props: Props) => {
           type="secondary"
           size="large"
           onClick={() => {
-            props.prevStep();
+            props.prevStep()
           }}
         >
           <Trans key="onboarding.prev" />
         </Button>
         <Button
           onClick={() => {
-            props.nextStep();
+            props.nextStep()
           }}
           size="large"
         >
@@ -105,7 +105,7 @@ const SecondStep = (props: Props) => {
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SecondStep;
+export default SecondStep

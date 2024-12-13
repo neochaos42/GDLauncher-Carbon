@@ -1,11 +1,11 @@
-import { resolve } from "path";
-import { builtinModules } from "module";
-import { defineConfig } from "vite";
-import { appVersion } from "@gd/config";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
+import { resolve } from "path"
+import { builtinModules } from "module"
+import { defineConfig } from "vite"
+import { appVersion } from "@gd/config"
+import { dirname } from "path"
+import { fileURLToPath } from "url"
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
   root: __dirname,
@@ -39,4 +39,4 @@ export default defineConfig({
     },
     sourcemap: true
   }
-});
+})

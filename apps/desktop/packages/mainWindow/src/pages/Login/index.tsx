@@ -1,4 +1,4 @@
-import { Button, createNotification } from "@gd/ui";
+import { Button, createNotification } from "@gd/ui"
 import {
   createSignal,
   Switch,
@@ -7,30 +7,30 @@ import {
   onMount,
   For,
   Show
-} from "solid-js";
-import Auth from "./Auth";
-import CodeStep from "./CodeStep";
-import fetchData from "./auth.login.data";
-import { useRouteData, useSearchParams } from "@solidjs/router";
-import { Trans } from "@gd/i18n";
-import { rspc } from "@/utils/rspcClient";
-import TermsAndConditions from "./TermsAndConditions";
-import Logo from "/assets/images/gdlauncher_wide_logo_blue.svg";
-import BackgroundVideo from "/assets/images/login_background.webm";
-import { handleStatus } from "@/utils/login";
-import { parseError } from "@/utils/helpers";
-import GDLAccount from "./GDLAccount";
-import GDLAccountCompletion from "./GDLAccountCompletion";
-import { useGDNavigate } from "@/managers/NavigationManager";
-import GDLAccountVerification from "./GDLAccountVerification";
-import { useGlobalStore } from "@/components/GlobalStoreContext";
-import PrivacyNotice from "./PrivacyNotice";
+} from "solid-js"
+import Auth from "./Auth"
+import CodeStep from "./CodeStep"
+import fetchData from "./auth.login.data"
+import { useRouteData, useSearchParams } from "@solidjs/router"
+import { Trans } from "@gd/i18n"
+import { rspc } from "@/utils/rspcClient"
+import TermsAndConditions from "./TermsAndConditions"
+import Logo from "/assets/images/gdlauncher_wide_logo_blue.svg"
+import BackgroundVideo from "/assets/images/login_background.webm"
+import { handleStatus } from "@/utils/login"
+import { parseError } from "@/utils/helpers"
+import GDLAccount from "./GDLAccount"
+import GDLAccountCompletion from "./GDLAccountCompletion"
+import { useGDNavigate } from "@/managers/NavigationManager"
+import GDLAccountVerification from "./GDLAccountVerification"
+import { useGlobalStore } from "@/components/GlobalStoreContext"
+import PrivacyNotice from "./PrivacyNotice"
 
-export type DeviceCodeObjectType = {
-  userCode: string;
-  link: string;
-  expiresAt: string;
-};
+export interface DeviceCodeObjectType {
+  userCode: string
+  link: string
+  expiresAt: string
+}
 
 enum Steps {
   TermsAndConditions = 1,
@@ -43,95 +43,95 @@ enum Steps {
 }
 
 export default function Login() {
-  const routeData: ReturnType<typeof fetchData> = useRouteData();
-  const [searchParams] = useSearchParams();
+  const routeData: ReturnType<typeof fetchData> = useRouteData()
+  const [searchParams] = useSearchParams()
 
-  const globalStore = useGlobalStore();
+  const globalStore = useGlobalStore()
 
-  const navigate = useGDNavigate();
-  const [step, setStep] = createSignal<Steps>(Steps.TermsAndConditions);
+  const navigate = useGDNavigate()
+  const [step, setStep] = createSignal<Steps>(Steps.TermsAndConditions)
   const [deviceCodeObject, setDeviceCodeObject] =
-    createSignal<DeviceCodeObjectType | null>(null);
-  const [loadingButton, setLoadingButton] = createSignal(false);
-  const activeUuid = globalStore.currentlySelectedAccountUuid;
+    createSignal<DeviceCodeObjectType | null>(null)
+  const [loadingButton, setLoadingButton] = createSignal(false)
+  const activeUuid = globalStore.currentlySelectedAccountUuid
 
   const gdlUser = rspc.createQuery(() => ({
     queryKey: ["account.peekGdlAccount", activeUuid.data!],
     enabled: !!activeUuid.data
-  }));
+  }))
 
   const saveGdlAccountMutation = rspc.createMutation(() => ({
     mutationKey: ["account.saveGdlAccount"]
-  }));
+  }))
 
   createEffect((prev) => {
     if (activeUuid.data && activeUuid.data !== prev) {
-      gdlUser.refetch();
+      gdlUser.refetch()
     }
 
-    return activeUuid.data;
-  });
+    return activeUuid.data
+  })
 
-  const [recoveryEmail, setRecoveryEmail] = createSignal<string | null>(null);
-  const [nickname, setNickname] = createSignal<string | null>(null);
+  const [recoveryEmail, setRecoveryEmail] = createSignal<string | null>(null)
+  const [nickname, setNickname] = createSignal<string | null>(null)
 
   const [acceptedHashedEmail, setAcceptedHashedEmail] = createSignal(
     globalStore.settings.data?.hashedEmailAccepted
-  );
+  )
 
-  const [cooldown, setCooldown] = createSignal(0);
+  const [cooldown, setCooldown] = createSignal(0)
 
-  let cooldownInterval: ReturnType<typeof setInterval> | undefined;
+  let cooldownInterval: ReturnType<typeof setInterval> | undefined
 
-  const rspcContext = rspc.useContext();
+  const rspcContext = rspc.useContext()
 
   const settingsMutation = rspc.createMutation(() => ({
     mutationKey: ["settings.setSettings"]
-  }));
+  }))
 
   const deleteGDLAccountMutation = rspc.createMutation(() => ({
     mutationKey: ["account.removeGdlAccount"]
-  }));
+  }))
 
   const requestEmailChangeMutation = rspc.createMutation(() => ({
     mutationKey: ["account.requestEmailChange"]
-  }));
+  }))
 
   const registerGdlAccountMutation = rspc.createMutation(() => ({
     mutationKey: ["account.registerGdlAccount"]
-  }));
+  }))
 
   const changeGDLAccountNicknameMutation = rspc.createMutation(() => ({
     mutationKey: ["account.changeGdlAccountNickname"]
-  }));
+  }))
 
-  const [isBackButtonVisible, setIsBackButtonVisible] = createSignal(false);
+  const [isBackButtonVisible, setIsBackButtonVisible] = createSignal(false)
 
   const isGDLAccountSet = () =>
     globalStore.settings.data?.gdlAccountId ||
-    globalStore.settings.data?.gdlAccountId === "";
+    globalStore.settings.data?.gdlAccountId === ""
 
   const accountEnrollFinalizeMutation = rspc.createMutation(() => ({
     mutationKey: ["account.enroll.finalize"]
-  }));
+  }))
 
   const nextStep = () => {
     if (step() < Steps.GDLAccountVerification) {
-      setStep((prev) => prev + 1);
+      setStep((prev) => prev + 1)
     }
-  };
+  }
 
   const prevStep = () => {
     if (step() >= Steps.TermsAndConditions) {
-      setStep((prev) => prev - 1);
+      setStep((prev) => prev - 1)
     }
-  };
+  }
 
-  let sidebarRef: HTMLDivElement | undefined = undefined;
-  let backgroundBlurRef: HTMLDivElement | undefined = undefined;
-  let welcomeToTextRef: HTMLDivElement | undefined = undefined;
-  let gdlauncherTextRef: HTMLDivElement | undefined = undefined;
-  let videoRef: HTMLVideoElement | undefined = undefined;
+  let sidebarRef: HTMLDivElement | undefined
+  let backgroundBlurRef: HTMLDivElement | undefined
+  let welcomeToTextRef: HTMLDivElement | undefined
+  let gdlauncherTextRef: HTMLDivElement | undefined
+  let videoRef: HTMLVideoElement | undefined
 
   async function transitionToLibrary() {
     return new Promise((resolve) => {
@@ -143,7 +143,7 @@ export default function Login() {
             easing: "linear",
             fill: "forwards"
           }
-        );
+        )
 
         videoRef?.animate(
           [{ transform: "translateX(15%)" }, { transform: "translateX(0%)" }],
@@ -152,41 +152,41 @@ export default function Login() {
             easing: "linear",
             fill: "forwards"
           }
-        );
+        )
 
         backgroundBlurRef.animate([{ opacity: 0 }, { opacity: 1 }], {
           duration: 500,
           delay: 350,
           easing: "linear",
           fill: "forwards"
-        });
+        })
 
         welcomeToTextRef?.animate([{ opacity: 0 }, { opacity: 1 }], {
           duration: 600,
           delay: 1100,
           easing: "linear",
           fill: "forwards"
-        });
+        })
 
         gdlauncherTextRef?.animate([{ opacity: 0 }, { opacity: 1 }], {
           duration: 600,
           delay: 2300,
           easing: "linear",
           fill: "forwards"
-        });
+        })
 
         setTimeout(() => {
-          navigate("/library");
-          resolve(null);
-        }, 5000);
+          navigate("/library")
+          resolve(null)
+        }, 5000)
       } else {
-        navigate("/library");
-        resolve(null);
+        navigate("/library")
+        resolve(null)
       }
-    });
+    })
   }
 
-  const addNotification = createNotification();
+  const addNotification = createNotification()
 
   createEffect(() => {
     handleStatus(routeData.status, {
@@ -195,10 +195,10 @@ export default function Login() {
           userCode: info.userCode,
           link: info.verificationUri,
           expiresAt: info.expiresAt
-        });
+        })
         if (routeData.status.data) {
-          await setStep(Steps.CodeStep);
-          setLoadingButton(false);
+          setStep(Steps.CodeStep)
+          setLoadingButton(false)
         }
       },
       async onError(error) {
@@ -206,90 +206,88 @@ export default function Login() {
           addNotification({
             name: parseError(error),
             type: "error"
-          });
-        await setStep(Steps.Auth);
-        setLoadingButton(false);
+          })
+        setStep(Steps.Auth)
+        setLoadingButton(false)
       },
       async onComplete() {
-        await accountEnrollFinalizeMutation.mutateAsync(undefined);
+        await accountEnrollFinalizeMutation.mutateAsync(undefined)
 
         const activeUuid = await rspcContext.client.query([
           "account.getActiveUuid"
-        ]);
+        ])
 
         if (!activeUuid) {
-          throw new Error("No active uuid");
+          throw new Error("No active uuid")
         }
 
         const settings = await rspcContext.client.query([
           "settings.getSettings"
-        ]);
+        ])
 
         // Already has GDL account
         if (
           settings.gdlAccountId !== null &&
           settings.gdlAccountId !== undefined
         ) {
-          transitionToLibrary();
-          return;
+          transitionToLibrary()
+          return
         }
 
         const gdlUserPeek = await rspcContext.client.query([
           "account.peekGdlAccount",
           activeUuid
-        ]);
+        ])
 
         if (gdlUserPeek?.email) {
-          setRecoveryEmail(gdlUserPeek.email);
-          setNickname(gdlUserPeek.nickname);
+          setRecoveryEmail(gdlUserPeek.email)
+          setNickname(gdlUserPeek.nickname)
         }
 
-        setStep(Steps.GDLAccount);
-        setLoadingButton(false);
+        setStep(Steps.GDLAccount)
+        setLoadingButton(false)
       }
-    });
-  });
+    })
+  })
 
   onMount(async () => {
     requestAnimationFrame(() => {
-      handleSidebarAnimation();
-    });
+      handleSidebarAnimation()
+    })
 
-    const activeUuid = await rspcContext.client.query([
-      "account.getActiveUuid"
-    ]);
+    const activeUuid = await rspcContext.client.query(["account.getActiveUuid"])
 
     if (!globalStore.settings.data?.termsAndPrivacyAccepted) {
-      setStep(Steps.TermsAndConditions);
-      setIsBackButtonVisible(false);
-      return;
+      setStep(Steps.TermsAndConditions)
+      setIsBackButtonVisible(false)
+      return
     }
 
-    const accounts = await rspcContext.client.query(["account.getAccounts"]);
+    const accounts = await rspcContext.client.query(["account.getAccounts"])
 
     if (
       !activeUuid ||
       accounts.length === 0 ||
       searchParams.addMicrosoftAccount
     ) {
-      setStep(Steps.Auth);
-      setIsBackButtonVisible(true);
-      return;
+      setStep(Steps.Auth)
+      setIsBackButtonVisible(true)
+      return
     }
 
     if (isGDLAccountSet()) {
-      transitionToLibrary();
+      transitionToLibrary()
     } else if (!isGDLAccountSet()) {
-      setIsBackButtonVisible(true);
-      setStep(Steps.GDLAccount);
+      setIsBackButtonVisible(true)
+      setStep(Steps.GDLAccount)
     }
 
-    return;
-  });
+    return
+  })
 
   async function handleSidebarAnimation() {
     if (sidebarRef) {
-      await new Promise((resolve) => setTimeout(resolve, 300));
+      await new Promise((resolve) => setTimeout(resolve, 300))
 
       sidebarRef.animate(
         [{ transform: "translateX(-100%)" }, { transform: "translateX(0)" }],
@@ -299,7 +297,7 @@ export default function Login() {
           easing: "cubic-bezier(0.175, 0.885, 0.32, 1)",
           fill: "forwards"
         }
-      );
+      )
 
       videoRef?.animate(
         [{ transform: "translateX(0)" }, { transform: "translateX(15%)" }],
@@ -309,17 +307,17 @@ export default function Login() {
           easing: "cubic-bezier(0.175, 0.885, 0.32, 1)",
           fill: "forwards"
         }
-      );
+      )
     }
   }
 
-  let btnRef: HTMLDivElement | undefined = undefined;
+  let btnRef: HTMLDivElement | undefined
 
   function handleAnimationForward() {
     if (btnRef) {
-      if (isBackButtonVisible()) return;
+      if (isBackButtonVisible()) return
 
-      setIsBackButtonVisible(true);
+      setIsBackButtonVisible(true)
       btnRef.animate(
         [
           { width: "0", margin: "0" },
@@ -330,13 +328,13 @@ export default function Login() {
           easing: "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
           fill: "forwards"
         }
-      );
+      )
     }
   }
 
   function handleAnimationBackward() {
     if (btnRef && isBackButtonVisible() && step() === Steps.PrivacyNotice) {
-      setIsBackButtonVisible(false);
+      setIsBackButtonVisible(false)
 
       btnRef.animate(
         [
@@ -348,42 +346,42 @@ export default function Login() {
           easing: "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
           fill: "forwards"
         }
-      );
+      )
     }
   }
 
   const accountEnrollCancelMutation = rspc.createMutation(() => ({
     mutationKey: ["account.enroll.cancel"]
-  }));
+  }))
 
   const accountEnrollBeginMutation = rspc.createMutation(() => ({
     mutationKey: ["account.enroll.begin"],
 
     onError() {
-      retryLogin();
+      retryLogin()
     }
-  }));
+  }))
 
-  const [retry, setRetry] = createSignal(0);
+  const [retry, setRetry] = createSignal(0)
 
   const retryLogin = () => {
     while (retry() <= 3) {
       if (!routeData.status.data) {
-        accountEnrollCancelMutation.mutate(undefined);
+        accountEnrollCancelMutation.mutate(undefined)
       }
-      accountEnrollBeginMutation.mutate(undefined);
-      setRetry((prev) => prev + 1);
+      accountEnrollBeginMutation.mutate(undefined)
+      setRetry((prev) => prev + 1)
     }
     if (retry() > 3) {
       addNotification({
         name: "Something went wrong while logging in, try again!",
         type: "error"
-      });
+      })
       if (routeData.status.data) {
-        accountEnrollCancelMutation.mutate(undefined);
+        accountEnrollCancelMutation.mutate(undefined)
       }
     }
-  };
+  }
 
   return (
     <div class="flex w-full h-screen" id="main-login-page">
@@ -509,8 +507,8 @@ export default function Login() {
                           ? false
                           : true)
                     ) {
-                      setLoadingButton(false);
-                      setStep(i() + 1);
+                      setLoadingButton(false)
+                      setStep(i() + 1)
                     }
                   }}
                 >
@@ -547,19 +545,19 @@ export default function Login() {
                 fullWidth
                 onClick={async () => {
                   if (step() === Steps.GDLAccount) {
-                    await saveGdlAccountMutation.mutateAsync("");
-                    transitionToLibrary();
+                    await saveGdlAccountMutation.mutateAsync("")
+                    transitionToLibrary()
                   } else if (
                     (step() === Steps.Auth || step() === Steps.CodeStep) &&
                     globalStore.accounts.data?.length !== 0
                   ) {
-                    navigate("/settings/accounts");
+                    navigate("/settings/accounts")
                   } else {
-                    handleAnimationBackward();
-                    prevStep();
+                    handleAnimationBackward()
+                    prevStep()
                   }
 
-                  setLoadingButton(false);
+                  setLoadingButton(false)
                 }}
               >
                 <Switch>
@@ -594,8 +592,8 @@ export default function Login() {
                 loadingButton() || step() === Steps.GDLAccountVerification
               }
               onClick={async () => {
-                handleAnimationForward();
-                setLoadingButton(true);
+                handleAnimationForward()
+                setLoadingButton(true)
 
                 if (step() === Steps.TermsAndConditions) {
                   try {
@@ -606,106 +604,104 @@ export default function Login() {
                       hashedEmailAccepted: {
                         Set: !!acceptedHashedEmail()
                       }
-                    });
+                    })
                   } catch (err) {
-                    console.log(err);
+                    console.log(err)
                     addNotification({
                       name: "Error while accepting terms and conditions",
                       content: "Check the console for more information.",
                       type: "error"
-                    });
+                    })
                   }
 
-                  setLoadingButton(false);
+                  setLoadingButton(false)
 
                   if (!searchParams.addMicrosoftAccount && activeUuid.data) {
-                    navigate("/library");
+                    navigate("/library")
                   } else {
-                    nextStep();
+                    nextStep()
                   }
                 } else if (step() === Steps.PrivacyNotice) {
-                  setLoadingButton(false);
-                  nextStep();
+                  setLoadingButton(false)
+                  nextStep()
                 } else if (step() === Steps.Auth) {
                   if (!routeData.status.data) {
-                    await accountEnrollBeginMutation.mutateAsync(undefined);
+                    await accountEnrollBeginMutation.mutateAsync(undefined)
                   } else {
-                    await accountEnrollCancelMutation.mutateAsync(undefined);
-                    await accountEnrollBeginMutation.mutateAsync(undefined);
+                    await accountEnrollCancelMutation.mutateAsync(undefined)
+                    await accountEnrollBeginMutation.mutateAsync(undefined)
                   }
                 } else if (step() === Steps.GDLAccount) {
-                  const uuid = globalStore?.currentlySelectedAccountUuid?.data;
+                  const uuid = globalStore?.currentlySelectedAccountUuid?.data
 
                   if (!uuid) {
-                    throw new Error("No active uuid");
+                    throw new Error("No active uuid")
                   }
 
                   try {
                     const existingGDLUser = await rspcContext.client.query([
                       "account.peekGdlAccount",
                       uuid
-                    ]);
+                    ])
 
-                    if (existingGDLUser && existingGDLUser.isEmailVerified) {
-                      transitionToLibrary();
-                      await saveGdlAccountMutation.mutateAsync(uuid);
+                    if (existingGDLUser?.isEmailVerified) {
+                      transitionToLibrary()
+                      await saveGdlAccountMutation.mutateAsync(uuid)
 
-                      return;
+                      return
                     } else if (
                       existingGDLUser &&
                       !existingGDLUser.isEmailVerified
                     ) {
-                      setRecoveryEmail(existingGDLUser.email);
-                      setNickname(existingGDLUser.nickname);
-                      setStep(Steps.GDLAccountVerification);
-                      return;
+                      setRecoveryEmail(existingGDLUser.email)
+                      setNickname(existingGDLUser.nickname)
+                      setStep(Steps.GDLAccountVerification)
+                      return
                     }
                   } catch (e) {
-                    console.error(e);
+                    console.error(e)
                   }
 
-                  await deleteGDLAccountMutation.mutateAsync(undefined);
-                  setLoadingButton(false);
-                  nextStep();
+                  await deleteGDLAccountMutation.mutateAsync(undefined)
+                  setLoadingButton(false)
+                  nextStep()
                 } else if (step() === Steps.GDLAccountCompletion) {
-                  const uuid = globalStore?.currentlySelectedAccountUuid?.data;
+                  const uuid = globalStore?.currentlySelectedAccountUuid?.data
 
                   if (!uuid) {
-                    throw new Error("No active uuid");
+                    throw new Error("No active uuid")
                   }
 
-                  const email = recoveryEmail();
+                  const email = recoveryEmail()
 
                   if (!email) {
-                    throw new Error("No recovery email");
+                    throw new Error("No recovery email")
                   }
 
                   try {
                     const existingGDLUser = await rspcContext.client.query([
                       "account.peekGdlAccount",
                       uuid
-                    ]);
+                    ])
 
                     if (
-                      existingGDLUser &&
-                      existingGDLUser.nickname &&
+                      existingGDLUser?.nickname &&
                       existingGDLUser.nickname !== nickname()
                     ) {
                       try {
                         await changeGDLAccountNicknameMutation.mutateAsync({
                           uuid,
                           nickname: nickname()!
-                        });
+                        })
                       } catch (e) {
-                        console.error(e);
-                        setLoadingButton(false);
-                        return;
+                        console.error(e)
+                        setLoadingButton(false)
+                        return
                       }
                     }
 
                     if (
-                      existingGDLUser &&
-                      existingGDLUser.email &&
+                      existingGDLUser?.email &&
                       existingGDLUser.email !== recoveryEmail()
                     ) {
                       try {
@@ -713,63 +709,60 @@ export default function Login() {
                           await requestEmailChangeMutation.mutateAsync({
                             uuid,
                             email: recoveryEmail()!
-                          });
+                          })
 
                         if (result.status === "success") {
-                          setStep(Steps.GDLAccountVerification);
-                          setLoadingButton(false);
+                          setStep(Steps.GDLAccountVerification)
+                          setLoadingButton(false)
                         } else if (result.status === "failed" && result.value) {
-                          clearInterval(cooldownInterval);
-                          cooldownInterval = undefined;
+                          clearInterval(cooldownInterval)
+                          cooldownInterval = undefined
 
-                          setLoadingButton(false);
-                          setCooldown(result.value);
-                          setRecoveryEmail(existingGDLUser.email);
+                          setLoadingButton(false)
+                          setCooldown(result.value)
+                          setRecoveryEmail(existingGDLUser.email)
 
                           cooldownInterval = setInterval(() => {
-                            setCooldown((prev) => prev - 1);
+                            setCooldown((prev) => prev - 1)
 
                             if (cooldown() <= 0) {
-                              setCooldown(0);
-                              clearInterval(cooldownInterval);
-                              cooldownInterval = undefined;
+                              setCooldown(0)
+                              clearInterval(cooldownInterval)
+                              cooldownInterval = undefined
                             }
-                          }, 1000);
+                          }, 1000)
                         }
                       } catch (e) {
-                        console.error(e);
+                        console.error(e)
                         addNotification({
                           name: "Error while requesting email change",
                           content: (e as any).message,
                           type: "error"
-                        });
+                        })
                       }
-                    } else if (
-                      existingGDLUser &&
-                      existingGDLUser.isEmailVerified
-                    ) {
-                      transitionToLibrary();
+                    } else if (existingGDLUser?.isEmailVerified) {
+                      transitionToLibrary()
                     } else if (
                       existingGDLUser &&
                       !existingGDLUser.isEmailVerified
                     ) {
-                      setRecoveryEmail(existingGDLUser.email);
-                      setNickname(existingGDLUser.nickname);
-                      setStep(Steps.GDLAccountVerification);
+                      setRecoveryEmail(existingGDLUser.email)
+                      setNickname(existingGDLUser.nickname)
+                      setStep(Steps.GDLAccountVerification)
                     } else {
                       await registerGdlAccountMutation.mutateAsync({
                         email: recoveryEmail()!,
                         nickname: nickname()!,
                         uuid
-                      });
+                      })
 
-                      await saveGdlAccountMutation.mutateAsync(uuid);
+                      await saveGdlAccountMutation.mutateAsync(uuid)
 
-                      nextStep();
+                      nextStep()
                     }
                   } catch (e) {
-                    setLoadingButton(false);
-                    console.error(e);
+                    setLoadingButton(false)
+                    console.error(e)
                   }
                 }
               }}
@@ -854,5 +847,5 @@ export default function Login() {
             /> */}
       </div>
     </div>
-  );
+  )
 }

@@ -1,5 +1,5 @@
-import { contextBridge, ipcRenderer } from "electron";
+import { contextBridge, ipcRenderer } from "electron"
 
 contextBridge.exposeInMainWorld("getCurrentOS", (os: any) => {
-  return ipcRenderer.invoke("getCurrentOS", os);
-});
+  return ipcRenderer.invoke("getCurrentOS", os)
+})

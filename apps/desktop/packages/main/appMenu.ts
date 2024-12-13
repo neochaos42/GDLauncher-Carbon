@@ -1,4 +1,4 @@
-import { Menu, app } from "electron";
+import { Menu, app } from "electron"
 
 const edit = [
   ...(process.platform === "darwin"
@@ -36,7 +36,7 @@ const edit = [
               label: "Quit GDLauncher",
               accelerator: "Command+Q",
               click: () => {
-                app.quit();
+                app.quit()
               }
             }
           ]
@@ -71,6 +71,6 @@ const edit = [
       { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" }
     ]
   }
-];
+]
 
-Menu.setApplicationMenu(Menu.buildFromTemplate(edit as any));
+Menu.setApplicationMenu(Menu.buildFromTemplate(edit as any))

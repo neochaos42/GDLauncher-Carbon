@@ -1,16 +1,15 @@
-/* eslint-disable i18next/no-literal-string */
-import { Spinner } from "@gd/ui";
-import { Match, Switch, JSX } from "solid-js";
+import { Spinner } from "@gd/ui"
+import { Match, Switch, JSX } from "solid-js"
 
 interface RouteData {
-  isLoading: boolean;
-  isError: boolean;
-  isSuccess: boolean;
+  isLoading: boolean
+  isError: boolean
+  isSuccess: boolean
 }
 
 interface Props {
-  routeData: { data: RouteData };
-  children?: JSX.Element;
+  routeData: { data: RouteData }
+  children?: JSX.Element
 }
 
 const LoadingError = (props: Props) => {
@@ -29,7 +28,7 @@ const LoadingError = (props: Props) => {
       </Match>
       <Match when={props.routeData.data.isSuccess}>{props.children}</Match>
     </Switch>
-  );
-};
+  )
+}
 
-export default LoadingError;
+export default LoadingError

@@ -76,7 +76,7 @@ function TruncatedPath(props: { originalPath: string }) {
     <div class="w-full whitespace-nowrap break-all overflow-hidden truncate">
       {props.originalPath}
     </div>
-  );
+  )
 }
 
-export default TruncatedPath;
+export default TruncatedPath

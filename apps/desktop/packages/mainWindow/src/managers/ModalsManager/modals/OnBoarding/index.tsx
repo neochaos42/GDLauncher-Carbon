@@ -1,17 +1,17 @@
-import ModalLayout from "../../ModalLayout";
-import { ModalProps } from "../..";
-import { Steps } from "@gd/ui";
-import { Match, Switch, createSignal } from "solid-js";
-import SecondStep from "./SecondStep";
-import ThirdStep from "./ThirdStep";
-import FirstStep from "./FirstStep";
-import { useTransContext } from "@gd/i18n";
-import mcCubes from "/assets/images/icons/mc-cubes.png";
+import ModalLayout from "../../ModalLayout"
+import { ModalProps } from "../.."
+import { Steps } from "@gd/ui"
+import { Match, Switch, createSignal } from "solid-js"
+import SecondStep from "./SecondStep"
+import ThirdStep from "./ThirdStep"
+import FirstStep from "./FirstStep"
+import { useTransContext } from "@gd/i18n"
+import mcCubes from "/assets/images/icons/mc-cubes.png"
 
-const [currentStep, setCurrentStep] = createSignal(0);
-export { currentStep, setCurrentStep };
+const [currentStep, setCurrentStep] = createSignal(0)
+export { currentStep, setCurrentStep }
 const OnBoarding = (props: ModalProps) => {
-  const [t] = useTransContext();
+  const [t] = useTransContext()
 
   const onBoardingSteps = [
     {
@@ -29,15 +29,15 @@ const OnBoarding = (props: ModalProps) => {
       icon: <div>3</div>,
       onClick: () => setCurrentStep(2)
     }
-  ];
+  ]
 
   const nextStep = () => {
-    setCurrentStep((prev) => prev + 1);
-  };
+    setCurrentStep((prev) => prev + 1)
+  }
 
   const prevStep = () => {
-    setCurrentStep((prev) => prev - 1);
-  };
+    setCurrentStep((prev) => prev - 1)
+  }
 
   return (
     <ModalLayout
@@ -69,7 +69,7 @@ const OnBoarding = (props: ModalProps) => {
         </div>
       </div>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default OnBoarding;
+export default OnBoarding

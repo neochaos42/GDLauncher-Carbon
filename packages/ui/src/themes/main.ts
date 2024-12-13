@@ -1,10 +1,10 @@
-import { Theme } from ".";
+import { Theme } from "."
 
 const additionalStyles = `
   html, body {
     font-size: 16px;
   }
-`;
+`
 
 const mainTheme: Theme = {
   accent: "62 133 208",
@@ -96,7 +96,7 @@ const mainTheme: Theme = {
   font: "Ubuntu",
   "font-mono": "Ubuntu Mono",
   "ads-sidebar-background": "url(./assets/images/gdlauncher_pattern.svg)",
-  "additional-styles": additionalStyles,
-};
+  "additional-styles": additionalStyles
+}
 
-export { mainTheme };
+export { mainTheme }

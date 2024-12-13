@@ -1,8 +1,8 @@
-import { Trans } from "@gd/i18n";
-import { useModal } from "@/managers/ModalsManager";
+import { Trans } from "@gd/i18n"
+import { useModal } from "@/managers/ModalsManager"
 
 const TermsAndConditions = () => {
-  const modalsContext = useModal();
+  const modalsContext = useModal()
 
   return (
     <div class="flex-1 flex flex-col justify-between text-left gap-4 leading-5 p-4 text-lightSlate-700">
@@ -15,7 +15,7 @@ const TermsAndConditions = () => {
               onClick={() => {
                 modalsContext?.openModal({
                   name: "termsAndConditions"
-                });
+                })
               }}
             >
               {""}
@@ -26,7 +26,7 @@ const TermsAndConditions = () => {
               onClick={() => {
                 modalsContext?.openModal({
                   name: "privacyStatement"
-                });
+                })
               }}
             >
               {""}
@@ -35,7 +35,7 @@ const TermsAndConditions = () => {
         </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TermsAndConditions;
+export default TermsAndConditions

@@ -1,19 +1,15 @@
-import { getCategories, isCurseForgeData, ModRowProps } from "@/utils/mods";
-import { For, Match, Show, Switch } from "solid-js";
-import { Tag, Tooltip } from "@gd/ui";
-import {
-  CFFECategory,
-  MRFECategoriesResponse,
-  MRFECategory
-} from "@gd/core_module/bindings";
-import { CategoryIcon } from "@/utils/instances";
-import { capitalize } from "@/utils/helpers";
+import { getCategories, isCurseForgeData, ModRowProps } from "@/utils/mods"
+import { For, Match, Show, Switch } from "solid-js"
+import { Tag, Tooltip } from "@gd/ui"
+import { CFFECategory, MRFECategoriesResponse } from "@gd/core_module/bindings"
+import { CategoryIcon } from "@/utils/instances"
+import { capitalize } from "@/utils/helpers"
 
-type Props = {
-  modProps: ModRowProps;
-  isRowSmall: boolean;
-  modrinthCategories: MRFECategoriesResponse | undefined;
-};
+interface Props {
+  modProps: ModRowProps
+  isRowSmall: boolean
+  modrinthCategories: MRFECategoriesResponse | undefined
+}
 
 const Categories = (props: Props) => {
   return (
@@ -25,7 +21,7 @@ const Categories = (props: Props) => {
               const modrinthCategory = () =>
                 props.modrinthCategories?.find(
                   (category) => category.name === tag
-                );
+                )
               return (
                 <Tooltip
                   content={
@@ -42,9 +38,7 @@ const Categories = (props: Props) => {
                         <div>
                           <Switch fallback={capitalize(tag as string)}>
                             <Match when={modrinthCategory()}>
-                              <CategoryIcon
-                                category={modrinthCategory() as MRFECategory}
-                              />
+                              <CategoryIcon category={modrinthCategory()!} />
                             </Match>
                           </Switch>
                         </div>
@@ -53,7 +47,7 @@ const Categories = (props: Props) => {
                     type="fixed"
                   />
                 </Tooltip>
-              );
+              )
             }}
           </For>
         </Match>
@@ -85,7 +79,7 @@ const Categories = (props: Props) => {
                             (category) =>
                               category.name ===
                               (getCategories(props.modProps)?.[0] as string)
-                          ) as MRFECategory
+                          )!
                         }
                       />
                     </Show>
@@ -126,7 +120,7 @@ const Categories = (props: Props) => {
                                     category={
                                       props.modrinthCategories?.find(
                                         (category) => category.name === tag
-                                      ) as MRFECategory
+                                      )!
                                     }
                                   />
                                 </Show>
@@ -151,7 +145,7 @@ const Categories = (props: Props) => {
         </Match>
       </Switch>
     </div>
-  );
-};
+  )
+}
 
-export default Categories;
+export default Categories

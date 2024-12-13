@@ -1,5 +1,5 @@
-import { Trans, useTransContext } from "@gd/i18n";
-import { Button, Dropdown, Input, Skeleton } from "@gd/ui";
+import { Trans, useTransContext } from "@gd/i18n"
+import { Button, Dropdown, Input, Skeleton } from "@gd/ui"
 import {
   createEffect,
   createMemo,
@@ -10,112 +10,112 @@ import {
   onMount,
   Show,
   Switch
-} from "solid-js";
+} from "solid-js"
 import {
   CFFEModSearchSortField,
   FEUnifiedSearchResult,
   MRFESearchIndex
-} from "@gd/core_module/bindings";
-import { RSPCError } from "@rspc/client";
-import { CurseForgeSortFields, ModrinthSortFields } from "@/utils/constants";
-import ModRow from "@/components/ModRow";
-import fetchData from "./modsBrowser.data";
-import { useInfiniteModsQuery } from "@/components/InfiniteScrollModsQueryWrapper";
-import { FetchingModpacks, NoModpacksAvailable } from "./ModsStatus";
+} from "@gd/core_module/bindings"
+import { RSPCError } from "@rspc/client"
+import { CurseForgeSortFields, ModrinthSortFields } from "@/utils/constants"
+import ModRow from "@/components/ModRow"
+import fetchData from "./modsBrowser.data"
+import { useInfiniteModsQuery } from "@/components/InfiniteScrollModsQueryWrapper"
+import { FetchingModpacks, NoModpacksAvailable } from "./ModsStatus"
 import {
   ErrorFetchingModpacks,
   NoMoreModpacks
-} from "../Modpacks/ModpacksStatus";
-import { useRouteData, useSearchParams } from "@solidjs/router";
-import { rspc } from "@/utils/rspcClient";
-import DefaultImg from "/assets/images/default-instance-img.png";
-import { useGDNavigate } from "@/managers/NavigationManager";
-import { getInstanceImageUrl } from "@/utils/instances";
-import { setInstanceId, instanceId as _instanceId } from "@/utils/browser";
-import { setClickedInstanceId } from "@/components/InstanceTile";
+} from "../Modpacks/ModpacksStatus"
+import { useRouteData, useSearchParams } from "@solidjs/router"
+import { rspc } from "@/utils/rspcClient"
+import DefaultImg from "/assets/images/default-instance-img.png"
+import { useGDNavigate } from "@/managers/NavigationManager"
+import { getInstanceImageUrl } from "@/utils/instances"
+import { setInstanceId, instanceId as _instanceId } from "@/utils/browser"
+import { setClickedInstanceId } from "@/components/InstanceTile"
 
 const ModsBrowser = () => {
-  const [t] = useTransContext();
-  const navigate = useGDNavigate();
+  const [t] = useTransContext()
+  const navigate = useGDNavigate()
 
-  const infiniteQuery = useInfiniteModsQuery();
+  const infiniteQuery = useInfiniteModsQuery()
 
-  const allVirtualRows = () => infiniteQuery.rowVirtualizer.getVirtualItems();
+  const allVirtualRows = () => infiniteQuery.rowVirtualizer.getVirtualItems()
 
-  const routeData: ReturnType<typeof fetchData> = useRouteData();
+  const routeData: ReturnType<typeof fetchData> = useRouteData()
 
-  const lastItem = () => allVirtualRows()[allVirtualRows().length - 1];
+  const lastItem = () => allVirtualRows()[allVirtualRows().length - 1]
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const instanceId = createMemo(() => {
-    const res = _instanceId() ?? parseInt(searchParams.instanceId, 10);
+    const res = _instanceId() ?? parseInt(searchParams.instanceId, 10)
 
     if (isNaN(res)) {
-      return null;
+      return null
     }
 
-    return res;
-  });
+    return res
+  })
 
   const instanceMods = rspc.createQuery(() => ({
     queryKey: ["instance.getInstanceMods", instanceId()]
-  }));
+  }))
 
   const instanceDetails = rspc.createQuery(() => ({
     queryKey: ["instance.getInstanceDetails", instanceId()]
-  }));
+  }))
 
   createEffect(() => {
     if (!lastItem()) {
-      return;
+      return
     }
 
     const lastItemIndex = infiniteQuery?.infiniteQuery.hasNextPage
       ? lastItem().index - 1
-      : lastItem().index;
+      : lastItem().index
 
     if (
       mods().length - lastItemIndex < 5 &&
       infiniteQuery?.infiniteQuery.hasNextPage &&
       !infiniteQuery.infiniteQuery.isFetchingNextPage
     ) {
-      infiniteQuery.infiniteQuery.fetchNextPage();
+      infiniteQuery.infiniteQuery.fetchNextPage()
     }
-  });
+  })
 
-  const [headerHeight, setHeaderHeight] = createSignal(90);
+  const [headerHeight, setHeaderHeight] = createSignal(90)
 
-  let containerRef: HTMLDivElement;
-  let resizeObserver: ResizeObserver;
+  let containerRef: HTMLDivElement
+  let resizeObserver: ResizeObserver
 
   onMount(() => {
     resizeObserver = new ResizeObserver((entries) => {
       window.requestAnimationFrame(() => {
-        setHeaderHeight(entries[0].target.getBoundingClientRect().height);
-      });
-    });
+        setHeaderHeight(entries[0].target.getBoundingClientRect().height)
+      })
+    })
 
-    resizeObserver.observe(containerRef);
-  });
+    resizeObserver.observe(containerRef)
+  })
 
   onCleanup(() => {
     if (resizeObserver) {
-      resizeObserver.disconnect();
+      resizeObserver.disconnect()
     }
-  });
+  })
 
-  const isCurseforge = () => infiniteQuery.query.searchApi === "curseforge";
+  const isCurseforge = () => infiniteQuery.query.searchApi === "curseforge"
 
   const sortingFields = () =>
-    isCurseforge() ? CurseForgeSortFields : ModrinthSortFields;
+    isCurseforge() ? CurseForgeSortFields : ModrinthSortFields
 
   const mods = () =>
     infiniteQuery?.infiniteQuery.data
       ? infiniteQuery.infiniteQuery.data.pages.flatMap((d: any) => d.data)
-      : [];
+      : []
 
-  const hasFiltersData = createMemo(() => Boolean(sortingFields()));
+  const hasFiltersData = createMemo(() => Boolean(sortingFields()))
 
   return (
     <div class="box-border h-full w-full relative">
@@ -148,8 +148,8 @@ const ModsBrowser = () => {
                     <Button
                       onClick={() => {
                         // TODO: pass the proper identifier, but we don't have it here
-                        setClickedInstanceId(undefined);
-                        navigate(`/library/${instanceId()}/mods`);
+                        setClickedInstanceId(undefined)
+                        navigate(`/library/${instanceId()}/mods`)
                       }}
                       type="outline"
                       size="small"
@@ -177,13 +177,13 @@ const ModsBrowser = () => {
                     onClick={() => {
                       setSearchParams({
                         instanceId: undefined
-                      });
-                      setInstanceId(undefined);
+                      })
+                      setInstanceId(undefined)
                       infiniteQuery.setQuery({
                         modloaders: null,
                         gameVersions: null,
                         categories: null
-                      });
+                      })
                     }}
                   />
                 </div>
@@ -195,8 +195,8 @@ const ModsBrowser = () => {
                   class="w-full text-lightSlate-700 rounded-full flex-1 max-w-none"
                   value={infiniteQuery.query.searchQuery || ""}
                   onInput={(e) => {
-                    const target = e.target as HTMLInputElement;
-                    infiniteQuery.setQuery({ searchQuery: target.value });
+                    const target = e.target as HTMLInputElement
+                    infiniteQuery.setQuery({ searchQuery: target.value })
                   }}
                 />
                 <div class="flex items-center gap-3">
@@ -215,22 +215,22 @@ const ModsBrowser = () => {
                           }
                         : {
                             modrinth: val.key as MRFESearchIndex
-                          };
+                          }
 
                       infiniteQuery.setQuery({
                         sortIndex
-                      });
+                      })
                     }}
                     value={
                       isCurseforge()
                         ? (
                             infiniteQuery.query.sortIndex as {
-                              curseForge: CFFEModSearchSortField;
+                              curseForge: CFFEModSearchSortField
                             }
                           ).curseForge
                         : (
                             infiniteQuery.query.sortIndex as {
-                              modrinth: MRFESearchIndex;
+                              modrinth: MRFESearchIndex
                             }
                           ).modrinth
                     }
@@ -246,10 +246,10 @@ const ModsBrowser = () => {
                       infiniteQuery.query.sortOrder === "descending"
                   }}
                   onClick={() => {
-                    const isAsc = infiniteQuery.query.sortOrder === "ascending";
+                    const isAsc = infiniteQuery.query.sortOrder === "ascending"
                     infiniteQuery.setQuery({
                       sortOrder: isAsc ? "descending" : "ascending"
-                    });
+                    })
                   }}
                 />
               </div>
@@ -272,7 +272,7 @@ const ModsBrowser = () => {
               <div
                 class="h-full rounded-xl overflow-x-hidden pr-2 overflow-y-auto ml-5"
                 ref={(el) => {
-                  infiniteQuery.setParentRef(el);
+                  infiniteQuery.setParentRef(el)
                 }}
               >
                 <div
@@ -285,12 +285,12 @@ const ModsBrowser = () => {
                   <For each={allVirtualRows()}>
                     {(virtualItem) => {
                       const isLoaderRow = () =>
-                        virtualItem.index > mods().length - 1;
+                        virtualItem.index > mods().length - 1
                       const mod = () =>
-                        mods()[virtualItem.index] as FEUnifiedSearchResult;
+                        mods()[virtualItem.index] as FEUnifiedSearchResult
 
                       const hasNextPage = () =>
-                        infiniteQuery.infiniteQuery.hasNextPage;
+                        infiniteQuery.infiniteQuery.hasNextPage
 
                       return (
                         <div
@@ -327,7 +327,7 @@ const ModsBrowser = () => {
                             </Switch>
                           </div>
                         </div>
-                      );
+                      )
                     }}
                   </For>
                 </div>
@@ -360,7 +360,7 @@ const ModsBrowser = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ModsBrowser;
+export default ModsBrowser

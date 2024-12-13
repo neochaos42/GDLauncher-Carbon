@@ -1,19 +1,19 @@
-import { convertSecondsToHumanTime } from "@/utils/helpers";
-import { port, rspc } from "@/utils/rspcClient";
-import { Trans } from "@gd/i18n";
-import { Navigate } from "@solidjs/router";
-import { createResource, createSignal, Match, Switch } from "solid-js";
+import { convertSecondsToHumanTime } from "@/utils/helpers"
+import { port, rspc } from "@/utils/rspcClient"
+import { Trans } from "@gd/i18n"
+import { Navigate } from "@solidjs/router"
+import { createResource, createSignal, Match, Switch } from "solid-js"
 
 interface Props {
-  nextStep: () => void;
-  prevStep: () => void;
-  activeUuid: string | null | undefined;
-  transitionToLibrary: () => void;
+  nextStep: () => void
+  prevStep: () => void
+  activeUuid: string | null | undefined
+  transitionToLibrary: () => void
 }
 
 const GDLAccountVerification = (props: Props) => {
-  const [cooldown, setCooldown] = createSignal(0);
-  const [sentVisible, setSentVisible] = createSignal(false);
+  const [cooldown, setCooldown] = createSignal(0)
+  const [sentVisible, setSentVisible] = createSignal(false)
 
   const [verified] = createResource(props.activeUuid, async () => {
     const res = await fetch(
@@ -24,25 +24,25 @@ const GDLAccountVerification = (props: Props) => {
           "Content-Type": "application/json"
         }
       }
-    );
+    )
 
-    return await res.text();
-  });
+    return await res.text()
+  })
 
   const saveGdlAccountMutation = rspc.createMutation(() => ({
     mutationKey: ["account.saveGdlAccount"]
-  }));
+  }))
 
   const peekedUser = rspc.createQuery(() => ({
     queryKey: ["account.peekGdlAccount", props.activeUuid!],
     enabled: !!props.activeUuid
-  }));
+  }))
 
   const requestNewVerificationTokenMutation = rspc.createMutation(() => ({
     mutationKey: ["account.requestNewVerificationToken"]
-  }));
+  }))
 
-  let cooldownInterval: ReturnType<typeof setInterval> | undefined;
+  let cooldownInterval: ReturnType<typeof setInterval> | undefined
 
   return (
     <>
@@ -64,42 +64,42 @@ const GDLAccountVerification = (props: Props) => {
               <div
                 onClick={async () => {
                   if (cooldownInterval) {
-                    return;
+                    return
                   }
 
                   if (!props.activeUuid) {
-                    throw new Error("No active uuid");
+                    throw new Error("No active uuid")
                   }
 
                   try {
                     const status =
                       await requestNewVerificationTokenMutation.mutateAsync(
                         props.activeUuid
-                      );
+                      )
 
                     if (status.status === "failed" && status.value) {
-                      setSentVisible(false);
+                      setSentVisible(false)
 
-                      clearInterval(cooldownInterval);
-                      cooldownInterval = undefined;
+                      clearInterval(cooldownInterval)
+                      cooldownInterval = undefined
 
-                      setCooldown(status.value);
+                      setCooldown(status.value)
 
                       cooldownInterval = setInterval(() => {
-                        setCooldown((prev) => prev - 1);
+                        setCooldown((prev) => prev - 1)
 
                         if (cooldown() <= 0) {
-                          setCooldown(0);
-                          clearInterval(cooldownInterval);
-                          cooldownInterval = undefined;
+                          setCooldown(0)
+                          clearInterval(cooldownInterval)
+                          cooldownInterval = undefined
                         }
-                      }, 1000);
+                      }, 1000)
                     } else if (status.status === "success") {
-                      setSentVisible(true);
-                      setTimeout(() => setSentVisible(false), 10000);
+                      setSentVisible(true)
+                      setTimeout(() => setSentVisible(false), 10000)
                     }
                   } catch (e) {
-                    console.error(e);
+                    console.error(e)
                   }
                 }}
                 class="underline transition-all duration-100 ease-in-out"
@@ -133,15 +133,11 @@ const GDLAccountVerification = (props: Props) => {
 
             <div
               onClick={async () => {
-                await props.transitionToLibrary?.();
+                props.transitionToLibrary?.()
 
-                console.log("saving account");
-
-                await saveGdlAccountMutation.mutateAsync(props.activeUuid!);
-
-                console.log("account saved");
+                await saveGdlAccountMutation.mutateAsync(props.activeUuid!)
               }}
-              class="underline text-lightSlate-400 hover:text-lightSlate-50 transition-all duration-100 ease-in-out"
+              class="text-lightSlate-400 hover:text-lightSlate-50 underline transition-all duration-100 ease-in-out"
             >
               <Trans key="login.verify_later" />
             </div>
@@ -149,7 +145,7 @@ const GDLAccountVerification = (props: Props) => {
         </Match>
       </Switch>
     </>
-  );
-};
+  )
+}
 
-export default GDLAccountVerification;
+export default GDLAccountVerification

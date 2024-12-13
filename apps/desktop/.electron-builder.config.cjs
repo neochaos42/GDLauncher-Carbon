@@ -1,23 +1,23 @@
-const fs = require("fs");
-const path = require("path");
-const dotenv = require("dotenv");
-const { notarize } = require("@electron/notarize");
+const fs = require("fs")
+const path = require("path")
+const dotenv = require("dotenv")
+const { notarize } = require("@electron/notarize")
 
 dotenv.config({
   path: "../../.env"
-});
+})
 
-let arch = process.argv[4].replace(/-/g, "");
-let os = process.argv[5].replace(/-/g, "");
-let profile = process.argv[7].replace(/-/g, "");
+let arch = process.argv[4].replace(/-/g, "")
+let os = process.argv[5].replace(/-/g, "")
+let profile = process.argv[7].replace(/-/g, "")
 
-let carbonAppBinName = os === "win" ? "carbon_app.exe" : "carbon_app";
-let coreModuleBinName = os === "win" ? "core_module.exe" : "core_module";
+let carbonAppBinName = os === "win" ? "carbon_app.exe" : "carbon_app"
+let coreModuleBinName = os === "win" ? "core_module.exe" : "core_module"
 let targetTripleLookup = {
   "win-x64": ["x86_64-pc-windows-msvc"],
   "linux-x64": ["x86_64-unknown-linux-gnu"],
   "mac-universal": ["x86_64-apple-darwin", "aarch64-apple-darwin"]
-};
+}
 
 let files = targetTripleLookup[`${os}-${arch}`].map((targetTriple) => {
   return {
@@ -25,16 +25,16 @@ let files = targetTripleLookup[`${os}-${arch}`].map((targetTriple) => {
     to: `./binaries/${
       targetTriple.includes("aarch") ? "arm64" : "x64"
     }/${coreModuleBinName}`
-  };
-});
+  }
+})
 
-for (file of files) {
-  let dirname = path.dirname(file.to);
-  fs.mkdirSync(dirname, { recursive: true });
-  fs.copyFileSync(file.from, file.to);
+for (const file of files) {
+  let dirname = path.dirname(file.to)
+  fs.mkdirSync(dirname, { recursive: true })
+  fs.copyFileSync(file.from, file.to)
 }
 
-let appChannel = require("../../packages/config/version.json").channel;
+let appChannel = require("../../packages/config/version.json").channel
 let publish =
   appChannel === "snapshot"
     ? undefined
@@ -44,9 +44,9 @@ let publish =
           (process.env.GENERIC_PUBLISH_URL || "http://localhost:9000/raw-cdn") +
           "/" +
           process.env.PUBLISH_URL_FOLDER
-      };
+      }
 
-const appId = "org.gorilladevs.GDLauncher";
+const appId = "org.gorilladevs.GDLauncher"
 
 module.exports = {
   productName: "GDLauncher",
@@ -101,41 +101,41 @@ module.exports = {
     target: appChannel === "snapshot" ? ["zip"] : ["zip", "appImage"],
     artifactName: "${productName}__${version}__${os}__" + arch + ".${ext}"
   },
-  afterAllArtifactBuild: (buildResult) => {
-    const path = require("path");
-    const fs = require("fs");
+  afterAllArtifactBuild: (_buildResult) => {
+    const path = require("path")
+    const fs = require("fs")
 
-    const packageJsonPath = path.join(__dirname, "package.json");
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
+    const packageJsonPath = path.join(__dirname, "package.json")
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"))
 
-    packageJson.version = "0.0.0";
+    packageJson.version = "0.0.0"
 
     fs.writeFileSync(
       packageJsonPath,
       `${JSON.stringify(packageJson, null, 2)}\n`,
       "utf8"
-    );
+    )
   },
   afterSign: async (context) => {
-    const { electronPlatformName, appOutDir } = context;
+    const { electronPlatformName, appOutDir } = context
     if (
       electronPlatformName !== "darwin" ||
       !process.env.APPLE_ID ||
       !process.env.APPLE_APP_SPECIFIC_PASSWORD
     ) {
-      console.log("Skipping notarization");
-      return;
+      console.log("Skipping notarization")
+      return
     }
 
-    const appName = context.packager.appInfo.productFilename;
+    const appName = context.packager.appInfo.productFilename
 
-    console.log("Notarizing...");
+    console.log("Notarizing...")
     return await notarize({
       tool: "notarytool",
       appPath: `${appOutDir}/${appName}.app`,
       appleId: process.env.APPLE_ID,
       appleIdPassword: process.env.APPLE_APP_SPECIFIC_PASSWORD,
       teamId: process.env.APPLE_TEAM_ID
-    });
+    })
   }
-};
+}

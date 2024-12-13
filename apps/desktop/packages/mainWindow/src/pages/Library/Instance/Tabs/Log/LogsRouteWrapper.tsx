@@ -1,5 +1,5 @@
-import { Outlet } from "@solidjs/router";
-import { isFullScreen } from ".";
+import { Outlet } from "@solidjs/router"
+import { isFullScreen } from "."
 
 const LogsRouteWrapper = () => {
   return (
@@ -10,7 +10,7 @@ const LogsRouteWrapper = () => {
     >
       <Outlet />
     </div>
-  );
-};
+  )
+}
 
-export default LogsRouteWrapper;
+export default LogsRouteWrapper

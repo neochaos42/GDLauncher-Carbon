@@ -1,15 +1,15 @@
-import { mcVersions } from "@/utils/mcVersion";
-import { supportedModloaders } from "@/utils/sidebar";
-import DefaultImg from "/assets/images/default-instance-img.png";
-import { McType } from "@gd/core_module/bindings";
-import { Trans } from "@gd/i18n";
-import { Checkbox, Dropdown } from "@gd/ui";
-import { useSearchParams } from "@solidjs/router";
-import { Match, Switch, createMemo, createSignal } from "solid-js";
-import { createStore } from "solid-js/store";
-import { rspc } from "@/utils/rspcClient";
-import { useInfiniteVersionsQuery } from "../InfiniteScrollVersionsQueryWrapper";
-import { getInstanceImageUrl } from "@/utils/instances";
+import { mcVersions } from "@/utils/mcVersion"
+import { supportedModloaders } from "@/utils/sidebar"
+import DefaultImg from "/assets/images/default-instance-img.png"
+import { McType } from "@gd/core_module/bindings"
+import { Trans } from "@gd/i18n"
+import { Checkbox, Dropdown } from "@gd/ui"
+import { useSearchParams } from "@solidjs/router"
+import { Match, Switch, createMemo, createSignal } from "solid-js"
+import { createStore } from "solid-js/store"
+import { rspc } from "@/utils/rspcClient"
+import { useInfiniteVersionsQuery } from "../InfiniteScrollVersionsQueryWrapper"
+import { getInstanceImageUrl } from "@/utils/instances"
 
 const mapTypeToColor = (type: McType) => {
   return (
@@ -27,39 +27,39 @@ const mapTypeToColor = (type: McType) => {
         <span class="text-red-500">{`[${type}]`}</span>
       </Match>
     </Switch>
-  );
-};
+  )
+}
 
-type Props = {
-  modplatform: "curseforge" | "modrinth";
-  type: "modpack" | "mod";
-};
+interface Props {
+  modplatform: "curseforge" | "modrinth"
+  type: "modpack" | "mod"
+}
 
 const ExploreVersionsNavbar = (props: Props) => {
-  const [searchParams, _setSearchParams] = useSearchParams();
-  const instanceId = () => parseInt(searchParams.instanceId, 10);
+  const [searchParams, _setSearchParams] = useSearchParams()
+  const instanceId = () => parseInt(searchParams.instanceId, 10)
 
-  const infiniteQuery = useInfiniteVersionsQuery();
+  const infiniteQuery = useInfiniteVersionsQuery()
 
   const [overrideEnabled, setOverrideEnabled] = createSignal(
     !instanceId || isNaN(instanceId())
-  );
+  )
 
   const [gameVersionFilters, _setGameVersionFilters] = createStore({
     snapshot: false,
     oldAlpha: false,
     oldBeta: false
-  });
+  })
 
   const instanceDetails = rspc.createQuery(() => ({
     queryKey: ["instance.getInstanceDetails", instanceId()]
-  }));
+  }))
 
   const modloaders = () => {
-    let res: { label: string; key: string }[] = [];
+    let res: { label: string; key: string }[] = []
 
     if (props.modplatform === "modrinth") {
-      const results = supportedModloaders[props.modplatform];
+      const results = supportedModloaders[props.modplatform]
       res = results
         .filter((modloader) =>
           modloader.supported_project_types.includes("modpack")
@@ -67,13 +67,13 @@ const ExploreVersionsNavbar = (props: Props) => {
         .map((v) => ({
           label: v.name.toString(),
           key: v.name.toString()
-        }));
+        }))
     } else if (props.modplatform === "curseforge") {
-      const results = supportedModloaders[props.modplatform];
+      const results = supportedModloaders[props.modplatform]
       res = results.map((v) => ({
         label: v.toString(),
         key: v.toString()
-      }));
+      }))
     }
 
     return [
@@ -81,13 +81,13 @@ const ExploreVersionsNavbar = (props: Props) => {
         label: "Select a modloader",
         key: ""
       }
-    ].concat(res);
-  };
+    ].concat(res)
+  }
 
   const filteredGameVersions = createMemo(() => {
-    const snapshot = gameVersionFilters.snapshot;
-    const oldAlpha = gameVersionFilters.oldAlpha;
-    const oldBeta = gameVersionFilters.oldBeta;
+    const snapshot = gameVersionFilters.snapshot
+    const oldAlpha = gameVersionFilters.oldAlpha
+    const oldBeta = gameVersionFilters.oldBeta
 
     return mcVersions().filter(
       (item) =>
@@ -95,8 +95,8 @@ const ExploreVersionsNavbar = (props: Props) => {
         (item.type === "snapshot" && snapshot) ||
         (item.type === "old_beta" && oldBeta) ||
         (item.type === "old_alpha" && oldAlpha)
-    );
-  });
+    )
+  })
 
   const filteredMappedGameVersions = () => {
     const allVersionsLabel = {
@@ -106,7 +106,7 @@ const ExploreVersionsNavbar = (props: Props) => {
         </span>
       ),
       key: ""
-    };
+    }
 
     return [
       allVersionsLabel,
@@ -119,8 +119,8 @@ const ExploreVersionsNavbar = (props: Props) => {
         ),
         key: item.id
       }))
-    ];
-  };
+    ]
+  }
 
   return (
     <div class="w-full flex gap-4 h-12 my-4">
@@ -172,7 +172,7 @@ const ExploreVersionsNavbar = (props: Props) => {
           onChange={(val) => {
             infiniteQuery?.setQuery({
               gameVersion: val.key.toString() || null
-            });
+            })
           }}
         />
       </div>
@@ -180,19 +180,19 @@ const ExploreVersionsNavbar = (props: Props) => {
         <Dropdown
           class="w-full"
           containerClass="w-full"
-          options={modloaders()!}
+          options={modloaders()}
           disabled={!overrideEnabled()}
           icon={<div class="i-ri:price-tag-3-fill" />}
           value={infiniteQuery.query.modLoaderType || null}
           onChange={(val) => {
             infiniteQuery?.setQuery({
               modLoaderType: val.key.toString() || null
-            });
+            })
           }}
         />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ExploreVersionsNavbar;
+export default ExploreVersionsNavbar

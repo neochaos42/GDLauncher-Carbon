@@ -1,9 +1,9 @@
-import { Trans } from "@gd/i18n";
-import { useGlobalStore } from "@/components/GlobalStoreContext";
-import { Show } from "solid-js";
+import { Trans } from "@gd/i18n"
+import { useGlobalStore } from "@/components/GlobalStoreContext"
+import { Show } from "solid-js"
 
 const PrivacyNotice = () => {
-  const accountsLength = useGlobalStore().currentlySelectedAccount();
+  const accountsLength = useGlobalStore().currentlySelectedAccount()
 
   return (
     <div class="flex-1 flex flex-col justify-between text-left gap-4 leading-5 p-4 text-lightSlate-700">
@@ -22,7 +22,7 @@ const PrivacyNotice = () => {
             <span
               class="underline"
               onClick={() => {
-                window?.openCMPWindow();
+                window?.openCMPWindow()
               }}
             >
               {""}
@@ -43,13 +43,13 @@ const PrivacyNotice = () => {
       <div
         class="text-xs underline whitespace-nowrap text-lightSlate-50 cursor-pointer"
         onClick={() => {
-          window?.openCMPWindow();
+          window?.openCMPWindow()
         }}
       >
         <Trans key="login.manage_cmp" />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PrivacyNotice;
+export default PrivacyNotice

@@ -1,31 +1,31 @@
-import ThemePreview from "@/components/ThemePreview";
-import { queryClient, rspc } from "@/utils/rspcClient";
-import { Trans } from "@gd/i18n";
-import { useRouteData } from "@solidjs/router";
-import { For } from "solid-js";
-import fetchData from "./settings.general.data";
-import LoadingError from "@/components/LoadingError";
+import ThemePreview from "@/components/ThemePreview"
+import { queryClient, rspc } from "@/utils/rspcClient"
+import { Trans } from "@gd/i18n"
+import { useRouteData } from "@solidjs/router"
+import { For } from "solid-js"
+import fetchData from "./settings.general.data"
+import LoadingError from "@/components/LoadingError"
 import {
   applyThemeByName,
   getAvailableThemes,
   getThemeColor
-} from "@/utils/theme";
-import PageTitle from "./components/PageTitle";
-import Row from "./components/Row";
-import Title from "./components/Title";
+} from "@/utils/theme"
+import PageTitle from "./components/PageTitle"
+import Row from "./components/Row"
+import Title from "./components/Title"
 
 const Appearance = () => {
-  const routeData: ReturnType<typeof fetchData> = useRouteData();
-  const themeName = () => routeData?.data?.data?.theme || "main";
+  const routeData: ReturnType<typeof fetchData> = useRouteData()
+  const themeName = () => routeData?.data?.data?.theme || "main"
 
   const settingsMutation = rspc.createMutation(() => ({
     mutationKey: ["settings.setSettings"],
     onMutate: (newTheme) => {
-      queryClient.setQueryData(["settings.setSettings"], newTheme);
+      queryClient.setQueryData(["settings.setSettings"], newTheme)
     }
-  }));
+  }))
 
-  const themes = getAvailableThemes();
+  const themes = getAvailableThemes()
 
   return (
     <LoadingError routeData={routeData}>
@@ -40,9 +40,9 @@ const Appearance = () => {
           <div class="w-full flex flex-wrap gap-6">
             <For each={themes}>
               {(theme) => {
-                const shade1 = getThemeColor(theme, "darkSlate-900");
-                const shade2 = getThemeColor(theme, "darkSlate-700");
-                const shade3 = getThemeColor(theme, "darkSlate-600");
+                const shade1 = getThemeColor(theme, "darkSlate-900")
+                const shade2 = getThemeColor(theme, "darkSlate-700")
+                const shade3 = getThemeColor(theme, "darkSlate-600")
 
                 return (
                   <div>
@@ -57,13 +57,13 @@ const Appearance = () => {
                           theme: {
                             Set: theme
                           }
-                        });
+                        })
                       }}
                       onMouseEnter={() => {
-                        applyThemeByName(theme);
+                        applyThemeByName(theme)
                       }}
                       onMouseLeave={() => {
-                        applyThemeByName(themeName());
+                        applyThemeByName(themeName())
                       }}
                     >
                       <div
@@ -87,7 +87,7 @@ const Appearance = () => {
                       </p>
                     </div>
                   </div>
-                );
+                )
               }}
             </For>
           </div>
@@ -102,7 +102,7 @@ const Appearance = () => {
         </Row>
       </div>
     </LoadingError>
-  );
-};
+  )
+}
 
-export default Appearance;
+export default Appearance

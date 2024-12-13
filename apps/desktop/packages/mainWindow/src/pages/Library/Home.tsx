@@ -1,9 +1,9 @@
-import HomeWithSidebar from "./HomeWithSidebar";
-import HomeGrid from "./HomeGrid";
-import { Show } from "solid-js";
+import HomeWithSidebar from "./HomeWithSidebar"
+import HomeGrid from "./HomeGrid"
+import { Show } from "solid-js"
 
 const Home = () => {
-  const gridLayout = () => true;
+  const gridLayout = () => true
 
   return (
     <div>
@@ -14,7 +14,7 @@ const Home = () => {
         <HomeGrid />
       </Show>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

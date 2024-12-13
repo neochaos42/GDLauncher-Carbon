@@ -1,5 +1,5 @@
-import { Collapsable, Input, Skeleton } from "@gd/ui";
-import SiderbarWrapper from "./wrapper";
+import { Collapsable, Input, Skeleton } from "@gd/ui"
+import SiderbarWrapper from "./wrapper"
 import {
   For,
   Match,
@@ -9,34 +9,34 @@ import {
   createEffect,
   createMemo,
   createSignal
-} from "solid-js";
+} from "solid-js"
 import {
   getCFModloaderIcon,
   isSidebarOpened,
   toggleSidebar
-} from "@/utils/sidebar";
-import { useLocation } from "@solidjs/router";
-import { getInstanceIdFromPath, setLastInstanceOpened } from "@/utils/routes";
-import { Trans, useTransContext } from "@gd/i18n";
-import { createStore, reconcile } from "solid-js/store";
-import { InstancesStore } from "@/utils/instances";
-import InstanceTile from "../InstanceTile";
-import skull from "/assets/images/icons/skull.png";
-import { CFFEModLoaderType } from "@gd/core_module/bindings";
-import { useGlobalStore } from "../GlobalStoreContext";
+} from "@/utils/sidebar"
+import { useLocation } from "@solidjs/router"
+import { getInstanceIdFromPath, setLastInstanceOpened } from "@/utils/routes"
+import { Trans, useTransContext } from "@gd/i18n"
+import { createStore, reconcile } from "solid-js/store"
+import { InstancesStore } from "@/utils/instances"
+import InstanceTile from "../InstanceTile"
+import skull from "/assets/images/icons/skull.png"
+import { CFFEModLoaderType } from "@gd/core_module/bindings"
+import { useGlobalStore } from "../GlobalStoreContext"
 
 const Sidebar = () => {
-  const location = useLocation();
-  const [t] = useTransContext();
+  const location = useLocation()
+  const [t] = useTransContext()
 
-  const instanceId = () => getInstanceIdFromPath(location.pathname);
-  const routeData = useGlobalStore();
-  const [instances, setInstances] = createStore<InstancesStore>({});
-  const [filter, setFilter] = createSignal("");
+  const instanceId = () => getInstanceIdFromPath(location.pathname)
+  const routeData = useGlobalStore()
+  const [instances, setInstances] = createStore<InstancesStore>({})
+  const [filter, setFilter] = createSignal("")
 
   createEffect(() => {
-    setLastInstanceOpened(instanceId() || "");
-  });
+    setLastInstanceOpened(instanceId() || "")
+  })
 
   const filteredData = createMemo(() =>
     filter()
@@ -44,35 +44,33 @@ const Sidebar = () => {
           item.name.toLowerCase().includes(filter().toLowerCase())
         )
       : instances.data
-  );
+  )
 
   createEffect(() => {
-    setInstances(reconcile({}));
+    setInstances(reconcile({}))
 
     if (filteredData()) {
       filteredData()?.forEach((instance) => {
         const validInstance =
-          instance.status.status === "valid"
-            ? instance.status.value
-            : undefined;
+          instance.status.status === "valid" ? instance.status.value : undefined
 
-        const modloader = validInstance?.modloader || "vanilla";
+        const modloader = validInstance?.modloader || "vanilla"
         if (modloader) {
           setInstances(modloader, (prev) => {
             const filteredPrev = (prev || []).filter(
               (prev) => prev.id !== instance.id
-            );
-            if (!instance.favorite) return [...filteredPrev, instance];
-            else return [...filteredPrev];
-          });
+            )
+            if (!instance.favorite) return [...filteredPrev, instance]
+            else return [...filteredPrev]
+          })
         }
-      });
+      })
     }
-  });
+  })
 
-  let inputRef: HTMLInputElement | undefined;
+  let inputRef: HTMLInputElement | undefined
   const favoriteInstances = () =>
-    instances.data?.filter((inst) => inst.favorite) || [];
+    instances.data?.filter((inst) => inst.favorite) || []
 
   const mapIconToKey = (key: string) => {
     return (
@@ -85,8 +83,8 @@ const Sidebar = () => {
           />
         </Match>
       </Switch>
-    );
-  };
+    )
+  }
   return (
     <SiderbarWrapper noPadding>
       <div class="h-full w-full box-border transition-all flex flex-col gap-2 pt-5 pb-5">
@@ -97,8 +95,8 @@ const Sidebar = () => {
               <div
                 class="flex justify-center items-center cursor-pointer rounded-full bg-darkSlate-700 group w-10 h-10"
                 onClick={() => {
-                  toggleSidebar();
-                  inputRef?.focus();
+                  toggleSidebar()
+                  inputRef?.focus()
                 }}
               >
                 <div class="duration-100 ease-in-out transition text-lightSlate-700 i-ri:search-line group-hover:text-lightSlate-700" />
@@ -222,7 +220,7 @@ const Sidebar = () => {
         <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-darkSlate-700 h-20 pointer-events-none" />
       </div>
     </SiderbarWrapper>
-  );
-};
+  )
+}
 
-export default Sidebar;
+export default Sidebar

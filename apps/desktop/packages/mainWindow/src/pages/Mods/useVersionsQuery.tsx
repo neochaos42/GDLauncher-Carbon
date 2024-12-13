@@ -1,18 +1,18 @@
-import { createStore } from "solid-js/store";
+import { createStore } from "solid-js/store"
 
-type VersionsQueryType = {
-  gameVersion: string | null;
-  index: number;
-  modLoaderType: string | null;
-  pageSize: number;
-};
+interface VersionsQueryType {
+  gameVersion: string | null
+  index: number
+  modLoaderType: string | null
+  pageSize: number
+}
 
 export const versionsDefaultQuery: VersionsQueryType = {
   gameVersion: null,
   index: 0,
   modLoaderType: null,
   pageSize: 20
-};
+}
 
 const useVersionsQuery = (
   initialValue?: typeof versionsDefaultQuery
@@ -23,19 +23,19 @@ const useVersionsQuery = (
   const [query, setQuery] = createStore<typeof versionsDefaultQuery>({
     ...versionsDefaultQuery,
     ...initialValue
-  });
+  })
 
   const setQueryParams = (newValue: Partial<typeof versionsDefaultQuery>) => {
-    const indexValue = newValue.index ?? 0;
+    const indexValue = newValue.index ?? 0
 
     setQuery((prev) => ({
       ...prev,
       ...newValue,
       index: indexValue
-    }));
-  };
+    }))
+  }
 
-  return [query, setQueryParams];
-};
+  return [query, setQueryParams]
+}
 
-export default useVersionsQuery;
+export default useVersionsQuery

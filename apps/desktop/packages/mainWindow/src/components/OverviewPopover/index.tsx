@@ -10,20 +10,18 @@ import {
   getSummary,
   getWebsiteUrl,
   isCurseForgeData
-} from "@/utils/mods";
-import { formatDownloadCount } from "@/utils/helpers";
-import { CategoryIcon } from "@/utils/instances";
+} from "@/utils/mods"
+import { formatDownloadCount } from "@/utils/helpers"
+import { CategoryIcon } from "@/utils/instances"
 import {
   CFFECategory,
-  CFFEModAuthor,
   MRFECategoriesResponse,
-  MRFECategory,
   MRFEProjectSearchResult
-} from "@gd/core_module/bindings";
-import { Trans } from "@gd/i18n";
-import { Tag } from "@gd/ui";
-import { formatDistanceToNowStrict } from "date-fns";
-import { For, Match, Show, Switch } from "solid-js";
+} from "@gd/core_module/bindings"
+import { Trans } from "@gd/i18n"
+import { Tag } from "@gd/ui"
+import { formatDistanceToNowStrict } from "date-fns"
+import { For, Match, Show, Switch } from "solid-js"
 
 const Authors = (props: { data: ModRowProps }) => {
   return (
@@ -33,7 +31,7 @@ const Authors = (props: { data: ModRowProps }) => {
           <For each={getAuthors(props.data)}>
             {(author, i) => (
               <>
-                <p class="m-0 text-sm">{(author as CFFEModAuthor)?.name}</p>
+                <p class="m-0 text-sm">{author?.name}</p>
                 <Show when={i() !== getAuthors(props.data).length - 1}>
                   <span class="text-lightSlate-100">{"•"}</span>
                 </Show>
@@ -51,12 +49,12 @@ const Authors = (props: { data: ModRowProps }) => {
         </Match>
       </Switch>
     </div>
-  );
-};
+  )
+}
 
 const OverviewPopover = (props: {
-  data: ModRowProps;
-  modrinthCategories: MRFECategoriesResponse | undefined;
+  data: ModRowProps
+  modrinthCategories: MRFECategoriesResponse | undefined
 }) => {
   return (
     <div class="relative flex flex-col overflow-hidden pb-4 w-70">
@@ -64,8 +62,8 @@ const OverviewPopover = (props: {
         <div
           class="rounded-lg bg-darkSlate-900 cursor-pointer w-6 h-6"
           onClick={() => {
-            const url = getWebsiteUrl(props.data);
-            if (url) window.openExternalLink(url);
+            const url = getWebsiteUrl(props.data)
+            if (url) window.openExternalLink(url)
           }}
         >
           <div class="w-4 h-4 text-lightSlate-500 hover:text-lightSlate-50 transition-color ease-in-out transition-100 absolute i-ri:external-link-line top-4 right-4 z-30" />
@@ -79,7 +77,7 @@ const OverviewPopover = (props: {
       <Show when={getLogoUrl(props.data)}>
         <img
           class="absolute right-0 top-0 bottom-0 select-none h-full w-full z-10 blur-sm"
-          src={getLogoUrl(props.data) as string}
+          src={getLogoUrl(props.data)!}
         />
       </Show>
       <div class="px-4 z-30">
@@ -105,7 +103,7 @@ const OverviewPopover = (props: {
                             category={
                               props.modrinthCategories?.find(
                                 (category) => category.name === tag
-                              ) as MRFECategory
+                              )!
                             }
                           />
                         </Match>
@@ -165,7 +163,7 @@ const OverviewPopover = (props: {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default OverviewPopover;
+export default OverviewPopover

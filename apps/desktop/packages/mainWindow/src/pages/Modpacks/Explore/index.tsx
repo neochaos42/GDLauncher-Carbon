@@ -1,13 +1,7 @@
-/* eslint-disable i18next/no-literal-string */
-import ContentWrapper from "@/components/ContentWrapper";
-import { useGDNavigate } from "@/managers/NavigationManager";
-import {
-  FEModResponse,
-  MRFEProject,
-  Mod,
-  Modpack as ModpackType
-} from "@gd/core_module/bindings";
-import { Trans } from "@gd/i18n";
+import ContentWrapper from "@/components/ContentWrapper"
+import { useGDNavigate } from "@/managers/NavigationManager"
+import { Mod, Modpack as ModpackType } from "@gd/core_module/bindings"
+import { Trans } from "@gd/i18n"
 import {
   Button,
   Skeleton,
@@ -17,44 +11,44 @@ import {
   Tabs,
   Tooltip,
   createNotification
-} from "@gd/ui";
+} from "@gd/ui"
 import {
   Outlet,
   useLocation,
   useParams,
   useRouteData,
   useSearchParams
-} from "@solidjs/router";
-import { For, Match, Show, Switch, createEffect, createSignal } from "solid-js";
-import fetchData from "../modpack.overview";
-import { format } from "date-fns";
-import { rspc } from "@/utils/rspcClient";
-import Authors from "@/pages/Library/Instance/Info/Authors";
-import { getUrlType } from "@/utils/instances";
-import ExploreVersionsNavbar from "@/components/ExploreVersionsNavbar";
+} from "@solidjs/router"
+import { For, Match, Show, Switch, createEffect, createSignal } from "solid-js"
+import fetchData from "../modpack.overview"
+import { format } from "date-fns"
+import { rspc } from "@/utils/rspcClient"
+import Authors from "@/pages/Library/Instance/Info/Authors"
+import { getUrlType } from "@/utils/instances"
+import ExploreVersionsNavbar from "@/components/ExploreVersionsNavbar"
 import InfiniteScrollVersionsQueryWrapper, {
   useInfiniteVersionsQuery
-} from "@/components/InfiniteScrollVersionsQueryWrapper";
+} from "@/components/InfiniteScrollVersionsQueryWrapper"
 
 const getTabIndexFromPath = (path: string) => {
   if (path.match(/\/(modpacks|mods)\/.+\/.+/g)) {
     if (path.endsWith("/changelog")) {
-      return 1;
+      return 1
     } else if (path.endsWith("/screenshots")) {
-      return 2;
+      return 2
     } else if (path.endsWith("/versions")) {
-      return 3;
+      return 3
     } else {
-      return 0;
+      return 0
     }
   }
 
-  return 0;
-};
+  return 0
+}
 
 const ModpacksInfiniteScrollQueryWrapper = () => {
-  const params = useParams();
-  const routeData: ReturnType<typeof fetchData> = useRouteData();
+  const params = useParams()
+  const routeData: ReturnType<typeof fetchData> = useRouteData()
 
   return (
     <InfiniteScrollVersionsQueryWrapper
@@ -63,30 +57,30 @@ const ModpacksInfiniteScrollQueryWrapper = () => {
     >
       <Modpack />
     </InfiniteScrollVersionsQueryWrapper>
-  );
-};
+  )
+}
 
 const Modpack = () => {
-  const [loading, setLoading] = createSignal(false);
-  const navigate = useGDNavigate();
-  const params = useParams();
-  const rspcContext = rspc.useContext();
-  const infiniteQuery = useInfiniteVersionsQuery();
-  const addNotification = createNotification();
-  const routeData: ReturnType<typeof fetchData> = useRouteData();
-  const [instanceMods, setInstanceMods] = createSignal<Mod[]>([]);
+  const [loading, setLoading] = createSignal(false)
+  const navigate = useGDNavigate()
+  const params = useParams()
+  const rspcContext = rspc.useContext()
+  const infiniteQuery = useInfiniteVersionsQuery()
+  const addNotification = createNotification()
+  const routeData: ReturnType<typeof fetchData> = useRouteData()
+  const [instanceMods, setInstanceMods] = createSignal<Mod[]>([])
 
-  const location = useLocation();
+  const location = useLocation()
 
-  const indexTab = () => getTabIndexFromPath(location.pathname);
+  const indexTab = () => getTabIndexFromPath(location.pathname)
 
-  const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams()
 
-  const instanceId = () => parseInt(searchParams.instanceId, 10);
+  const instanceId = () => parseInt(searchParams.instanceId, 10)
 
-  const isModpack = () => getUrlType(location.pathname) === "modpacks";
+  const isModpack = () => getUrlType(location.pathname) === "modpacks"
 
-  const detailsType = () => (isModpack() ? "modpacks" : "mods");
+  const detailsType = () => (isModpack() ? "modpacks" : "mods")
 
   const instancePages = () => [
     {
@@ -105,40 +99,40 @@ const Modpack = () => {
       label: "Versions",
       path: `/${detailsType()}/${params.id}/${params.platform}/versions`
     }
-  ];
+  ]
 
-  let refStickyTabs: HTMLDivElement;
-  const [isSticky, setIsSticky] = createSignal(false);
+  let refStickyTabs: HTMLDivElement
+  const [isSticky, setIsSticky] = createSignal(false)
 
-  const isFetching = () => routeData.modpackDetails?.isLoading;
+  const isFetching = () => routeData.modpackDetails?.isLoading
 
   const loadIconMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.loadIconUrl"]
-  }));
+  }))
 
   const defaultGroup = rspc.createQuery(() => ({
     queryKey: ["instance.getDefaultGroup"]
-  }));
+  }))
 
   const prepareInstanceMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.prepareInstance"]
-  }));
+  }))
 
   const createInstanceMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.createInstance"]
-  }));
+  }))
 
   const generateModpackObj = () => {
-    const isCurseforge = routeData.isCurseforge;
+    const isCurseforge = routeData.isCurseforge
 
     if (isCurseforge) {
       if (!routeData.modpackDetails.data) {
-        setLoading(false);
+        setLoading(false)
         return addNotification({
           name: "Error while downloading the modpack.",
           content: "Modpack details not found.",
           type: "error"
-        });
+        })
       }
       return {
         type: "curseforge",
@@ -146,20 +140,20 @@ const Modpack = () => {
           file_id: routeData.modpackDetails.data.data.mainFileId,
           project_id: routeData.modpackDetails.data.data.id
         }
-      } as ModpackType;
+      } as ModpackType
     } else {
-      const versions = routeData.modrinthProjectVersions.data;
+      const versions = routeData.modrinthProjectVersions.data
 
       if (!versions || !routeData.modpackDetails.data) {
-        setLoading(false);
+        setLoading(false)
         return addNotification({
           name: "Error while downloading the modpack.",
           content: "Modpack details not found.",
           type: "error"
-        });
+        })
       }
 
-      const versionId = versions[versions.length - 1];
+      const versionId = versions[versions.length - 1]
 
       const modrinth = {
         type: "modrinth",
@@ -167,30 +161,30 @@ const Modpack = () => {
           project_id: routeData.modpackDetails.data.id,
           version_id: versionId.id
         }
-      } as ModpackType;
+      } as ModpackType
 
-      return modrinth;
+      return modrinth
     }
-  };
+  }
 
   const instanceName = () =>
     routeData.isCurseforge
       ? routeData.modpackDetails.data?.data.name
-      : routeData.modpackDetails.data?.title;
+      : routeData.modpackDetails.data?.title
 
   const icon = () =>
     routeData.isCurseforge
-      ? (routeData.modpackDetails?.data as FEModResponse).data.logo?.url
-      : (routeData.modpackDetails?.data as MRFEProject).icon_url;
+      ? (routeData.modpackDetails?.data)!.data.logo?.url
+      : (routeData.modpackDetails?.data)!.icon_url
 
   const handleDownload = async () => {
-    setLoading(true);
-    const instanceIcon = icon();
+    setLoading(true)
+    const instanceIcon = icon()
 
-    if (instanceIcon) loadIconMutation.mutate(instanceIcon);
+    if (instanceIcon) loadIconMutation.mutate(instanceIcon)
 
-    const name = instanceName();
-    const modpackObj = generateModpackObj();
+    const name = instanceName()
+    const modpackObj = generateModpackObj()
 
     if (name && modpackObj) {
       try {
@@ -202,41 +196,41 @@ const Modpack = () => {
           version: {
             Modpack: modpackObj
           }
-        });
+        })
 
-        setLoading(true);
-        await prepareInstanceMutation.mutateAsync(instanceId);
+        setLoading(true)
+        await prepareInstanceMutation.mutateAsync(instanceId)
       } catch (err) {
-        console.error(err);
+        console.error(err)
         addNotification({
           name: "Error while downloading the modpack.",
           content: "Check the console for more information.",
           type: "error"
-        });
+        })
       } finally {
-        setLoading(false);
-        navigate(`/library`);
+        setLoading(false)
+        navigate(`/library`)
       }
     }
 
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   createEffect(async () => {
     if (instanceId() !== undefined && !isNaN(instanceId())) {
       const mods = await rspcContext.client.query([
         "instance.getInstanceMods",
-        instanceId() as number
-      ]);
+        instanceId()
+      ])
 
-      if (mods) setInstanceMods(mods);
+      if (mods) setInstanceMods(mods)
     }
-  });
+  })
 
   const projectId = () =>
     routeData.isCurseforge
       ? routeData.modpackDetails.data?.data.id
-      : routeData.modpackDetails.data?.id;
+      : routeData.modpackDetails.data?.id
 
   const isModInstalled = () =>
     instanceMods()?.find(
@@ -244,7 +238,7 @@ const Modpack = () => {
         (routeData.isCurseforge
           ? mod.curseforge?.project_id
           : mod.modrinth?.project_id) === projectId()
-    ) !== undefined;
+    ) !== undefined
 
   return (
     <ContentWrapper>
@@ -254,11 +248,11 @@ const Modpack = () => {
           "scrollbar-gutter": "stable"
         }}
         ref={(el) => {
-          infiniteQuery.setParentRef(el);
+          infiniteQuery.setParentRef(el)
         }}
         onScroll={() => {
-          const rect = refStickyTabs.getBoundingClientRect();
-          setIsSticky(rect.top <= 104);
+          const rect = refStickyTabs.getBoundingClientRect()
+          setIsSticky(rect.top <= 104)
         }}
       >
         <div class="flex flex-col justify-between ease-in-out transition-all items-stretch h-58">
@@ -293,11 +287,11 @@ const Modpack = () => {
                     if (routeData.isCurseforge) {
                       window.openExternalLink(
                         `https://www.curseforge.com/minecraft/modpacks/${routeData.modpackDetails.data?.data.slug}`
-                      );
+                      )
                     } else {
                       window.openExternalLink(
                         `https://modrinth.com/modpack/${routeData.modpackDetails.data?.slug}`
-                      );
+                      )
                     }
                   }}
                 >
@@ -365,10 +359,9 @@ const Modpack = () => {
                               {format(
                                 new Date(
                                   routeData.isCurseforge
-                                    ? (routeData.modpackDetails.data?.data
-                                        .dateCreated as string)
-                                    : (routeData.modpackDetails.data
-                                        ?.published as string)
+                                    ? routeData.modpackDetails.data?.data
+                                        .dateCreated!
+                                    : routeData.modpackDetails.data?.published!
                                 ).getTime(),
                                 "P"
                               )}
@@ -436,7 +429,7 @@ const Modpack = () => {
             <div class="bg-darkSlate-800 w-full">
               <div
                 ref={(el) => {
-                  refStickyTabs = el;
+                  refStickyTabs = el
                 }}
                 class="sticky top-0 flex flex-col px-4 z-10 bg-darkSlate-800"
               >
@@ -465,7 +458,7 @@ const Modpack = () => {
                           {(page) => (
                             <Tab
                               onClick={() => {
-                                navigate(`${page.path}${location.search}`);
+                                navigate(`${page.path}${location.search}`)
                               }}
                             >
                               {page.label}
@@ -516,7 +509,7 @@ const Modpack = () => {
         </div>
       </div>
     </ContentWrapper>
-  );
-};
+  )
+}
 
-export default ModpacksInfiniteScrollQueryWrapper;
+export default ModpacksInfiniteScrollQueryWrapper

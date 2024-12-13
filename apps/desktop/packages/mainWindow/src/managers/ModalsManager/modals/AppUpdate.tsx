@@ -1,43 +1,43 @@
-import { Button, Progressbar } from "@gd/ui";
-import { ModalProps } from "..";
-import ModalLayout from "../ModalLayout";
-import { Trans } from "@gd/i18n";
+import { Button, Progressbar } from "@gd/ui"
+import { ModalProps } from ".."
+import ModalLayout from "../ModalLayout"
+import { Trans } from "@gd/i18n"
 import updateAvailable, {
   updateDownloaded,
   updateProgress
-} from "@/utils/updater";
-import { rspc } from "@/utils/rspcClient";
-import { Match, Show, Switch, createResource } from "solid-js";
+} from "@/utils/updater"
+import { rspc } from "@/utils/rspcClient"
+import { Match, Show, Switch, createResource } from "solid-js"
 
 const AppUpdate = (props: ModalProps) => {
   const settings = rspc.createQuery(() => ({
     queryKey: ["settings.getSettings"]
-  }));
-  const [os] = createResource(() => window.getCurrentOS());
+  }))
+  const [os] = createResource(() => window.getCurrentOS())
 
   const releaseChannelTransKey = () => {
     switch (settings.data?.releaseChannel) {
       case "stable":
-        return "settings:release_channel_stable";
+        return "settings:release_channel_stable"
       case "beta":
-        return "settings:release_channel_beta";
+        return "settings:release_channel_beta"
       case "alpha":
-        return "settings:release_channel_alpha";
+        return "settings:release_channel_alpha"
       default:
-        return "";
+        return ""
     }
-  };
+  }
 
   const releaseChannelFontColor = () => {
     switch (settings.data?.releaseChannel) {
       case "beta":
-        return "text-yellow-900";
+        return "text-yellow-900"
       case "alpha":
-        return "text-red-900";
+        return "text-red-900"
       default:
-        return "";
+        return ""
     }
-  };
+  }
 
   return (
     <ModalLayout noHeader={props.noHeader} title={props?.title}>
@@ -80,7 +80,7 @@ const AppUpdate = (props: ModalProps) => {
           <div class="flex items-center justify-center flex-1 mb-4 mt-20">
             <Button
               onClick={() => {
-                window.installUpdate();
+                window.installUpdate()
               }}
               disabled={!updateDownloaded()}
             >
@@ -105,7 +105,7 @@ const AppUpdate = (props: ModalProps) => {
         </div>
       </Show>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default AppUpdate;
+export default AppUpdate

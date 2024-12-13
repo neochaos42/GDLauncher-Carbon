@@ -15,7 +15,7 @@ export const NAVBAR_ROUTES = [
     path: "/mods",
     icon: "i-fa6-solid:cube"
   }
-];
+]
 
-export const MOJANG_API = "https://launchercontent.mojang.com";
-export const NEWS_URL = `${MOJANG_API}/news.json`;
+export const MOJANG_API = "https://launchercontent.mojang.com"
+export const NEWS_URL = `${MOJANG_API}/news.json`

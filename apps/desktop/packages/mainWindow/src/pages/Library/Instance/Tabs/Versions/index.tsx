@@ -1,12 +1,12 @@
-import { Button } from "@gd/ui";
-import { For, Show, createEffect, createSignal } from "solid-js";
-import { Trans } from "@gd/i18n";
-import Version from "./Version";
-import skull from "/assets/images/icons/skull.png";
-import { useRouteData } from "@solidjs/router";
-import fetchData from "../../instance.data";
-import { rspc } from "@/utils/rspcClient";
-import { CFFEFile } from "@gd/core_module/bindings";
+import { Button } from "@gd/ui"
+import { For, Show, createEffect, createSignal } from "solid-js"
+import { Trans } from "@gd/i18n"
+import Version from "./Version"
+import skull from "/assets/images/icons/skull.png"
+import { useRouteData } from "@solidjs/router"
+import fetchData from "../../instance.data"
+import { rspc } from "@/utils/rspcClient"
+import { CFFEFile } from "@gd/core_module/bindings"
 
 const NoVersions = () => {
   return (
@@ -32,19 +32,19 @@ const NoVersions = () => {
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const Versions = () => {
-  const [versions, setVersions] = createSignal<CFFEFile[]>([]);
+  const [versions, setVersions] = createSignal<CFFEFile[]>([])
   const [mainFileId, setMainFileId] = createSignal<undefined | number>(
     undefined
-  );
-  const routeData: ReturnType<typeof fetchData> = useRouteData();
+  )
+  const routeData: ReturnType<typeof fetchData> = useRouteData()
 
   const modId = () =>
     routeData.instanceDetails?.data?.modpack?.modpack?.type === "curseforge" &&
-    routeData.instanceDetails.data?.modpack?.modpack.value?.project_id;
+    routeData.instanceDetails.data?.modpack?.modpack.value?.project_id
 
   if (modId()) {
     const instanceDetails = rspc.createQuery(() => ({
@@ -54,16 +54,16 @@ const Versions = () => {
           modId: modId() as number
         }
       ]
-    }));
+    }))
 
     createEffect(() => {
-      setMainFileId(instanceDetails.data?.data.mainFileId);
+      setMainFileId(instanceDetails.data?.data.mainFileId)
       if (instanceDetails.data?.data.latestFilesIndexes) {
         instanceDetails.data?.data.latestFiles.forEach((latestFile) => {
-          setVersions((prev) => [...prev, latestFile]);
-        });
+          setVersions((prev) => [...prev, latestFile])
+        })
       }
-    });
+    })
   }
 
   return (
@@ -74,14 +74,12 @@ const Versions = () => {
           fallback={<NoVersions />}
         >
           <For each={versions()}>
-            {(props) => (
-              <Version version={props} mainFileId={mainFileId() as number} />
-            )}
+            {(props) => <Version version={props} mainFileId={mainFileId()!} />}
           </For>
         </Show>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Versions;
+export default Versions

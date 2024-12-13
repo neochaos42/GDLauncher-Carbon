@@ -5,10 +5,10 @@ import {
   createEffect,
   onMount,
   onCleanup,
-  mergeProps,
-} from "solid-js";
-import { Portal } from "solid-js/web";
-import { useFloating } from "solid-floating-ui";
+  mergeProps
+} from "solid-js"
+import { Portal } from "solid-js/web"
+import { useFloating } from "solid-floating-ui"
 import {
   offset,
   shift,
@@ -16,24 +16,27 @@ import {
   hide,
   size,
   Placement,
-  autoPlacement,
-} from "@floating-ui/dom";
+  autoPlacement
+} from "@floating-ui/dom"
 
-type Props = {
-  children: JSX.Element;
-  content: (close: () => void) => JSX.Element | string | number;
-  trigger?: "click" | "hover";
-  placement?: Placement;
-  color?: string;
-  noTip?: boolean;
-  noPadding?: boolean;
-  opened?: boolean;
-  onOpen?: () => void;
-  onClose?: () => void;
-  noShadow?: boolean;
-};
+interface Props {
+  children: JSX.Element
+  content: (close: () => void) => JSX.Element | string | number
+  trigger?: "click" | "hover"
+  placement?: Placement
+  color?: string
+  noTip?: boolean
+  noPadding?: boolean
+  opened?: boolean
+  onOpen?: () => void
+  onClose?: () => void
+  noShadow?: boolean
+}
 
-type Point = { x: number; y: number };
+interface Point {
+  x: number
+  y: number
+}
 
 function isPointInTriangle(
   pt: Point,
@@ -41,100 +44,100 @@ function isPointInTriangle(
   v2: Point,
   v3: Point
 ): boolean {
-  const dX = pt.x - v3.x;
-  const dY = pt.y - v3.y;
-  const dX21 = v3.x - v2.x;
-  const dY12 = v2.y - v3.y;
-  const D = dY12 * (v1.x - v3.x) + dX21 * (v1.y - v3.y);
-  const s = dY12 * dX + dX21 * dY;
-  const t = (v3.y - v1.y) * dX + (v1.x - v3.x) * dY;
-  if (D < 0) return s <= 0 && t <= 0 && s + t >= D;
-  return s >= 0 && t >= 0 && s + t <= D;
+  const dX = pt.x - v3.x
+  const dY = pt.y - v3.y
+  const dX21 = v3.x - v2.x
+  const dY12 = v2.y - v3.y
+  const D = dY12 * (v1.x - v3.x) + dX21 * (v1.y - v3.y)
+  const s = dY12 * dX + dX21 * dY
+  const t = (v3.y - v1.y) * dX + (v1.x - v3.x) * dY
+  if (D < 0) return s <= 0 && t <= 0 && s + t >= D
+  return s >= 0 && t >= 0 && s + t <= D
 }
 
 const Popover = (_props: Props) => {
-  const props: Props = mergeProps({ trigger: "hover" as "hover" }, _props);
+  const props: Props = mergeProps({ trigger: "hover" as const }, _props)
 
-  const [isHoveringCard, setSsHoveringCard] = createSignal(false);
-  const [PopoverOpened, setPopoverOpened] = createSignal(false);
-  const [elementRef, setElementRef] = createSignal<HTMLDivElement>();
-  const [PopoverRef, setPopoverRef] = createSignal<HTMLDivElement>();
-  const [triangleStart, setTriangleStart] = createSignal({ x: 0, y: 0 });
+  const [isHoveringCard, setSsHoveringCard] = createSignal(false)
+  const [PopoverOpened, setPopoverOpened] = createSignal(false)
+  const [elementRef, setElementRef] = createSignal<HTMLDivElement>()
+  const [PopoverRef, setPopoverRef] = createSignal<HTMLDivElement>()
+  const [triangleStart, setTriangleStart] = createSignal({ x: 0, y: 0 })
   const [openTimer, setOpenTimer] =
-    createSignal<ReturnType<typeof setTimeout>>();
+    createSignal<ReturnType<typeof setTimeout>>()
 
   const open = () => {
     if (props.trigger === "click") {
-      document.addEventListener("click", onClickWindow);
+      document.addEventListener("click", onClickWindow)
     }
-    setPopoverOpened(true);
-    props.onOpen?.();
-  };
+    setPopoverOpened(true)
+    props.onOpen?.()
+  }
 
   const close = () => {
     if (props.trigger === "click") {
-      document.removeEventListener("click", onClickWindow);
+      document.removeEventListener("click", onClickWindow)
     }
-    setPopoverOpened(false);
-    props.onClose?.();
-  };
+    setPopoverOpened(false)
+    props.onClose?.()
+  }
 
   const menuRect = () => {
-    if (!PopoverRef()) return;
-    const popover = PopoverRef() as HTMLDivElement;
+    if (!PopoverRef()) return
+    const popover = PopoverRef()!
     return popover && popover.offsetWidth > 0 && popover.offsetHeight > 0
       ? popover.getBoundingClientRect()
-      : undefined;
-  };
+      : undefined
+  }
 
   const trackMouse = (e: MouseEvent) => {
-    if (!menuRect()) return;
+    if (!menuRect()) return
     const b = {
-      x: (menuRect() as DOMRect).left,
-      y: (menuRect() as DOMRect).top,
-    };
+      x: menuRect()!.left,
+      y: menuRect()!.top
+    }
     const c = {
-      x: (menuRect() as DOMRect).left,
-      y: (menuRect() as DOMRect).bottom,
-    };
+      x: menuRect()!.left,
+      y: menuRect()!.bottom
+    }
 
-    const a = triangleStart();
+    const a = triangleStart()
 
     if (
       !isPointInTriangle({ x: e.clientX, y: e.clientY }, a, b, c) &&
       !isHoveringCard()
     ) {
-      close();
+      close()
     } else {
-      open();
+      open()
     }
-  };
+  }
 
-  let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
+  let debounceTimeout: ReturnType<typeof setTimeout> | null = null
 
   const debouncedTrackMouse = (e: MouseEvent) => {
-    if (debounceTimeout) clearTimeout(debounceTimeout);
+    if (debounceTimeout) clearTimeout(debounceTimeout)
 
     debounceTimeout = setTimeout(() => {
-      trackMouse(e);
-    }, 50);
-  };
+      trackMouse(e)
+    }, 50)
+  }
 
   const onClickWindow = () => {
-    close();
-  };
+    close()
+  }
 
   onMount(() => {
     if (props.trigger === "hover") {
-      window.addEventListener("mousemove", debouncedTrackMouse);
+      window.addEventListener("mousemove", debouncedTrackMouse)
     }
-  });
+  })
 
   onCleanup(() => {
     if (props.trigger === "hover") {
-      window.removeEventListener("mousemove", debouncedTrackMouse);
+      window.removeEventListener("mousemove", debouncedTrackMouse)
     }
-  });
+  })
 
   const position = useFloating(elementRef, PopoverRef, {
     ...(props.placement && { placement: props.placement }),
@@ -147,22 +150,22 @@ const Popover = (_props: Props) => {
         ? autoPlacement({
             padding: {
               top: 0,
-              right: 200,
-            },
+              right: 200
+            }
           })
-        : undefined,
+        : undefined
     ],
     whileElementsMounted: (reference, floating, update) =>
       autoUpdate(reference, floating, update, {
-        animationFrame: true,
-      }),
-  });
+        animationFrame: true
+      })
+  })
 
   createEffect(() => {
     if (position.middlewareData.hide?.referenceHidden) {
-      close();
+      close()
     }
-  });
+  })
 
   return (
     <>
@@ -170,10 +173,10 @@ const Popover = (_props: Props) => {
         <Portal>
           <div
             onMouseEnter={() => {
-              setSsHoveringCard(true);
+              setSsHoveringCard(true)
             }}
             onMouseLeave={() => {
-              setSsHoveringCard(false);
+              setSsHoveringCard(false)
             }}
             ref={setPopoverRef}
             class={`rounded-lg will-change z-100 ${props.color || ""} ${
@@ -182,15 +185,15 @@ const Popover = (_props: Props) => {
             style={{
               position: "absolute",
               top: `${position.y ?? 0}px`,
-              left: `${position.x ?? 0}px`,
+              left: `${position.x ?? 0}px`
             }}
             classList={{
               "bg-darkSlate-900": !props.color,
-              "px-2 py-1": !props.noPadding,
+              "px-2 py-1": !props.noPadding
             }}
             onClick={(e) => {
-              e.stopImmediatePropagation();
-              e.stopPropagation();
+              e.stopImmediatePropagation()
+              e.stopPropagation()
             }}
           >
             <div class="relative">{props.content(close)}</div>
@@ -202,7 +205,7 @@ const Popover = (_props: Props) => {
                   "left-1/2 -translate-x-1/2 -bottom-1":
                     props.placement?.includes("top") || !props.placement,
                   "top-1/2 -translate-y-1/2 -left-1":
-                    props.placement?.includes("right"),
+                    props.placement?.includes("right")
                 }}
               />
             </Show>
@@ -213,28 +216,28 @@ const Popover = (_props: Props) => {
       <div
         ref={setElementRef}
         onMouseEnter={(e) => {
-          setTriangleStart({ x: e.clientX, y: e.clientY });
-          setSsHoveringCard(true);
+          setTriangleStart({ x: e.clientX, y: e.clientY })
+          setSsHoveringCard(true)
           if (props.trigger === "hover") {
             setOpenTimer(
               setTimeout(() => {
-                open();
+                open()
               }, 300)
-            );
+            )
           }
         }}
         onMouseLeave={() => {
           if (props.trigger === "hover") {
-            clearTimeout(openTimer());
+            clearTimeout(openTimer())
           }
-          setSsHoveringCard(false);
+          setSsHoveringCard(false)
         }}
         onClick={() => {
           if (props.trigger === "click") {
             if (PopoverOpened()) {
-              close();
+              close()
             } else {
-              open();
+              open()
             }
           }
         }}
@@ -242,7 +245,7 @@ const Popover = (_props: Props) => {
         {props.children}
       </div>
     </>
-  );
-};
+  )
+}
 
-export { Popover };
+export { Popover }

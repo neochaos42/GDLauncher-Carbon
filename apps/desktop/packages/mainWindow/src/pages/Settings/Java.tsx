@@ -1,4 +1,4 @@
-import { Trans } from "@gd/i18n";
+import { Trans } from "@gd/i18n"
 import {
   Button,
   Input,
@@ -12,65 +12,65 @@ import {
   Dropdown,
   Popover,
   ContextMenu
-} from "@gd/ui";
-import { useRouteData } from "@solidjs/router";
-import { For, Match, Show, Switch, createMemo } from "solid-js";
-import SettingsJavaData from "./settings.java.data";
-import { useModal } from "@/managers/ModalsManager";
-import { rspc } from "@/utils/rspcClient";
-import PageTitle from "./components/PageTitle";
-import Row from "./components/Row";
-import Title from "./components/Title";
-import RowsContainer from "./components/RowsContainer";
-import RightHandSide from "./components/RightHandSide";
-import { generateSequence } from "@/utils/helpers";
-import Center from "./components/Center";
-import TruncatedPath from "@/components/TruncatePath";
+} from "@gd/ui"
+import { useRouteData } from "@solidjs/router"
+import { For, Match, Show, Switch, createMemo } from "solid-js"
+import SettingsJavaData from "./settings.java.data"
+import { useModal } from "@/managers/ModalsManager"
+import { rspc } from "@/utils/rspcClient"
+import PageTitle from "./components/PageTitle"
+import Row from "./components/Row"
+import Title from "./components/Title"
+import RowsContainer from "./components/RowsContainer"
+import RightHandSide from "./components/RightHandSide"
+import { generateSequence } from "@/utils/helpers"
+import Center from "./components/Center"
+import TruncatedPath from "@/components/TruncatePath"
 
 const Java = () => {
-  const routeData: ReturnType<typeof SettingsJavaData> = useRouteData();
-  const javasData = () => routeData?.availableJavas;
-  const javas = () => javasData()?.data || [];
-  const modalsContext = useModal();
+  const routeData: ReturnType<typeof SettingsJavaData> = useRouteData()
+  const javasData = () => routeData?.availableJavas
+  const javas = () => javasData()?.data || []
+  const modalsContext = useModal()
 
   const settings = rspc.createQuery(() => ({
     queryKey: ["settings.getSettings"]
-  }));
+  }))
 
   const profileAssignments = rspc.createQuery(() => ({
     queryKey: ["java.systemJavaProfileAssignments"]
-  }));
+  }))
 
   const settingsMutation = rspc.createMutation(() => ({
     mutationKey: ["settings.setSettings"]
-  }));
+  }))
 
   const updateProfile = rspc.createMutation(() => ({
     mutationKey: ["java.updateJavaProfile"]
-  }));
+  }))
 
   const deleteProfile = rspc.createMutation(() => ({
     mutationKey: ["java.deleteJavaProfile"]
-  }));
+  }))
 
-  let deleteJavaMutation = rspc.createMutation(() => ({
+  const deleteJavaMutation = rspc.createMutation(() => ({
     mutationKey: ["java.deleteJavaVersion"]
-  }));
+  }))
 
   const mbTotalRAM = () =>
-    Math.round(Number(routeData.totalRam.data) / 1024 / 1024);
+    Math.round(Number(routeData.totalRam.data) / 1024 / 1024)
 
   const initialJavaArgs = createMemo((prev: string | undefined) => {
-    if (prev) return prev;
+    if (prev) return prev
 
-    return settings.data?.javaCustomArgs;
-  });
+    return settings.data?.javaCustomArgs
+  })
 
   const flattenedAvailableJavas = () =>
     Object.values(routeData.availableJavas.data || {}).reduce(
       (acc, curr) => acc.concat(curr),
       []
-    );
+    )
 
   const availableJavasDropdown = () => {
     const results = flattenedAvailableJavas()?.map((java) => {
@@ -89,8 +89,8 @@ const Java = () => {
           </div>
         ),
         key: java.id
-      };
-    });
+      }
+    })
 
     return [
       {
@@ -98,30 +98,30 @@ const Java = () => {
         key: "unassigned"
       },
       ...results
-    ];
-  };
+    ]
+  }
 
   const javaProfiles = () => [
     (routeData.javaProfiles.data || []).filter((profile) => profile.isSystem),
     (routeData.javaProfiles.data || []).filter((profile) => !profile.isSystem)
-  ];
+  ]
 
   const menuItems = () => [
     {
       icon: "i-ri:pencil-fill",
       label: "Add Managed",
       action: () => {
-        modalsContext?.openModal({ name: "addManagedJava" });
+        modalsContext?.openModal({ name: "addManagedJava" })
       }
     },
     {
       icon: "i-ri:folder-open-fill",
       label: "Add Custom",
       action: () => {
-        modalsContext?.openModal({ name: "addCustomJava" });
+        modalsContext?.openModal({ name: "addCustomJava" })
       }
     }
-  ];
+  ]
 
   return (
     <>
@@ -145,7 +145,7 @@ const Java = () => {
                   xmx: {
                     Set: val
                   }
-                });
+                })
               }}
             />
             <Input
@@ -156,7 +156,7 @@ const Java = () => {
                   xmx: {
                     Set: parseInt(e.currentTarget.value, 10)
                   }
-                });
+                })
               }}
             />
           </Center>
@@ -165,7 +165,7 @@ const Java = () => {
           <Title>
             <Trans key="java.java_arguments_title" />
           </Title>
-          <div class="flex gap-4 justify-center items-center">
+          <div class="flex items-center justify-center gap-4">
             <Input
               class="w-full"
               value={settings.data?.javaCustomArgs}
@@ -174,7 +174,7 @@ const Java = () => {
                   javaCustomArgs: {
                     Set: e.target.value
                   }
-                });
+                })
               }}
             />
             <Tooltip content={<Trans key="tooltip.undo" />}>
@@ -187,7 +187,7 @@ const Java = () => {
                     javaCustomArgs: {
                       Set: initialJavaArgs() || ""
                     }
-                  });
+                  })
                 }}
               >
                 <i class="w-5 h-5 i-ri:arrow-go-back-fill" />
@@ -203,7 +203,7 @@ const Java = () => {
                     javaCustomArgs: {
                       Set: ""
                     }
-                  });
+                  })
                 }}
               >
                 <i class="w-5 h-5 i-ri:close-fill" />
@@ -227,7 +227,7 @@ const Java = () => {
                   autoManageJavaSystemProfiles: {
                     Set: e.target.checked
                   }
-                });
+                })
               }}
             />
           </RightHandSide>
@@ -285,7 +285,7 @@ const Java = () => {
                                   const usedInNProfiles = () =>
                                     (routeData.javaProfiles.data || []).filter(
                                       (item) => item.javaId === java.id
-                                    );
+                                    )
 
                                   return (
                                     <div class="flex justify-between rounded-md py-2 px-4 hover:bg-darkSlate-600">
@@ -372,7 +372,7 @@ const Java = () => {
                                         </Show>
                                       </div>
                                     </div>
-                                  );
+                                  )
                                 }}
                               </For>
                             </div>
@@ -416,7 +416,7 @@ const Java = () => {
                               onClick={() => {
                                 modalsContext?.openModal({
                                   name: "javaProfileCreation"
-                                });
+                                })
                               }}
                             >
                               <div class="text-xl i-ri:add-fill" />
@@ -427,7 +427,7 @@ const Java = () => {
                           {(profile) => {
                             const id = flattenedAvailableJavas()?.find(
                               (java) => java.id === profile.javaId
-                            )?.id;
+                            )?.id
 
                             return (
                               <div class="px-4 py-2 flex justify-between items-center hover:bg-darkSlate-600">
@@ -451,14 +451,14 @@ const Java = () => {
                                           option.key.toString() === "unassigned"
                                             ? null
                                             : option.key.toString()
-                                      });
+                                      })
                                     }}
                                   />
                                   <Show when={i() === 1}>
                                     <div
                                       class="text-lightSlate-700 hover:text-red-400 ease-in-out duration-100 text-lg transition-color i-ri:delete-bin-7-fill"
                                       onClick={() => {
-                                        deleteProfile.mutate(profile.name);
+                                        deleteProfile.mutate(profile.name)
                                       }}
                                     />
                                   </Show>
@@ -492,7 +492,7 @@ const Java = () => {
                                   </Show>
                                 </div>
                               </div>
-                            );
+                            )
                           }}
                         </For>
                       </div>
@@ -505,7 +505,7 @@ const Java = () => {
         </div>
       </RowsContainer>
     </>
-  );
-};
+  )
+}
 
-export default Java;
+export default Java

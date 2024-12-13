@@ -1,50 +1,50 @@
-import { Button, Input, Tooltip } from "@gd/ui";
-import { Trans } from "@gd/i18n";
-import PageTitle from "./components/PageTitle";
-import RowsContainer from "./components/RowsContainer";
-import Row from "./components/Row";
-import Title from "./components/Title";
+import { Button, Input, Tooltip } from "@gd/ui"
+import { Trans } from "@gd/i18n"
+import PageTitle from "./components/PageTitle"
+import RowsContainer from "./components/RowsContainer"
+import Row from "./components/Row"
+import Title from "./components/Title"
 import {
   createEffect,
   createResource,
   createSignal,
   Match,
   Switch
-} from "solid-js";
-import Center from "./components/Center";
-import { useModal } from "@/managers/ModalsManager";
+} from "solid-js"
+import Center from "./components/Center"
+import { useModal } from "@/managers/ModalsManager"
 
-const [isChangingRuntimePath, setIsChangingRuntimePath] = createSignal(false);
+const [isChangingRuntimePath, setIsChangingRuntimePath] = createSignal(false)
 
 const RuntimePath = () => {
-  const modalsContext = useModal();
+  const modalsContext = useModal()
 
   const [runtimePath, setRuntimePath] = createSignal<string | undefined>(
     undefined
-  );
+  )
 
   const [initialRuntimePath] = createResource(() => {
-    return window.getInitialRuntimePath();
-  });
+    return window.getInitialRuntimePath()
+  })
 
   const [currentRuntimePath] = createResource(() => {
-    return window.getRuntimePath();
-  });
+    return window.getRuntimePath()
+  })
 
   createEffect(() => {
     if (currentRuntimePath() === undefined) {
-      return;
+      return
     }
 
-    setRuntimePath(currentRuntimePath()!);
-  });
+    setRuntimePath(currentRuntimePath()!)
+  })
 
   const [isPathValid] = createResource(
     () => [runtimePath()] as const,
     () => {
-      return window.validateRuntimePath(runtimePath()!);
+      return window.validateRuntimePath(runtimePath()!)
     }
-  );
+  )
 
   return (
     <>
@@ -68,18 +68,18 @@ const RuntimePath = () => {
                       title: "Select Runtime Path",
                       defaultPath: runtimePath(),
                       properties: ["openDirectory"]
-                    });
+                    })
 
                     if (result.canceled) {
-                      return;
+                      return
                     }
 
-                    setRuntimePath(result.filePaths[0]);
+                    setRuntimePath(result.filePaths[0])
                   }}
                 />
               }
               onInput={({ target: { value } }) => {
-                setRuntimePath(value);
+                setRuntimePath(value)
               }}
             />
             <Tooltip content={<Trans key="tooltip.undo" />}>
@@ -89,7 +89,7 @@ const RuntimePath = () => {
                 class="h-10"
                 size="small"
                 onClick={() => {
-                  setRuntimePath(currentRuntimePath()!);
+                  setRuntimePath(currentRuntimePath()!)
                 }}
               >
                 <i class="w-5 h-5 i-ri:arrow-go-back-fill" />
@@ -102,7 +102,7 @@ const RuntimePath = () => {
                 class="h-10"
                 size="small"
                 onClick={() => {
-                  setRuntimePath(initialRuntimePath()!);
+                  setRuntimePath(initialRuntimePath()!)
                 }}
               >
                 <i class="w-5 h-5 i-ri:close-fill" />
@@ -157,7 +157,7 @@ const RuntimePath = () => {
                       setIsChangingRuntimePath,
                       isChangingRuntimePath: isChangingRuntimePath
                     }
-                  );
+                  )
                 }}
               >
                 <i class="w-5 h-5 i-ri-restart-line" />
@@ -167,7 +167,7 @@ const RuntimePath = () => {
         </Row>
       </RowsContainer>
     </>
-  );
-};
+  )
+}
 
-export default RuntimePath;
+export default RuntimePath

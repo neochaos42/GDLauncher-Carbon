@@ -1,5 +1,5 @@
-import { Button } from "./index.jsx";
-import type { Meta, StoryObj } from "storybook-solidjs";
+import { Button } from "./index.jsx"
+import type { Meta, StoryObj } from "storybook-solidjs"
 
 const meta: Meta<typeof Button> = {
   /* 👇 The title prop is optional.
@@ -11,36 +11,36 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     type: {
       options: ["primary", "secondary", "outline", "glow"],
-      control: { type: "radio" },
+      control: { type: "radio" }
     },
     size: {
       options: ["large", "medium", "small"],
-      control: { type: "radio" },
-    },
-  },
-};
+      control: { type: "radio" }
+    }
+  }
+}
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof Button>;
+type Story = StoryObj<typeof Button>
 
 export const Primary: Story = {
   args: {
     disabled: false,
     variant: "primary",
     children: "Click Here",
-    uppercase: true,
-  },
-};
+    uppercase: true
+  }
+}
 
 export const Outline: Story = {
   args: {
     disabled: false,
     variant: "outline",
     children: "Click Here",
-    uppercase: true,
-  },
-};
+    uppercase: true
+  }
+}
 
 export const Icon: Story = {
   args: {
@@ -49,6 +49,6 @@ export const Icon: Story = {
     children: "Click Here",
     icon: <div class="i-ri:refresh-line" />,
     iconRight: false,
-    uppercase: true,
-  },
-};
+    uppercase: true
+  }
+}

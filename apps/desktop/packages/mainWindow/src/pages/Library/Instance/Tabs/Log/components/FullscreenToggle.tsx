@@ -1,7 +1,7 @@
-type Props = {
-  isFullScreen: () => boolean;
-  setIsFullScreen: (_: boolean) => void;
-};
+interface Props {
+  isFullScreen: () => boolean
+  setIsFullScreen: (_: boolean) => void
+}
 
 export default function FullscreenToggle(props: Props) {
   return (
@@ -12,8 +12,8 @@ export default function FullscreenToggle(props: Props) {
         "i-ri:fullscreen-exit-line": props.isFullScreen()
       }}
       onClick={() => {
-        props.setIsFullScreen(!props.isFullScreen());
+        props.setIsFullScreen(!props.isFullScreen())
       }}
     />
-  );
+  )
 }

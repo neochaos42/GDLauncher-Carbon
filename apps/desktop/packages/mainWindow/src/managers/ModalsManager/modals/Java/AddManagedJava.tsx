@@ -1,84 +1,82 @@
-import { Trans } from "@gd/i18n";
-import { ModalProps } from "@/managers/ModalsManager";
-import ModalLayout from "@/managers/ModalsManager/ModalLayout";
-import { Button, Dropdown, createNotification } from "@gd/ui";
-import { rspc } from "@/utils/rspcClient";
-import { Show, createEffect, createSignal, onMount } from "solid-js";
+import { Trans } from "@gd/i18n"
+import { ModalProps } from "@/managers/ModalsManager"
+import ModalLayout from "@/managers/ModalsManager/ModalLayout"
+import { Button, Dropdown, createNotification } from "@gd/ui"
+import { rspc } from "@/utils/rspcClient"
+import { Show, createEffect, createSignal, onMount } from "solid-js"
 import {
   FEManagedJavaArch,
   FEManagedJavaOs,
   FEManagedJavaVersion,
   FEVendor
-} from "@gd/core_module/bindings";
-import { hasKey } from "@/utils/helpers";
+} from "@gd/core_module/bindings"
+import { hasKey } from "@/utils/helpers"
 
-type mappedOS = {
-  [name: string]: FEManagedJavaOs;
-};
+type mappedOS = Record<string, FEManagedJavaOs>
 
 const osMappedNames: mappedOS = {
   win32: "windows",
   darwin: "macOs",
   linux: "linux"
-};
+}
 
 const AddManagedJava = (props: ModalProps) => {
-  let javaVendors = rspc.createQuery(() => ({
+  const javaVendors = rspc.createQuery(() => ({
     queryKey: ["java.getManagedVendors"]
-  }));
+  }))
 
-  const [vendor, setVendor] = createSignal<FEVendor>("azul");
+  const [vendor, setVendor] = createSignal<FEVendor>("azul")
   const [currentOs, setCurrentOs] = createSignal<{
-    platform: FEManagedJavaOs | undefined;
-    arch: FEManagedJavaArch | undefined;
-  }>({ platform: undefined, arch: undefined });
+    platform: FEManagedJavaOs | undefined
+    arch: FEManagedJavaArch | undefined
+  }>({ platform: undefined, arch: undefined })
   const [javaVersions, setJavaVersions] = createSignal<FEManagedJavaVersion[]>(
     []
-  );
-  const [selectedJavaVersion, setSelectedJavaVersion] = createSignal("");
-  const [loading, setLoading] = createSignal(false);
-  const addNotification = createNotification();
+  )
+  const [selectedJavaVersion, setSelectedJavaVersion] = createSignal("")
+  const [loading, setLoading] = createSignal(false)
+  const addNotification = createNotification()
 
   // eslint-disable-next-line solid/reactivity
-  let versionsByVendor = rspc.createQuery(() => ({
+  const versionsByVendor = rspc.createQuery(() => ({
     queryKey: ["java.getManagedVersionsByVendor", vendor()]
-  }));
+  }))
 
-  let addJavaMutation = rspc.createMutation(() => ({
+  const addJavaMutation = rspc.createMutation(() => ({
     mutationKey: ["java.setupManagedJava"]
-  }));
+  }))
 
   onMount(() => {
     window.getCurrentOS().then((currentOs) => {
       setCurrentOs({
         platform: osMappedNames[currentOs.platform],
         arch: currentOs.arch as FEManagedJavaArch
-      });
-    });
-  });
+      })
+    })
+  })
 
   createEffect(() => {
-    const platform = currentOs().platform;
-    const arch = currentOs().arch;
+    const platform = currentOs().platform
+    const arch = currentOs().arch
     if (versionsByVendor.data && platform && arch) {
       if (hasKey(versionsByVendor.data, platform)) {
-        const javaVersions = versionsByVendor.data[platform][arch];
-        setJavaVersions(javaVersions);
+        const javaVersions = versionsByVendor.data[platform][arch]
+        setJavaVersions(javaVersions)
       }
-    } else setJavaVersions([]);
-  });
+    } else setJavaVersions([])
+  })
 
   const mappedJavaVersions = () =>
     javaVersions()?.map((versions) => ({
-      key: versions.id as string,
-      label: versions.name as string
-    })) || [];
+      key: versions.id,
+      label: versions.name
+    })) || []
 
   const mappedVendors = () =>
     javaVendors?.data?.map((vendors) => ({
       key: vendors as string,
       label: vendors as string
-    })) || [];
+    })) || []
 
   return (
     <ModalLayout noHeader={props.noHeader} title={props?.title}>
@@ -97,7 +95,7 @@ const AddManagedJava = (props: ModalProps) => {
               <Show when={!javaVendors.isLoading}>
                 <Dropdown
                   onChange={(javaVendor) => {
-                    setVendor(javaVendor.key as FEVendor);
+                    setVendor(javaVendor.key as FEVendor)
                   }}
                   containerClass="border-1 border-solid border-darkSlate-600 rounded-lg"
                   options={mappedVendors()}
@@ -143,27 +141,27 @@ const AddManagedJava = (props: ModalProps) => {
               rounded={false}
               loading={loading()}
               onClick={async () => {
-                const id = selectedJavaVersion() || mappedJavaVersions()[0].key;
-                const vend = vendor() || mappedVendors()[0].key;
+                const id = selectedJavaVersion() || mappedJavaVersions()[0].key
+                const vend = vendor() || mappedVendors()[0].key
 
                 if (currentOs().arch && currentOs().platform && id && vend) {
                   try {
-                    setLoading(true);
+                    setLoading(true)
 
                     await addJavaMutation.mutateAsync({
-                      arch: currentOs().arch as FEManagedJavaArch,
-                      os: currentOs().platform as FEManagedJavaOs,
+                      arch: currentOs().arch!,
+                      os: currentOs().platform!,
                       id,
                       vendor: vend
-                    });
+                    })
 
                     addNotification({
                       name: "Java added successfully",
                       type: "success"
-                    });
+                    })
                   } catch (err) {
-                    console.error(err);
-                    setLoading(false);
+                    console.error(err)
+                    setLoading(false)
                   }
                 }
               }}
@@ -179,7 +177,7 @@ const AddManagedJava = (props: ModalProps) => {
         </div>
       </div>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default AddManagedJava;
+export default AddManagedJava

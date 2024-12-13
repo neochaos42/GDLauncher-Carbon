@@ -1,8 +1,8 @@
-import { useTransContext } from "@gd/i18n";
-import { Input } from "@gd/ui";
+import { useTransContext } from "@gd/i18n"
+import { Input } from "@gd/ui"
 
 export const ExportNameVersion = () => {
-  const [t] = useTransContext();
+  const [t] = useTransContext()
   return (
     <div class="w-full flex flex-col gap-2">
       <span>{t("instance.instance_name")}</span>
@@ -16,6 +16,6 @@ export const ExportNameVersion = () => {
         icon={<div onClick={() => {}} class="i-material-symbols:close" />}
       />
     </div>
-  );
-};
-export default ExportNameVersion;
+  )
+}
+export default ExportNameVersion

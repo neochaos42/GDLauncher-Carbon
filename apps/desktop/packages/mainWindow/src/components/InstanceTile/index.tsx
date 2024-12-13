@@ -1,137 +1,137 @@
-import { createEffect, createSignal } from "solid-js";
-import Tile from "../Instance/Tile";
+import { createEffect, createSignal } from "solid-js"
+import Tile from "../Instance/Tile"
 import {
   getPreparingState,
   getRunningState,
   getInactiveState,
   getInstanceImageUrl,
   isInstanceDeleting
-} from "@/utils/instances";
-import { ListInstance, FESubtask } from "@gd/core_module/bindings";
-import { useGDNavigate } from "@/managers/NavigationManager";
-import { rspc } from "@/utils/rspcClient";
-import { createStore } from "solid-js/store";
-import { bytesToMB } from "@/utils/helpers";
+} from "@/utils/instances"
+import { ListInstance, FESubtask } from "@gd/core_module/bindings"
+import { useGDNavigate } from "@/managers/NavigationManager"
+import { rspc } from "@/utils/rspcClient"
+import { createStore } from "solid-js/store"
+import { bytesToMB } from "@/utils/helpers"
 
-type InstanceDownloadProgress = {
-  totalDownload: number;
-  downloaded: number;
-  percentage: number;
-  subTasks: FESubtask[] | undefined;
-};
+interface InstanceDownloadProgress {
+  totalDownload: number
+  downloaded: number
+  percentage: number
+  subTasks: FESubtask[] | undefined
+}
 
-export let [clickedInstanceId, setClickedInstanceId] = createSignal<
+export const [clickedInstanceId, setClickedInstanceId] = createSignal<
   string | undefined
->(undefined);
+>(undefined)
 
 const InstanceTile = (props: {
-  instance: ListInstance;
-  isSidebarOpened?: boolean;
-  identifier: string;
-  selected?: boolean;
-  size: 1 | 2 | 3 | 4 | 5;
+  instance: ListInstance
+  isSidebarOpened?: boolean
+  identifier: string
+  selected?: boolean
+  size: 1 | 2 | 3 | 4 | 5
 }) => {
-  const [isLoading, setIsLoading] = createSignal(false);
-  const [failError, setFailError] = createSignal("");
+  const [isLoading, setIsLoading] = createSignal(false)
+  const [failError, setFailError] = createSignal("")
   const [progress, setProgress] = createStore<InstanceDownloadProgress>({
     totalDownload: 0,
     downloaded: 0,
     percentage: 0,
     subTasks: undefined
-  });
+  })
 
-  const navigate = useGDNavigate();
+  const navigate = useGDNavigate()
 
   const validInstance = () =>
     props.instance.status.status === "valid"
       ? props.instance.status.value
-      : undefined;
+      : undefined
 
   const invalidInstance = () =>
     props.instance.status.status === "invalid"
       ? props.instance.status.value
-      : undefined;
+      : undefined
 
-  const inactiveState = () => getInactiveState(validInstance()?.state);
-  const isPreparingState = () => getPreparingState(validInstance()?.state);
-  const isDeleting = () => isInstanceDeleting(validInstance()?.state);
+  const inactiveState = () => getInactiveState(validInstance()?.state)
+  const isPreparingState = () => getPreparingState(validInstance()?.state)
+  const isDeleting = () => isInstanceDeleting(validInstance()?.state)
 
-  const modloader = () => validInstance()?.modloader;
+  const modloader = () => validInstance()?.modloader
 
-  const taskId = () => isPreparingState();
+  const taskId = () => isPreparingState()
 
-  const isRunning = () => getRunningState(validInstance()?.state);
+  const isRunning = () => getRunningState(validInstance()?.state)
   const dismissTaskMutation = rspc.createMutation(() => ({
     mutationKey: ["vtask.dismissTask"]
-  }));
+  }))
 
   const task = rspc.createQuery(() => ({
     queryKey: ["vtask.getTask", taskId() || null]
-  }));
+  }))
 
   createEffect(() => {
-    setFailError("");
+    setFailError("")
 
     if (task?.data) {
-      const data = task.data;
-      setProgress("totalDownload", data.download_total);
-      setProgress("downloaded", data.downloaded);
+      const data = task.data
+      setProgress("totalDownload", data.download_total)
+      setProgress("downloaded", data.downloaded)
       if (data.progress.type === "Known") {
-        setProgress("subTasks", data.active_subtasks);
-        setProgress("percentage", data.progress.value);
-        setIsLoading(true);
+        setProgress("subTasks", data.active_subtasks)
+        setProgress("percentage", data.progress.value)
+        setIsLoading(true)
       } else if (data.progress.type === "Failed") {
-        setIsLoading(false);
+        setIsLoading(false)
       } else {
-        setIsLoading(false);
+        setIsLoading(false)
       }
     } else {
-      setIsLoading(false);
+      setIsLoading(false)
       setProgress({
         totalDownload: 0,
         downloaded: 0,
         percentage: 0,
         subTasks: undefined
-      });
+      })
     }
-  });
+  })
 
   createEffect(() => {
     if ((validInstance() || invalidInstance()) && taskId === undefined) {
-      dismissTaskMutation.mutate(taskId);
+      dismissTaskMutation.mutate(taskId)
     }
-  });
+  })
 
   const failedTask = rspc.createQuery(() => ({
-    queryKey: ["vtask.getTask", inactiveState() as number],
+    queryKey: ["vtask.getTask", inactiveState()!],
     enabled: false
-  }));
+  }))
 
   createEffect(() => {
     if (inactiveState() !== null && inactiveState() !== undefined) {
-      failedTask.refetch();
+      failedTask.refetch()
     }
-  });
+  })
 
   createEffect(() => {
     if (failedTask.data && failedTask.data.progress.type === "Failed") {
-      if (taskId()) dismissTaskMutation.mutate(taskId() as number);
-      setFailError(failedTask.data.progress.value.cause[0].display);
+      if (taskId()) dismissTaskMutation.mutate(taskId()!)
+      setFailError(failedTask.data.progress.value.cause[0].display)
     }
-  });
+  })
 
-  const variant = () => (props.isSidebarOpened ? "sidebar" : "sidebar-small");
+  const variant = () => (props.isSidebarOpened ? "sidebar" : "sidebar-small")
   const type = () =>
-    props.isSidebarOpened === undefined ? undefined : variant();
+    props.isSidebarOpened === undefined ? undefined : variant()
 
   return (
     <Tile
       onClick={() => {
-        setClickedInstanceId(props.identifier);
+        setClickedInstanceId(props.identifier)
 
         requestAnimationFrame(() => {
-          navigate(`/library/${props.instance.id}`);
-        });
+          navigate(`/library/${props.instance.id}`)
+        })
       }}
       shouldSetViewTransition={clickedInstanceId() === props.identifier}
       identifier={props.identifier}
@@ -157,7 +157,7 @@ const InstanceTile = (props: {
       downloaded={bytesToMB(progress.downloaded)}
       subTasks={progress.subTasks}
     />
-  );
-};
+  )
+}
 
-export default InstanceTile;
+export default InstanceTile

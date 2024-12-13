@@ -1,71 +1,71 @@
-import { ModalProps } from "../../";
-import ModalLayout from "../../ModalLayout";
+import { ModalProps } from "../../"
+import ModalLayout from "../../ModalLayout"
 
-import { Trans } from "@gd/i18n";
-import { For, Match, onMount, Show, Switch } from "solid-js";
-import changelogs, { Changelog } from "./changelogs";
-import { Button } from "@gd/ui";
-import { rspc } from "@/utils/rspcClient";
+import { Trans } from "@gd/i18n"
+import { For, Match, onMount, Show, Switch } from "solid-js"
+import changelogs, { Changelog } from "./changelogs"
+import { Button } from "@gd/ui"
+import { rspc } from "@/utils/rspcClient"
 
-type SectionProps = {
-  type: keyof Changelog;
-};
+interface SectionProps {
+  type: keyof Changelog
+}
 
 const Section = (props: SectionProps) => {
   const textColor = () => {
     switch (props.type) {
       case "new":
-        return "text-green-400";
+        return "text-green-400"
       case "improved":
-        return "text-yellow-400";
+        return "text-yellow-400"
       case "fixed":
-        return "text-red-400";
+        return "text-red-400"
     }
-  };
+  }
 
   const borderColor = () => {
     switch (props.type) {
       case "new":
-        return "border-green-400";
+        return "border-green-400"
       case "improved":
-        return "border-yellow-400";
+        return "border-yellow-400"
       case "fixed":
-        return "border-red-400";
+        return "border-red-400"
     }
-  };
+  }
 
   const icon = () => {
     switch (props.type) {
       case "new":
-        return "i-ri:shining-2-fill";
+        return "i-ri:shining-2-fill"
       case "improved":
-        return "i-ri:hammer-fill";
+        return "i-ri:hammer-fill"
       case "fixed":
-        return "i-ri:bug-fill";
+        return "i-ri:bug-fill"
     }
-  };
+  }
 
   const title = () => {
     switch (props.type) {
       case "new":
-        return "NEW";
+        return "NEW"
       case "improved":
-        return "IMPROVED";
+        return "IMPROVED"
       case "fixed":
-        return "BUG FIXES";
+        return "BUG FIXES"
     }
-  };
+  }
 
   const list = () => {
     switch (props.type) {
       case "new":
-        return changelogs.new;
+        return changelogs.new
       case "improved":
-        return changelogs.improved;
+        return changelogs.improved
       case "fixed":
-        return changelogs.fixed;
+        return changelogs.fixed
     }
-  };
+  }
 
   return (
     <div>
@@ -108,19 +108,19 @@ const Section = (props: SectionProps) => {
         </Switch>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const Changelogs = (props: ModalProps) => {
   const sendEvent = rspc.createMutation(() => ({
     mutationKey: ["metrics.sendEvent"]
-  }));
+  }))
 
   onMount(() => {
     sendEvent.mutate({
       event_name: "changelog_viewed"
-    });
-  });
+    })
+  })
 
   return (
     <ModalLayout
@@ -151,7 +151,7 @@ const Changelogs = (props: ModalProps) => {
           <Button
             backgroundColor="bg-brands-discord"
             onClick={() => {
-              window.open("https://discord.gdlauncher.com", "_blank");
+              window.open("https://discord.gdlauncher.com", "_blank")
             }}
           >
             <div class="flex items-center justify-center gap-4 animate-wiggle animate-delay-1400 animate-loop">
@@ -162,7 +162,7 @@ const Changelogs = (props: ModalProps) => {
         </div>
       </div>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default Changelogs;
+export default Changelogs

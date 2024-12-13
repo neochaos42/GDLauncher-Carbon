@@ -1,8 +1,8 @@
-import { useGlobalStore } from "@/components/GlobalStoreContext";
-import { useGDNavigate } from "@/managers/NavigationManager";
-import { rspc } from "@/utils/rspcClient";
-import { Trans } from "@gd/i18n";
-import { Skeleton } from "@gd/ui";
+import { useGlobalStore } from "@/components/GlobalStoreContext"
+import { useGDNavigate } from "@/managers/NavigationManager"
+import { rspc } from "@/utils/rspcClient"
+import { Trans } from "@gd/i18n"
+import { Skeleton } from "@gd/ui"
 import {
   For,
   Match,
@@ -11,14 +11,14 @@ import {
   createEffect,
   createResource,
   createSignal
-} from "solid-js";
+} from "solid-js"
 
-const HEXING_TALES_MODPACK_ID = 891604;
+const HEXING_TALES_MODPACK_ID = 891604
 
 const FeaturedModpackTile = () => {
-  const navigate = useGDNavigate();
-  const rspcContext = rspc.useContext();
-  const [shouldShow, setShouldShow] = createSignal(true);
+  const navigate = useGDNavigate()
+  const rspcContext = rspc.useContext()
+  const [shouldShow, setShouldShow] = createSignal(true)
 
   const [hexingTales] = createResource(() => {
     return rspcContext.client
@@ -28,20 +28,20 @@ const FeaturedModpackTile = () => {
           modId: HEXING_TALES_MODPACK_ID
         }
       ])
-      .catch(console.error);
-  });
+      .catch(console.error)
+  })
 
   const settingsMutation = rspc.createMutation(() => ({
     mutationKey: ["settings.setSettings"]
-  }));
+  }))
 
-  const globalStore = useGlobalStore();
-  const settings = () => globalStore.settings.data;
-  const instances = () => globalStore.instances.data;
+  const globalStore = useGlobalStore()
+  const settings = () => globalStore.settings.data
+  const instances = () => globalStore.instances.data
 
   createEffect(() => {
-    if (!instances()) return;
-    if (!settings) return;
+    if (!instances()) return
+    if (!settings) return
 
     for (const i of instances()!) {
       if (
@@ -49,13 +49,13 @@ const FeaturedModpackTile = () => {
         i.status.value.modpack?.type === "curseforge" &&
         i.status.value.modpack?.value?.project_id === HEXING_TALES_MODPACK_ID
       ) {
-        setShouldShow(false);
-        return;
+        setShouldShow(false)
+        return
       }
     }
 
-    setShouldShow(true);
-  });
+    setShouldShow(true)
+  })
 
   return (
     <Show when={shouldShow()}>
@@ -69,18 +69,18 @@ const FeaturedModpackTile = () => {
                 !!hexingTales()?.data
             }}
             onClick={() => {
-              navigate(`/modpacks/${HEXING_TALES_MODPACK_ID}/curseforge`);
+              navigate(`/modpacks/${HEXING_TALES_MODPACK_ID}/curseforge`)
             }}
           >
             <div
               class="z-1 absolute text-lightSlate-900 hover:text-lightSlate-50 opacity-50 top-2 right-2 duration-200 ease-in-out i-ri:eye-fill w-4 h-4"
               onClick={(e) => {
-                e.stopPropagation();
+                e.stopPropagation()
                 settingsMutation.mutate({
                   showFeatured: {
                     Set: false
                   }
-                });
+                })
               }}
             />
             <div class="absolute top-0 left-0 group-hover:-translate-y-full duration-200 ease-in-out">
@@ -123,18 +123,18 @@ const FeaturedModpackTile = () => {
           <div
             class="text-lightSlate-900 hover:text-lightSlate-50 opacity-50 my-2 mr-2 duration-200 ease-in-out i-ri:eye-off-fill w-4 h-4"
             onClick={(e) => {
-              e.stopPropagation();
+              e.stopPropagation()
               settingsMutation.mutate({
                 showFeatured: {
                   Set: true
                 }
-              });
+              })
             }}
           />
         </Show>
       </>
     </Show>
-  );
-};
+  )
+}
 
-export default FeaturedModpackTile;
+export default FeaturedModpackTile

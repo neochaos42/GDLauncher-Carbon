@@ -1,12 +1,12 @@
-import { mergeProps } from "solid-js";
+import { mergeProps } from "solid-js"
 
 interface Props {
-  percentage: number | string;
-  color?: string;
+  percentage: number | string
+  color?: string
 }
 
 const Progressbar = (props: Props) => {
-  const mergedProps = mergeProps({ percentage: 0 }, props);
+  const mergedProps = mergeProps({ percentage: 0 }, props)
 
   return (
     <div class="w-full bg-darkSlate-900 m-0 mx-auto rounded-lg overflow-hidden border border-gray-300">
@@ -17,7 +17,7 @@ const Progressbar = (props: Props) => {
         style={{ width: `${mergedProps.percentage}%` }}
       />
     </div>
-  );
-};
+  )
+}
 
-export { Progressbar };
+export { Progressbar }

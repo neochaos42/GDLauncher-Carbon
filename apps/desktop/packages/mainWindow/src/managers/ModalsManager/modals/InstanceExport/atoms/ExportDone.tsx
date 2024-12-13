@@ -1,11 +1,11 @@
-import { useTransContext } from "@gd/i18n";
-import { Button } from "@gd/ui";
-import CheckIcon from "./CheckIcon";
-import { Show } from "solid-js";
-import { failedMsg } from "./Exporting";
+import { useTransContext } from "@gd/i18n"
+import { Button } from "@gd/ui"
+import CheckIcon from "./CheckIcon"
+import { Show } from "solid-js"
+import { failedMsg } from "./Exporting"
 
 export default function ExportDone(props: { path: string }) {
-  const [t] = useTransContext();
+  const [t] = useTransContext()
   return (
     <div class="flex gap-4 flex-col items-center justify-center h-full gap-2 p-4">
       <Show when={!failedMsg()}>
@@ -22,7 +22,7 @@ export default function ExportDone(props: { path: string }) {
           style={{ width: "100%", "max-width": "100%" }}
           type="primary"
           onClick={async () => {
-            window.openFolder(props.path);
+            window.openFolder(props.path)
           }}
         >
           <div class="i-ri:folder-line" />
@@ -30,5 +30,5 @@ export default function ExportDone(props: { path: string }) {
         </Button>
       </Show>
     </div>
-  );
+  )
 }

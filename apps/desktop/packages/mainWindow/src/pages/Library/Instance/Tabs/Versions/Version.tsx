@@ -1,25 +1,25 @@
-import { Trans } from "@gd/i18n";
-import { Show } from "solid-js";
-import { format } from "date-fns";
-import { CFFEFile } from "@gd/core_module/bindings";
+import { Trans } from "@gd/i18n"
+import { Show } from "solid-js"
+import { format } from "date-fns"
+import { CFFEFile } from "@gd/core_module/bindings"
 
-type Props = {
-  version: CFFEFile;
-  mainFileId: number;
-};
+interface Props {
+  version: CFFEFile
+  mainFileId: number
+}
 
 const getColor = (stable: string) => {
   switch (stable) {
     case "stable":
-      return "text-green-500";
+      return "text-green-500"
     case "beta":
-      return "text-yellow-500";
+      return "text-yellow-500"
     case "alpha":
-      return "text-red-500";
+      return "text-red-500"
     default:
-      return "text-green-500";
+      return "text-green-500"
   }
-};
+}
 
 const Active = () => {
   return (
@@ -32,8 +32,8 @@ const Active = () => {
       />
       <div class="text-green-500 text-2xl i-ri:check-fill" />
     </div>
-  );
-};
+  )
+}
 
 const Version = (props: Props) => {
   return (
@@ -76,7 +76,7 @@ const Version = (props: Props) => {
         </Show>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Version;
+export default Version

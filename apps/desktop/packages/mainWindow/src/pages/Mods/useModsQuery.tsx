@@ -1,5 +1,5 @@
-import { FEUnifiedSearchParameters } from "@gd/core_module/bindings";
-import { createStore } from "solid-js/store";
+import { FEUnifiedSearchParameters } from "@gd/core_module/bindings"
+import { createStore } from "solid-js/store"
 
 export const modsDefaultQuery: FEUnifiedSearchParameters = {
   searchQuery: "",
@@ -12,7 +12,7 @@ export const modsDefaultQuery: FEUnifiedSearchParameters = {
   index: 0,
   pageSize: 20,
   searchApi: "curseforge"
-};
+}
 
 const useModsQuery = (
   initialValue?: FEUnifiedSearchParameters
@@ -23,19 +23,19 @@ const useModsQuery = (
   const [query, setQuery] = createStore<FEUnifiedSearchParameters>({
     ...modsDefaultQuery,
     ...initialValue
-  });
+  })
 
   const setQueryParams = (newValue: Partial<FEUnifiedSearchParameters>) => {
-    const indexValue = newValue.index ?? 0;
+    const indexValue = newValue.index ?? 0
 
     setQuery((prev) => ({
       ...prev,
       ...newValue,
       index: indexValue
-    }));
-  };
+    }))
+  }
 
-  return [query, setQueryParams];
-};
+  return [query, setQueryParams]
+}
 
-export default useModsQuery;
+export default useModsQuery

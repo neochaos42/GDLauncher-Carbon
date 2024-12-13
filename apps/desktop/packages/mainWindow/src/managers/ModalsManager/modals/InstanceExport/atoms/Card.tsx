@@ -1,10 +1,10 @@
-import EntityCard, { EntityCardProps } from "@/components/Card/EntityCard";
-import { setPayload, payload } from "..";
-import { ExportTarget } from "@gd/core_module/bindings";
+import EntityCard, { EntityCardProps } from "@/components/Card/EntityCard"
+import { setPayload, payload } from ".."
+import { ExportTarget } from "@gd/core_module/bindings"
 
 export const Card = (
   props: EntityCardProps & {
-    instanceTitle: ExportTarget;
+    instanceTitle: ExportTarget
   }
 ) => {
   return (
@@ -14,7 +14,7 @@ export const Card = (
         setPayload({
           ...payload,
           target: props.instanceTitle
-        });
+        })
       }}
     >
       <EntityCard
@@ -22,5 +22,5 @@ export const Card = (
         selected={props.instanceTitle === payload.target}
       />
     </div>
-  );
-};
+  )
+}

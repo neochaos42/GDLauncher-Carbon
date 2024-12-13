@@ -1,58 +1,49 @@
-import Card from "@/components/Card";
-import { Trans, useTransContext } from "@gd/i18n";
-import { For, Show } from "solid-js";
-import fetchData from "./instance.data";
-import { useParams, useRouteData } from "@solidjs/router";
-import { InstanceDetails } from "@gd/core_module/bindings";
-import { format, formatDuration, intervalToDuration } from "date-fns";
-import FadedBanner, { FadedBannerSkeleton } from "@/components/FadedBanner";
-import { port } from "@/utils/rspcClient";
-import { Button } from "@gd/ui";
-import { getModpackPlatformIcon } from "@/utils/instances";
-import { useGDNavigate } from "@/managers/NavigationManager";
+import Card from "@/components/Card"
+import { Trans, useTransContext } from "@gd/i18n"
+import { For, Show } from "solid-js"
+import fetchData from "./instance.data"
+import { useParams, useRouteData } from "@solidjs/router"
+import { format, formatDuration, intervalToDuration } from "date-fns"
+import FadedBanner, { FadedBannerSkeleton } from "@/components/FadedBanner"
+import { port } from "@/utils/rspcClient"
+import { Button } from "@gd/ui"
+import { getModpackPlatformIcon } from "@/utils/instances"
+import { useGDNavigate } from "@/managers/NavigationManager"
 
 const Overview = () => {
-  const routeData: ReturnType<typeof fetchData> = useRouteData();
-  const params = useParams();
-  const navigate = useGDNavigate();
-  const [t] = useTransContext();
+  const routeData: ReturnType<typeof fetchData> = useRouteData()
+  const params = useParams()
+  const navigate = useGDNavigate()
+  const [t] = useTransContext()
 
   const modpackPlatform = () =>
-    routeData.instanceDetails.data?.modpack?.modpack.type;
+    routeData.instanceDetails.data?.modpack?.modpack.type
 
   const modpackProjectId = () => {
     if (
       routeData.instanceDetails.data?.modpack?.modpack.type === "curseforge"
     ) {
-      return routeData.instanceDetails.data?.modpack?.modpack?.value
-        ?.project_id;
+      return routeData.instanceDetails.data?.modpack?.modpack?.value?.project_id
     } else if (
       routeData.instanceDetails.data?.modpack?.modpack.type === "modrinth"
     ) {
-      return routeData.instanceDetails.data?.modpack?.modpack?.value
-        ?.project_id;
+      return routeData.instanceDetails.data?.modpack?.modpack?.value?.project_id
     }
-  };
+  }
 
   return (
     <div class="flex flex-col gap-4">
-      <div class="w-full flex justify-center flex-wrap gap-4">
+      <div class="flex w-full flex-wrap justify-center gap-4">
         <Show when={routeData.instanceDetails.data?.version}>
           <Card
             title="Minecraft version"
-            text={
-              (routeData.instanceDetails.data as InstanceDetails).version || ""
-            }
+            text={routeData.instanceDetails.data!.version || ""}
             icon="vanilla"
             class="flex-1"
           />
         </Show>
         <Show when={routeData.instanceDetails.data?.modloaders}>
-          <For
-            each={
-              (routeData.instanceDetails.data as InstanceDetails).modloaders
-            }
-          >
+          <For each={routeData.instanceDetails.data!.modloaders}>
             {(modloader, index) => (
               <>
                 <Card
@@ -102,7 +93,7 @@ const Overview = () => {
           <Card
             title={t("instance.overview_card_last_played_title")}
             text={format(
-              new Date(routeData.instanceDetails.data?.lastPlayed as string),
+              new Date(routeData.instanceDetails.data?.lastPlayed!),
               "PPP"
             )}
             icon="sign"
@@ -142,7 +133,7 @@ const Overview = () => {
                     <div class="flex gap-3 text-sm text-lightSlate-600">
                       <div class="flex items-center">
                         <img
-                          src={getModpackPlatformIcon(modpackPlatform()!)}
+                          src={getModpackPlatformIcon(modpackPlatform())}
                           class="h-3 w-3"
                         />
                       </div>
@@ -163,11 +154,11 @@ const Overview = () => {
                       if (modpackPlatform() === "curseforge") {
                         window.openExternalLink(
                           `https://www.curseforge.com/minecraft/modpacks/${routeData.modpackInfo.data?.url_slug}`
-                        );
+                        )
                       } else if (modpackPlatform() === "modrinth") {
                         window.openExternalLink(
                           `https://modrinth.com/mod/${routeData.modpackInfo.data?.url_slug}`
-                        );
+                        )
                       }
                     }}
                   >
@@ -183,13 +174,13 @@ const Overview = () => {
                           `/modpacks/${modpackProjectId()}/curseforge?instanceId=${
                             params.id
                           }`
-                        );
+                        )
                       } else if (modpackPlatform() === "modrinth") {
                         navigate(
                           `/modpacks/${modpackProjectId()}/modrith?instanceId=${
                             params.id
                           }`
-                        );
+                        )
                       }
                     }}
                   >
@@ -219,7 +210,7 @@ const Overview = () => {
         </div>
       </Show>
     </div>
-  );
-};
+  )
+}
 
-export default Overview;
+export default Overview

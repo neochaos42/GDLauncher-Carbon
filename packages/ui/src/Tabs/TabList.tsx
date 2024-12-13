@@ -1,11 +1,11 @@
-import { JSXElement, Match, Show, Switch } from "solid-js";
-import { SpacingTab, TabType, useTabsContext } from "./Tabs";
-import { cva, type VariantProps } from "class-variance-authority";
+import { JSXElement, Match, Show, Switch } from "solid-js"
+import { SpacingTab, TabType, useTabsContext } from "./Tabs"
+import { cva, type VariantProps } from "class-variance-authority"
 
 interface Props extends VariantProps<typeof tabListStyles> {
-  aligment?: "between" | "default";
-  children: Element[] | JSXElement;
-  heightClass?: string;
+  aligment?: "between" | "default"
+  children: Element[] | JSXElement
+  heightClass?: string
 }
 
 const tabListStyles = cva("flex relative items-start w-full min-h-12 gap-6", {
@@ -13,95 +13,95 @@ const tabListStyles = cva("flex relative items-start w-full min-h-12 gap-6", {
     variant: {
       underline: "bg-darkSlate-800",
       block: "bg-darkSlate-900",
-      traditional: "",
+      traditional: ""
     },
     orientation: {
       horizontal: "",
-      vertical: "",
+      vertical: ""
     },
     alignment: {
       between: "justify-between",
-      default: "",
-    },
+      default: ""
+    }
   },
   defaultVariants: {
     variant: "underline",
     orientation: "horizontal",
-    alignment: "default",
-  },
-});
+    alignment: "default"
+  }
+})
 
 const tabListContentStyles = cva("flex box-border overflow-auto w-full gap-6", {
   variants: {
     variant: {
       underline: "border-b-darkSlate-800 border-b-1 h-full",
       block: "items-center m-2 rounded-xl",
-      traditional: "items-center scrollbar-hide",
+      traditional: "items-center scrollbar-hide"
     },
     orientation: {
       horizontal: "flex-row",
-      vertical: "flex-col",
-    },
-  },
-});
+      vertical: "flex-col"
+    }
+  }
+})
 
 const TabList = (props: Props) => {
-  const tabsContext = useTabsContext();
+  const tabsContext = useTabsContext()
 
-  const tabs = () => tabsContext?.getRegisteredTabs() || [];
+  const tabs = () => tabsContext?.getRegisteredTabs() || []
 
-  const currentIndex = () => tabsContext?.currentIndex() || 0;
-  const currentTab = () => tabs()[currentIndex()];
+  const currentIndex = () => tabsContext?.currentIndex() || 0
+  const currentTab = () => tabs()[currentIndex()]
 
-  const isIgnored = () => (currentTab() as TabType)?.ignored;
+  const isIgnored = () => (currentTab() as TabType)?.ignored
 
   const getPositionPx = (index: number) => {
-    const filteredTabs = tabs()?.slice(0, index);
-    if (index < 0 || index > tabs()?.length) return 0;
+    const filteredTabs = tabs()?.slice(0, index)
+    if (index < 0 || index > tabs()?.length) return 0
 
-    let dimension = 0;
+    let dimension = 0
     for (const tab of filteredTabs) {
       const isSpacing =
-        typeof tab === "object" && (tab as SpacingTab)?.type === "spacing";
+        typeof tab === "object" && (tab as SpacingTab)?.type === "spacing"
 
       if (tabsContext?.orientation() === "horizontal") {
         if (isSpacing) {
-          dimension += (tab as SpacingTab).space;
+          dimension += (tab as SpacingTab).space
         } else {
-          dimension += (tab as TabType).ref.offsetWidth;
+          dimension += (tab as TabType).ref.offsetWidth
         }
       } else {
         if (isSpacing) {
-          dimension += (tab as SpacingTab).space;
+          dimension += (tab as SpacingTab).space
         } else {
-          dimension += (tab as TabType).ref.offsetHeight;
+          dimension += (tab as TabType).ref.offsetHeight
         }
       }
     }
-    return dimension;
-  };
+    return dimension
+  }
 
   const getWidth = (index: number) => {
-    if (index < 0 || index > tabs()?.length) return 0;
+    if (index < 0 || index > tabs()?.length) return 0
 
-    const tab = tabs()[index];
+    const tab = tabs()[index]
 
     const isSpacing =
-      typeof tab === "object" && (tab as SpacingTab)?.type === "spacing";
+      typeof tab === "object" && (tab as SpacingTab)?.type === "spacing"
 
-    return isSpacing ? "auto" : (tab as TabType).ref.offsetWidth;
-  };
+    return isSpacing ? "auto" : (tab as TabType).ref.offsetWidth
+  }
 
   const getHeight = (index: number) => {
-    if (index < 0 || index > tabs()?.length) return 0;
+    if (index < 0 || index > tabs()?.length) return 0
 
-    const tab = tabs()[index];
+    const tab = tabs()[index]
 
     const isSpacing =
-      typeof tab === "object" && (tab as SpacingTab)?.type === "spacing";
+      typeof tab === "object" && (tab as SpacingTab)?.type === "spacing"
 
-    return isSpacing ? "auto" : (tab as TabType).ref.offsetHeight;
-  };
+    return isSpacing ? "auto" : (tab as TabType).ref.offsetHeight
+  }
 
   return (
     <div
@@ -109,7 +109,7 @@ const TabList = (props: Props) => {
         variant: tabsContext?.variant(),
         orientation: tabsContext?.orientation(),
         alignment: props.aligment,
-        class: props.heightClass ?? "h-full",
+        class: props.heightClass ?? "h-full"
       })}
     >
       <Switch>
@@ -117,10 +117,10 @@ const TabList = (props: Props) => {
           <div
             class={tabListContentStyles({
               variant: "underline",
-              orientation: tabsContext?.orientation(),
+              orientation: tabsContext?.orientation()
             })}
             style={{
-              gap: tabsContext?.gap?.()?.toString() + "rem",
+              gap: tabsContext?.gap?.()?.toString() + "rem"
             }}
           >
             {props.children}
@@ -130,15 +130,15 @@ const TabList = (props: Props) => {
                 classList={{
                   "top-0 w-1 right-0":
                     tabsContext?.orientation() === "vertical",
-                  "left-0": tabsContext?.orientation() === "horizontal",
+                  "left-0": tabsContext?.orientation() === "horizontal"
                 }}
                 style={{
                   ...(tabsContext?.orientation() === "horizontal"
                     ? {
-                        width: `${getWidth(currentIndex())}px`,
+                        width: `${getWidth(currentIndex())}px`
                       }
                     : {
-                        height: `${getHeight(currentIndex())}px`,
+                        height: `${getHeight(currentIndex())}px`
                       }),
                   ...(tabsContext?.orientation() === "horizontal"
                     ? {
@@ -146,15 +146,15 @@ const TabList = (props: Props) => {
                           currentIndex()
                         )}px + (${
                           tabsContext?.gap?.() ?? 1.5
-                        }rem * ${currentIndex()})))`,
+                        }rem * ${currentIndex()})))`
                       }
                     : {
                         transform: `translateY(calc(${getPositionPx(
                           currentIndex()
                         )}px+ (${
                           tabsContext?.gap?.() ?? 1.5
-                        }rem * ${currentIndex()})))`,
-                      }),
+                        }rem * ${currentIndex()})))`
+                      })
                 }}
               />
             </Show>
@@ -164,10 +164,10 @@ const TabList = (props: Props) => {
           <div
             class={tabListContentStyles({
               variant: "block",
-              orientation: tabsContext?.orientation(),
+              orientation: tabsContext?.orientation()
             })}
             style={{
-              gap: (tabsContext?.gap?.()?.toString() ?? 1.5) + "rem",
+              gap: (tabsContext?.gap?.()?.toString() ?? 1.5) + "rem"
             }}
           >
             {props.children}
@@ -177,10 +177,10 @@ const TabList = (props: Props) => {
           <div
             class={tabListContentStyles({
               variant: "traditional",
-              orientation: tabsContext?.orientation(),
+              orientation: tabsContext?.orientation()
             })}
             style={{
-              gap: (tabsContext?.gap?.()?.toString() ?? 1.5) + "rem",
+              gap: (tabsContext?.gap?.()?.toString() ?? 1.5) + "rem"
             }}
           >
             {props.children}
@@ -188,7 +188,7 @@ const TabList = (props: Props) => {
         </Match>
       </Switch>
     </div>
-  );
-};
+  )
+}
 
-export { TabList };
+export { TabList }

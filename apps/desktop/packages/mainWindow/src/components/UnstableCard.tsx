@@ -1,10 +1,10 @@
-import { Trans } from "@gd/i18n";
-import { Match, Switch } from "solid-js";
+import { Trans } from "@gd/i18n"
+import { Match, Switch } from "solid-js"
 
 const UnstableCard = () => {
-  const isSnapshotRelease = __APP_VERSION__.includes("-snapshot") || false;
-  const isBetaRelease = __APP_VERSION__.includes("-beta");
-  const isAlphaRelease = __APP_VERSION__.includes("-alpha");
+  const isSnapshotRelease = __APP_VERSION__.includes("-snapshot") || false
+  const isBetaRelease = __APP_VERSION__.includes("-beta")
+  const isAlphaRelease = __APP_VERSION__.includes("-alpha")
   return (
     <div>
       <Switch>
@@ -40,7 +40,7 @@ const UnstableCard = () => {
         </Match>
       </Switch>
     </div>
-  );
-};
+  )
+}
 
-export default UnstableCard;
+export default UnstableCard

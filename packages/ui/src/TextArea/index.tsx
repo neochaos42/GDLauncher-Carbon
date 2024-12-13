@@ -1,13 +1,13 @@
-import { JSX, Show } from "solid-js";
+import { JSX, Show } from "solid-js"
 
 interface Props extends JSX.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  value?: string | number;
-  placeholder?: string;
-  error?: string | boolean;
-  disabled?: boolean;
-  class?: string;
-  inputClass?: string;
-  icon?: Element;
+  value?: string | number
+  placeholder?: string
+  error?: string | boolean
+  disabled?: boolean
+  class?: string
+  inputClass?: string
+  icon?: Element
 }
 
 const TextArea = (props: Props) => {
@@ -21,7 +21,7 @@ const TextArea = (props: Props) => {
         classList={{
           "border-0 border-transparent hover:border-darkSlate-500 active:border-darkSlate-500":
             !props.error,
-          "border-2 border-solid border-red-500": !!props.error,
+          "border-2 border-solid border-red-500": !!props.error
         }}
       >
         {props.children}
@@ -30,7 +30,7 @@ const TextArea = (props: Props) => {
         <div class="text-red-500 text-left mt-2 font-light">{props.error}</div>
       </Show>
     </>
-  );
-};
+  )
+}
 
-export { TextArea };
+export { TextArea }

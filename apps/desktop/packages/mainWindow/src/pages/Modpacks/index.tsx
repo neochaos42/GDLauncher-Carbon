@@ -1,7 +1,7 @@
-import Sidebar from "@/components/Sidebar/modpacks";
-import { Outlet } from "@solidjs/router";
-import ContentWrapper from "@/components/ModpackBrowserWrapper";
-import InfiniteScrollModsLayout from "@/components/InfiniteScrollModsQueryWrapper";
+import Sidebar from "@/components/Sidebar/modpacks"
+import { Outlet } from "@solidjs/router"
+import ContentWrapper from "@/components/ModpackBrowserWrapper"
+import InfiniteScrollModsLayout from "@/components/InfiniteScrollModsQueryWrapper"
 
 function ModpacksLayout() {
   return (
@@ -15,7 +15,7 @@ function ModpacksLayout() {
         </>
       </InfiniteScrollModsLayout>
     </div>
-  );
+  )
 }
 
-export default ModpacksLayout;
+export default ModpacksLayout

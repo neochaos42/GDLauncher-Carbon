@@ -1,3 +1,7 @@
 # Ignore artifacts:
 dist
 node_modules
+playwright-report
+binaries
+test-results
+release

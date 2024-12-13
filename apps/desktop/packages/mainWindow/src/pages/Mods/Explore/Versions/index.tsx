@@ -1,42 +1,42 @@
-import { useRouteData, useSearchParams } from "@solidjs/router";
-import fetchData from "../../mods.versions";
-import VersionRow from "./VersionRow";
-import { rspc } from "@/utils/rspcClient";
-import MainContainer from "@/components/Browser/MainContainer";
-import { useInfiniteVersionsQuery } from "@/components/InfiniteScrollVersionsQueryWrapper";
-import { createEffect } from "solid-js";
+import { useRouteData, useSearchParams } from "@solidjs/router"
+import fetchData from "../../mods.versions"
+import VersionRow from "./VersionRow"
+import { rspc } from "@/utils/rspcClient"
+import MainContainer from "@/components/Browser/MainContainer"
+import { useInfiniteVersionsQuery } from "@/components/InfiniteScrollVersionsQueryWrapper"
+import { createEffect } from "solid-js"
 
 const Versions = () => {
-  const routeData: ReturnType<typeof fetchData> = useRouteData();
+  const routeData: ReturnType<typeof fetchData> = useRouteData()
 
-  const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams()
 
-  const infiniteQuery = useInfiniteVersionsQuery();
+  const infiniteQuery = useInfiniteVersionsQuery()
 
-  const rows = () => infiniteQuery.allRows();
+  const rows = () => infiniteQuery.allRows()
 
-  const allVirtualRows = () => infiniteQuery.rowVirtualizer.getVirtualItems();
+  const allVirtualRows = () => infiniteQuery.rowVirtualizer.getVirtualItems()
 
-  const lastItem = () => allVirtualRows()[allVirtualRows()?.length - 1];
+  const lastItem = () => allVirtualRows()[allVirtualRows()?.length - 1]
 
-  const instanceId = () => parseInt(searchParams.instanceId, 10);
+  const instanceId = () => parseInt(searchParams.instanceId, 10)
 
   const instanceMods = rspc.createQuery(() => ({
     queryKey: ["instance.getInstanceMods", instanceId()]
-  }));
+  }))
 
   const instanceDetails = rspc.createQuery(() => ({
     queryKey: ["instance.getInstanceDetails", instanceId()]
-  }));
+  }))
 
   createEffect(() => {
     if (!lastItem() || lastItem().index === infiniteQuery?.query.index) {
-      return;
+      return
     }
 
     const lastItemIndex = infiniteQuery?.infiniteQuery.hasNextPage
       ? lastItem().index - 1
-      : lastItem().index;
+      : lastItem().index
 
     if (
       lastItemIndex >= rows().length - 1 &&
@@ -44,9 +44,9 @@ const Versions = () => {
       !infiniteQuery.infiniteQuery.isFetchingNextPage &&
       !infiniteQuery.isLoading
     ) {
-      infiniteQuery.infiniteQuery.fetchNextPage();
+      infiniteQuery.infiniteQuery.fetchNextPage()
     }
-  });
+  })
 
   const installedMod = () => {
     for (const version of rows()) {
@@ -59,12 +59,12 @@ const Versions = () => {
             return {
               id: mod?.id,
               remoteId: version?.fileId.toString()
-            };
+            }
           }
         }
       }
     }
-  };
+  }
 
   return (
     <MainContainer
@@ -84,7 +84,7 @@ const Versions = () => {
     >
       {VersionRow}
     </MainContainer>
-  );
-};
+  )
+}
 
-export default Versions;
+export default Versions

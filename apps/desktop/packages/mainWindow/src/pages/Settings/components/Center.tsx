@@ -1,18 +1,18 @@
-import { JSX, children } from "solid-js";
+import { JSX, children } from "solid-js"
 
-type Props = {
-  children: JSX.Element;
-  class?: string;
-};
+interface Props {
+  children: JSX.Element
+  class?: string
+}
 
 function Center(props: Props) {
-  const c = children(() => props.children);
+  const c = children(() => props.children)
 
   return (
     <div class={"flex gap-4 justify-center items-center w-full " + props.class}>
       {c()}
     </div>
-  );
+  )
 }
 
-export default Center;
+export default Center

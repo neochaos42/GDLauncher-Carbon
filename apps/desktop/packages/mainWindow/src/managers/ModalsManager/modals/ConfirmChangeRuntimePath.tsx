@@ -1,21 +1,21 @@
-import { ModalProps, useModal } from "..";
-import ModalLayout from "../ModalLayout";
-import { Button, Progressbar } from "@gd/ui";
-import { Trans } from "@gd/i18n";
-import { Match, Show, Switch, createResource, createSignal } from "solid-js";
-import { Portal } from "solid-js/web";
-import { RTprogress, RTsetProgress } from "@/utils/runtimePathProgress";
+import { ModalProps, useModal } from ".."
+import ModalLayout from "../ModalLayout"
+import { Button, Progressbar } from "@gd/ui"
+import { Trans } from "@gd/i18n"
+import { Match, Show, Switch, createResource, createSignal } from "solid-js"
+import { Portal } from "solid-js/web"
+import { RTprogress, RTsetProgress } from "@/utils/runtimePathProgress"
 
 const ConfirmChangeRuntimePath = (props: ModalProps) => {
-  const modalsContext = useModal();
+  const modalsContext = useModal()
 
   const [migrationError, setMigrationError] = createSignal<string | undefined>(
     undefined
-  );
+  )
 
   const [currentRuntimePath] = createResource(() => {
-    return window.getRuntimePath();
-  });
+    return window.getRuntimePath()
+  })
 
   return (
     <>
@@ -66,7 +66,7 @@ const ConfirmChangeRuntimePath = (props: ModalProps) => {
           <div class="flex justify-between w-full">
             <Button
               onClick={() => {
-                modalsContext?.closeModal();
+                modalsContext?.closeModal()
               }}
             >
               <Trans key="settings:confirm_change_cancel_button" />
@@ -75,17 +75,17 @@ const ConfirmChangeRuntimePath = (props: ModalProps) => {
               type="secondary"
               disabled={props.data.isChangingRuntimePath()}
               onClick={async () => {
-                props.data.setIsChangingRuntimePath(true);
+                props.data.setIsChangingRuntimePath(true)
 
                 try {
-                  await window.changeRuntimePath(props.data.runtimePath);
-                  modalsContext?.closeModal();
+                  await window.changeRuntimePath(props.data.runtimePath)
+                  modalsContext?.closeModal()
                 } catch (e: any) {
-                  setMigrationError(e.message);
+                  setMigrationError(e.message)
                 }
 
-                RTsetProgress(undefined);
-                props.data.setIsChangingRuntimePath(false);
+                RTsetProgress(undefined)
+                props.data.setIsChangingRuntimePath(false)
               }}
             >
               <Trans key="settings:confirm_change_confirm_button" />
@@ -114,7 +114,7 @@ const ConfirmChangeRuntimePath = (props: ModalProps) => {
                           onClick={() => {
                             window.openExternalLink(
                               "https://gdlauncher.com/docs/troubleshooting/#migration-error"
-                            );
+                            )
                           }}
                         />
                         {""}
@@ -183,7 +183,7 @@ const ConfirmChangeRuntimePath = (props: ModalProps) => {
         </Portal>
       </Show>
     </>
-  );
-};
+  )
+}
 
-export default ConfirmChangeRuntimePath;
+export default ConfirmChangeRuntimePath

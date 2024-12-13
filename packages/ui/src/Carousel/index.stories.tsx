@@ -1,5 +1,5 @@
-import { Carousel } from "./index.jsx";
-import type { Meta, StoryObj } from "storybook-solidjs";
+import { Carousel } from "./index.jsx"
+import type { Meta, StoryObj } from "storybook-solidjs"
 
 const meta: Meta<typeof Carousel> = {
   /* 👇 The title prop is optional.
@@ -8,15 +8,15 @@ const meta: Meta<typeof Carousel> = {
    */
   title: "Carousel",
   component: Carousel,
-  argTypes: {},
-};
+  argTypes: {}
+}
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof Carousel>;
+type Story = StoryObj<typeof Carousel>
 
 export const Primary: Story = {
   args: {
-    title: "Recent Played",
-  },
-};
+    title: "Recent Played"
+  }
+}

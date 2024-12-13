@@ -1,11 +1,11 @@
-export type LogEntry = {
-  sourceKind: LogEntrySourceKind;
-  level: LogEntryLevel;
-  timestamp: number;
-  logger: string;
-  thread: string;
-  message: string;
-};
+export interface LogEntry {
+  sourceKind: LogEntrySourceKind
+  level: LogEntryLevel
+  timestamp: number
+  logger: string
+  thread: string
+  message: string
+}
 
 export enum LogEntrySourceKind {
   _System = "System",

@@ -1,35 +1,35 @@
-import { useGlobalStore } from "@/components/GlobalStoreContext";
-import { convertSecondsToHumanTime } from "@/utils/helpers";
-import { Trans, useTransContext } from "@gd/i18n";
-import { Input, Tooltip } from "@gd/ui";
-import { Show } from "solid-js";
+import { useGlobalStore } from "@/components/GlobalStoreContext"
+import { convertSecondsToHumanTime } from "@/utils/helpers"
+import { Trans, useTransContext } from "@gd/i18n"
+import { Input, Tooltip } from "@gd/ui"
+import { Show } from "solid-js"
 
 interface Props {
-  nextStep: () => void;
-  prevStep: () => void;
-  recoveryEmail: string | null;
-  setRecoveryEmail: (_: string | null) => void;
-  nickname: string | null;
-  setNickname: (_: string | null) => void;
-  cooldown: number;
-  acceptedHashedEmail: boolean;
-  setAcceptedHashedEmail: (_: (_: boolean) => boolean) => void;
+  nextStep: () => void
+  prevStep: () => void
+  recoveryEmail: string | null
+  setRecoveryEmail: (_: string | null) => void
+  nickname: string | null
+  setNickname: (_: string | null) => void
+  cooldown: number
+  acceptedHashedEmail: boolean
+  setAcceptedHashedEmail: (_: (_: boolean) => boolean) => void
 }
 
 const GDLAccountCompletion = (props: Props) => {
-  const [t] = useTransContext();
+  const [t] = useTransContext()
 
-  const globalStore = useGlobalStore();
+  const globalStore = useGlobalStore()
 
   const defaultNickname = () => {
     const account = globalStore.accounts.data?.find(
       (account) => account.uuid === globalStore.currentlySelectedAccount()?.uuid
-    );
+    )
 
-    if (!account) return "";
+    if (!account) return ""
 
-    return account.username;
-  };
+    return account.username
+  }
 
   return (
     <div class="flex-1 w-full flex flex-col justify-between items-center text-center gap-5 p-10">
@@ -47,7 +47,7 @@ const GDLAccountCompletion = (props: Props) => {
           value={props.recoveryEmail || ""}
           disabled={!!props.cooldown}
           onSearch={(value) => {
-            props.setRecoveryEmail(value);
+            props.setRecoveryEmail(value)
           }}
         />
         <Show when={props.cooldown}>
@@ -73,7 +73,7 @@ const GDLAccountCompletion = (props: Props) => {
           value={props.nickname ?? defaultNickname()}
           disabled={!!props.cooldown}
           onSearch={(value) => {
-            props.setNickname(value);
+            props.setNickname(value)
           }}
         />
 
@@ -103,7 +103,7 @@ const GDLAccountCompletion = (props: Props) => {
         </div> */}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default GDLAccountCompletion;
+export default GDLAccountCompletion

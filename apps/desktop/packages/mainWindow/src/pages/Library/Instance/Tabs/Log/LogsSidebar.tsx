@@ -1,61 +1,61 @@
-import { GameLogEntry } from "@gd/core_module/bindings";
-import { Collapsable, Spinner } from "@gd/ui";
-import { createSignal, For, Match, Show, Switch } from "solid-js";
-import formatDateTime from "./formatDateTime";
-import { Trans, useTransContext } from "@gd/i18n";
+import { GameLogEntry } from "@gd/core_module/bindings"
+import { Collapsable, Spinner } from "@gd/ui"
+import { createSignal, For, Match, Show, Switch } from "solid-js"
+import formatDateTime from "./formatDateTime"
+import { Trans, useTransContext } from "@gd/i18n"
 
-type LogsByTimespan = Record<string, Array<GameLogEntry>>;
+type LogsByTimespan = Record<string, GameLogEntry[]>
 
-export type LogsCollapsableProps = {
-  title: string;
-  logGroup: Array<GameLogEntry>;
-  setSelectedLog: (_: number | undefined) => void;
-  selectedLog: number | undefined;
-  sortDirection: "asc" | "desc";
-};
+export interface LogsCollapsableProps {
+  title: string
+  logGroup: GameLogEntry[]
+  setSelectedLog: (_: number | undefined) => void
+  selectedLog: number | undefined
+  sortDirection: "asc" | "desc"
+}
 
 const LogsCollapsable = (props: LogsCollapsableProps) => {
-  const [t] = useTransContext();
+  const [t] = useTransContext()
 
   const sortedLogs = () => {
     return props.logGroup
       .filter((log) => !log.active)
       .sort((a, b) => {
         if (props.sortDirection === "asc") {
-          return parseInt(b.timestamp, 10) - parseInt(a.timestamp, 10);
+          return parseInt(b.timestamp, 10) - parseInt(a.timestamp, 10)
         } else {
-          return parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10);
+          return parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10)
         }
-      });
-  };
+      })
+  }
 
   const groupTitle = () => {
-    const logDate = new Date(props.title);
+    const logDate = new Date(props.title)
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
 
-    const diffTime = Math.abs(today.getTime() - logDate.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffTime = Math.abs(today.getTime() - logDate.getTime())
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
-    console.log(diffDays);
+    console.log(diffDays)
 
-    let dateText: string;
+    let dateText: string
 
     if (diffDays === 0) {
-      dateText = "Today";
+      dateText = "Today"
     } else if (diffDays === 1) {
-      dateText = "Yesterday";
+      dateText = "Yesterday"
     } else if (diffDays < 7) {
-      dateText = t("x_days_ago", { count: diffDays });
+      dateText = t("x_days_ago", { count: diffDays })
     } else {
       dateText = new Date(logDate).toLocaleDateString(undefined, {
         dateStyle: "short"
-      });
+      })
     }
 
-    return dateText;
-  };
+    return dateText
+  }
 
   return (
     <Show when={sortedLogs().length > 0}>
@@ -69,7 +69,7 @@ const LogsCollapsable = (props: LogsCollapsableProps) => {
             <div
               class="relative text-lightSlate-700 py-3.5 px-4 hover:bg-darkSlate-700 rounded-md w-full box-border"
               onClick={() => {
-                props.setSelectedLog(log.id);
+                props.setSelectedLog(log.id)
               }}
             >
               {formatDateTime(new Date(parseInt(log.timestamp, 10)))}
@@ -81,50 +81,50 @@ const LogsCollapsable = (props: LogsCollapsableProps) => {
         </For>
       </Collapsable>
     </Show>
-  );
-};
+  )
+}
 
-export type LogsSidebarProps = {
-  availableLogEntries: GameLogEntry[];
-  setSelectedLog: (_: number | undefined) => void;
-  selectedLog: number | undefined;
-  isLoading: boolean;
-};
+export interface LogsSidebarProps {
+  availableLogEntries: GameLogEntry[]
+  setSelectedLog: (_: number | undefined) => void
+  selectedLog: number | undefined
+  isLoading: boolean
+}
 
 const LogsSidebar = (props: LogsSidebarProps) => {
-  const [sortDirection, setSortDirection] = createSignal<"asc" | "desc">("asc");
+  const [sortDirection, setSortDirection] = createSignal<"asc" | "desc">("asc")
 
   const logGroups = () => {
-    const logsByTimespan: LogsByTimespan = {};
+    const logsByTimespan: LogsByTimespan = {}
 
     for (const log of props.availableLogEntries) {
-      const logDate = new Date(parseInt(log.timestamp, 10));
-      logDate.setHours(0, 0, 0, 0);
+      const logDate = new Date(parseInt(log.timestamp, 10))
+      logDate.setHours(0, 0, 0, 0)
 
-      const dateText = logDate.toDateString();
+      const dateText = logDate.toDateString()
 
       if (!logsByTimespan[dateText]) {
-        logsByTimespan[dateText] = [];
+        logsByTimespan[dateText] = []
       }
 
-      logsByTimespan[dateText].push(log);
+      logsByTimespan[dateText].push(log)
     }
 
     const sortedGroups = Object.entries(logsByTimespan).sort(
       ([dateA], [dateB]) => {
-        const timeA = new Date(dateA).getTime();
-        const timeB = new Date(dateB).getTime();
+        const timeA = new Date(dateA).getTime()
+        const timeB = new Date(dateB).getTime()
 
-        return sortDirection() === "asc" ? timeB - timeA : timeA - timeB;
+        return sortDirection() === "asc" ? timeB - timeA : timeA - timeB
       }
-    );
+    )
 
-    return Object.fromEntries(sortedGroups);
-  };
+    return Object.fromEntries(sortedGroups)
+  }
 
   const activeLog = () => {
-    return props.availableLogEntries.find((log) => log.active);
-  };
+    return props.availableLogEntries.find((log) => log.active)
+  }
 
   return (
     <div class="flex flex-col w-50 box-border pr-6 h-full">
@@ -140,9 +140,9 @@ const LogsSidebar = (props: LogsSidebarProps) => {
           }}
           onClick={() => {
             if (sortDirection() === "asc") {
-              setSortDirection("desc");
+              setSortDirection("desc")
             } else {
-              setSortDirection("asc");
+              setSortDirection("asc")
             }
           }}
         />
@@ -191,7 +191,7 @@ const LogsSidebar = (props: LogsSidebarProps) => {
         </Match>
       </Switch>
     </div>
-  );
-};
+  )
+}
 
-export default LogsSidebar;
+export default LogsSidebar

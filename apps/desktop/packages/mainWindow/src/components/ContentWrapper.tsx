@@ -1,6 +1,6 @@
 interface Props {
-  children: any;
-  zeroPadding?: boolean;
+  children: any
+  zeroPadding?: boolean
 }
 const ContentWrapper = (props: Props) => {
   return (
@@ -17,7 +17,7 @@ const ContentWrapper = (props: Props) => {
         {props.children}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ContentWrapper;
+export default ContentWrapper

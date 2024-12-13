@@ -1,13 +1,13 @@
-import { JSX, Show, children } from "solid-js";
+import { JSX, Show, children } from "solid-js"
 
-type Props = {
-  children: JSX.Element;
-  description?: JSX.Element;
-  class?: string;
-};
+interface Props {
+  children: JSX.Element
+  description?: JSX.Element
+  class?: string
+}
 
 function Title(props: Props) {
-  const c = children(() => props.children);
+  const c = children(() => props.children)
 
   return (
     <div class={props.class || undefined}>
@@ -16,7 +16,7 @@ function Title(props: Props) {
         <p class="text-lightSlate-700 max-w-200 pr-4">{props.description}</p>
       </Show>
     </div>
-  );
+  )
 }
 
-export default Title;
+export default Title

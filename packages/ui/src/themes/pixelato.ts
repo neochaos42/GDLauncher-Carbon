@@ -1,4 +1,4 @@
-import { Theme } from ".";
+import { Theme } from "."
 
 const additionalStyles = `
   html, body {
@@ -8,7 +8,7 @@ const additionalStyles = `
   * {
     border-radius: 0 !important;
   }
-`;
+`
 
 const pixelato: Theme = {
   accent: "65 105 225", // Softer Royal Blue (previously Lapis Blue)
@@ -100,7 +100,7 @@ const pixelato: Theme = {
   font: "Monocraft",
   "font-mono": "Monocraft",
   "ads-sidebar-background": "url(./assets/images/sidebar-bg.png)",
-  "additional-styles": additionalStyles,
-};
+  "additional-styles": additionalStyles
+}
 
-export { pixelato };
+export { pixelato }

@@ -1,40 +1,40 @@
-import { Progressbar, createNotification } from "@gd/ui";
-import { ModalProps, useModal } from "..";
-import ModalLayout from "../ModalLayout";
-import { Trans } from "@gd/i18n";
+import { Progressbar, createNotification } from "@gd/ui"
+import { ModalProps, useModal } from ".."
+import ModalLayout from "../ModalLayout"
+import { Trans } from "@gd/i18n"
 
-import { rspc } from "@/utils/rspcClient";
-import { createSignal, onCleanup } from "solid-js";
-import { Mod } from "@gd/core_module/bindings";
-import { RSPCError } from "@rspc/client";
+import { rspc } from "@/utils/rspcClient"
+import { createSignal, onCleanup } from "solid-js"
+import { Mod } from "@gd/core_module/bindings"
+import { RSPCError } from "@rspc/client"
 
-type Props = {
-  instanceId: number;
-  mods: Mod[];
-};
+interface Props {
+  instanceId: number
+  mods: Mod[]
+}
 
 const AppUpdate = (props: ModalProps) => {
-  const data: () => Props = () => props?.data;
-  const addNotification = createNotification();
-  const modalsContext = useModal();
-  const [modsUpdated, setModsUpdated] = createSignal(0);
-  const [isDestroyed, setIsDestroyed] = createSignal(false);
+  const data: () => Props = () => props?.data
+  const addNotification = createNotification()
+  const modalsContext = useModal()
+  const [modsUpdated, setModsUpdated] = createSignal(0)
+  const [isDestroyed, setIsDestroyed] = createSignal(false)
 
   onCleanup(() => {
-    setIsDestroyed(true);
-  });
+    setIsDestroyed(true)
+  })
 
   const updateModMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.updateMod"],
     onError: (err) => {
-      console.error(err);
+      console.error(err)
       addNotification({
         name: `Error updating mod`,
         content: err?.message,
         type: "error"
-      });
+      })
     }
-  }));
+  }))
 
   const updateMods = async () => {
     for (const modId of data().mods) {
@@ -42,37 +42,37 @@ const AppUpdate = (props: ModalProps) => {
         await updateModMutation.mutateAsync({
           instance_id: data().instanceId,
           mod_id: modId.id
-        });
+        })
       } catch (err) {
-        console.error(err);
+        console.error(err)
         addNotification({
           name: `Error updating mod`,
           content: (err as RSPCError)?.message,
           type: "error"
-        });
+        })
       } finally {
-        setModsUpdated((prev) => prev + 1);
+        setModsUpdated((prev) => prev + 1)
       }
 
-      if (isDestroyed()) return;
+      if (isDestroyed()) return
     }
 
     addNotification({
       name: "Mods updated successfully!",
       type: "success"
-    });
-    modalsContext?.closeModal();
-  };
+    })
+    modalsContext?.closeModal()
+  }
 
   const currentModName = () => {
-    const mod = data().mods[modsUpdated()];
+    const mod = data().mods[modsUpdated()]
 
-    if (!mod) return "";
+    if (!mod) return ""
 
-    return mod.curseforge?.name || mod.modrinth?.title || mod.filename;
-  };
+    return mod.curseforge?.name || mod.modrinth?.title || mod.filename
+  }
 
-  updateMods();
+  updateMods()
 
   return (
     <ModalLayout noHeader={props.noHeader} title={props?.title}>
@@ -102,7 +102,7 @@ const AppUpdate = (props: ModalProps) => {
         </div>
       </div>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default AppUpdate;
+export default AppUpdate

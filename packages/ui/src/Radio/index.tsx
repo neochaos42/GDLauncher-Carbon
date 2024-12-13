@@ -5,46 +5,46 @@ import {
   Match,
   For,
   splitProps,
-  createSignal,
-} from "solid-js";
-import { Button } from "../Button";
+  createSignal
+} from "solid-js"
+import { Button } from "../Button"
 
-type Props = {
-  value: string | number | string[] | undefined;
-  checked: boolean;
-  onChange?: OnChange;
-  buttonStyle?: ButtonStyle;
-  children?: JSX.Element;
-};
+interface Props {
+  value: string | number | string[] | undefined
+  checked: boolean
+  onChange?: OnChange
+  buttonStyle?: ButtonStyle
+  children?: JSX.Element
+}
 
-type OnChange = (_value: string | number | string[] | undefined) => void;
+type OnChange = (_value: string | number | string[] | undefined) => void
 
-type Option = {
-  value: string | number | string[] | undefined;
-  label: JSX.Element;
-};
+interface Option {
+  value: string | number | string[] | undefined
+  label: JSX.Element
+}
 
-type ButtonStyle = "standard" | "button";
+type ButtonStyle = "standard" | "button"
 
-type GroupProps = {
-  onChange?: OnChange;
-  value?: string | number | string[] | undefined;
-  buttonStyle?: ButtonStyle;
-  options: Option[];
-};
+interface GroupProps {
+  onChange?: OnChange
+  value?: string | number | string[] | undefined
+  buttonStyle?: ButtonStyle
+  options: Option[]
+}
 
-let nextId = 1;
+let nextId = 1
 
 const Radio = (props: Props) => {
-  const [local, otherProps] = splitProps(props, ["buttonStyle", "onChange"]);
-  const [isHovered, setIsHovered] = createSignal(false); // Track hover state
+  const [local, otherProps] = splitProps(props, ["buttonStyle", "onChange"])
+  const [isHovered, setIsHovered] = createSignal(false) // Track hover state
 
-  const id = `radio-${nextId++}`;
+  const id = `radio-${nextId++}`
 
   // Determine base and conditional classes based on buttonStyle
-  const baseClasses = "relative flex gap-3 items-center";
-  const indicatorBaseClasses = "w-5 h-5 min-w-5 min-h-5 rounded-full";
-  const indicatorCheckedClasses = "border-transparent";
+  const baseClasses = "relative flex gap-3 items-center"
+  const indicatorBaseClasses = "w-5 h-5 min-w-5 min-h-5 rounded-full"
+  const indicatorCheckedClasses = "border-transparent"
 
   return (
     <>
@@ -61,7 +61,7 @@ const Radio = (props: Props) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onClick={() => {
-          local?.onChange?.(props.value);
+          local?.onChange?.(props.value)
         }}
       >
         <Show when={local?.buttonStyle === "button"}>
@@ -89,8 +89,8 @@ const Radio = (props: Props) => {
         </Show>
       </label>
     </>
-  );
-};
+  )
+}
 
 const Group = (props: GroupProps) => {
   return (
@@ -126,9 +126,9 @@ const Group = (props: GroupProps) => {
         </For>
       </Match>
     </Switch>
-  );
-};
+  )
+}
 
-Radio.group = Group;
+Radio.group = Group
 
-export { Radio };
+export { Radio }

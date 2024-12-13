@@ -1,4 +1,4 @@
-import { Trans } from "@gd/i18n";
+import { Trans } from "@gd/i18n"
 
 const Auth = () => {
   return (
@@ -7,7 +7,7 @@ const Auth = () => {
         <Trans key="login.sign_in_with_microsoft_text" />
       </p>
     </div>
-  );
-};
+  )
+}
 
-export default Auth;
+export default Auth

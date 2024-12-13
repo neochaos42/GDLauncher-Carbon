@@ -1,17 +1,17 @@
-import { Tab, TabList, TabPanel, Tabs } from "@gd/ui";
-import { ModalProps } from "../..";
-import ModalLayout from "../../ModalLayout";
-import { Trans } from "@gd/i18n";
-import Custom from "./Custom";
-import Import from "./Import";
-import { Match, Switch } from "solid-js";
+import { Tab, TabList, TabPanel, Tabs } from "@gd/ui"
+import { ModalProps } from "../.."
+import ModalLayout from "../../ModalLayout"
+import { Trans } from "@gd/i18n"
+import Custom from "./Custom"
+import Import from "./Import"
+import { Match, Switch } from "solid-js"
 
-type Props = {
-  id?: number;
-};
+interface Props {
+  id?: number
+}
 
 const InstanceCreation = (props: ModalProps) => {
-  const data: () => Props = () => props.data;
+  const data: () => Props = () => props.data
 
   return (
     <ModalLayout
@@ -45,7 +45,7 @@ const InstanceCreation = (props: ModalProps) => {
         </Switch>
       </div>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default InstanceCreation;
+export default InstanceCreation

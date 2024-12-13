@@ -76,39 +76,39 @@ Once `dev` or `build` npm-script is executed, the `dist` folder will be generate
 
 - **packages/preload/index.ts**
 
-    ```typescript
-    import fs from "fs"
-    import { contextBridge, ipcRenderer } from "electron"
+  ```typescript
+  import fs from "fs"
+  import { contextBridge, ipcRenderer } from "electron"
 
-    // --------- Expose some API to Renderer-process. ---------
-    contextBridge.exposeInMainWorld("fs", fs)
-    contextBridge.exposeInMainWorld("ipcRenderer", ipcRenderer)
-    ```
+  // --------- Expose some API to Renderer-process. ---------
+  contextBridge.exposeInMainWorld("fs", fs)
+  contextBridge.exposeInMainWorld("ipcRenderer", ipcRenderer)
+  ```
 
 - **packages/renderer/src/global.d.ts**
 
-    ```typescript
-    // Defined in the window
-    interface Window {
-      fs: typeof import("fs")
-      ipcRenderer: import("electron").IpcRenderer
-    }
-    ```
+  ```typescript
+  // Defined in the window
+  interface Window {
+    fs: typeof import("fs")
+    ipcRenderer: import("electron").IpcRenderer
+  }
+  ```
 
 - **packages/renderer/src/main.ts**
 
-    ```typescript
-    // Use Electron and NodeJS API in the Renderer-process
-    console.log("fs", window.fs)
-    console.log("ipcRenderer", window.ipcRenderer)
-    ```
+  ```typescript
+  // Use Electron and NodeJS API in the Renderer-process
+  console.log("fs", window.fs)
+  console.log("ipcRenderer", window.ipcRenderer)
+  ```
 
 ## Use SerialPort, SQLite3, or other node-native addons in the Main-process
 
 - First, you need to make sure that the dependencies in the `package.json` are NOT in the "devDependencies". Because the project will need them after packaged.
 
 - Main-process, Preload-script are also built with Vite, and they're built as [build.lib](https://vitejs.dev/config/#build-lib).  
-    So they just need to configure Rollup.
+   So they just need to configure Rollup.
 
 **Click to see more** 👉 [packages/main/vite.config.ts](https://github.com/ch99q/vite-solid-electron/blob/main/packages/main/vite.config.ts)
 
@@ -119,13 +119,13 @@ export default {
     lib: {
       entry: "index.ts",
       formats: ["cjs"],
-      fileName: () => "[name].js",
+      fileName: () => "[name].js"
     },
     rollupOptions: {
       // configuration here
-      external: ["serialport", "sqlite3"],
-    },
-  },
+      external: ["serialport", "sqlite3"]
+    }
+  }
 }
 ```
 
@@ -140,7 +140,6 @@ export default {
 ## Result
 
 <img width="400px" src="https://raw.githubusercontent.com/caoxiemeihao/blog/main/vite-solid-electron/react-win.png" />
-
 
 ## Special thanks
 

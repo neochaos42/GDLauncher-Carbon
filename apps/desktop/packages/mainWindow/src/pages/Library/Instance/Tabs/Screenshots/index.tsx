@@ -1,15 +1,15 @@
-import { Trans } from "@gd/i18n";
-import { Checkbox } from "@gd/ui";
-import { For, Show, createEffect } from "solid-js";
-import pictureImage from "/assets/images/icons/picture.png";
-import { createStore } from "solid-js/store";
-import { format } from "date-fns";
-import { getTitleByDays } from "@/utils/helpers";
+import { Trans } from "@gd/i18n"
+import { Checkbox } from "@gd/ui"
+import { For, Show, createEffect } from "solid-js"
+import pictureImage from "/assets/images/icons/picture.png"
+import { createStore } from "solid-js/store"
+import { format } from "date-fns"
+import { getTitleByDays } from "@/utils/helpers"
 
-type ScreenshotsType = {
-  img: string;
-  date: string;
-};
+interface ScreenshotsType {
+  img: string
+  date: string
+}
 
 const screenshots: ScreenshotsType[] = [
   // {
@@ -36,7 +36,7 @@ const screenshots: ScreenshotsType[] = [
   //   img: screenshot1,
   //   date: "2023-01-29T09:20:53.513Z"
   // }
-];
+]
 
 const NoMods = () => {
   return (
@@ -54,53 +54,51 @@ const NoMods = () => {
         </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
 interface MappedScreenshots extends ScreenshotsType {
-  timestamp: Date;
-  days: number;
+  timestamp: Date
+  days: number
 }
 
-interface FilteredScreenshots {
-  [timestamp: string]: MappedScreenshots[];
-}
+type FilteredScreenshots = Record<string, MappedScreenshots[]>
 
 const Screenshots = () => {
   const [filteredScreenshots, setFilteredScreenshots] =
-    createStore<FilteredScreenshots>({});
+    createStore<FilteredScreenshots>({})
 
   createEffect(() => {
-    const filteredscreenshots: MappedScreenshots[] = [];
+    const filteredscreenshots: MappedScreenshots[] = []
     screenshots.map((screenshot) => {
-      const fileBirthdate = new Date(screenshot.date);
-      const timeDiff: number = Date.now() - (fileBirthdate as any);
-      const days = Math.floor(timeDiff / 1000) / 60 / 60 / 24;
+      const fileBirthdate = new Date(screenshot.date)
+      const timeDiff: number = Date.now() - (fileBirthdate as any)
+      const days = Math.floor(timeDiff / 1000) / 60 / 60 / 24
       filteredscreenshots.push({
         ...screenshot,
         timestamp: fileBirthdate,
         days
-      });
-    });
+      })
+    })
     const sortedScreenshots = filteredscreenshots.sort(
       (a, b) => (b.timestamp as any) - (a.timestamp as any)
-    );
+    )
 
-    const hashmapDates = new Map();
+    const hashmapDates = new Map()
 
     for (const screenshot of sortedScreenshots) {
       if (hashmapDates.has(screenshot.days)) {
         hashmapDates.set(screenshot.days, [
           ...hashmapDates.get(screenshot.days),
           screenshot
-        ]);
+        ])
       } else {
-        hashmapDates.set(screenshot.days, [screenshot]);
+        hashmapDates.set(screenshot.days, [screenshot])
       }
     }
 
-    setFilteredScreenshots(Object.fromEntries(hashmapDates));
-  });
+    setFilteredScreenshots(Object.fromEntries(hashmapDates))
+  })
 
   return (
     <div>
@@ -182,7 +180,7 @@ const Screenshots = () => {
         </Show>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Screenshots;
+export default Screenshots

@@ -1,22 +1,22 @@
-import { rspc } from "@/utils/rspcClient";
-import { Trans } from "@gd/i18n";
-import { Button } from "@gd/ui";
+import { rspc } from "@/utils/rspcClient"
+import { Trans } from "@gd/i18n"
+import { Button } from "@gd/ui"
 
-type Props = {
-  nextStep: () => void;
-};
+interface Props {
+  nextStep: () => void
+}
 
 const FirstStep = (props: Props) => {
   const accounts = rspc.createQuery(() => ({
     queryKey: ["account.getAccounts"]
-  }));
+  }))
   const activeUuid = rspc.createQuery(() => ({
     queryKey: ["account.getActiveUuid"]
-  }));
+  }))
 
   const currentAccount = accounts.data?.find(
     (account) => account.uuid === activeUuid.data
-  );
+  )
 
   return (
     <div class="flex flex-col justify-between box-border h-full lg:w-160">
@@ -39,14 +39,14 @@ const FirstStep = (props: Props) => {
           type="primary"
           size="large"
           onClick={() => {
-            props.nextStep();
+            props.nextStep()
           }}
         >
           <Trans key="onboarding.next" />
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FirstStep;
+export default FirstStep

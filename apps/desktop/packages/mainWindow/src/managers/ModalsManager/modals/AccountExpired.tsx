@@ -1,26 +1,26 @@
-import { useGDNavigate } from "@/managers/NavigationManager";
-import { Trans } from "@gd/i18n";
-import { Button } from "@gd/ui";
-import ModalLayout from "../ModalLayout";
-import { ModalProps, useModal } from "..";
-import { rspc } from "@/utils/rspcClient";
-import { useGlobalStore } from "@/components/GlobalStoreContext";
+import { useGDNavigate } from "@/managers/NavigationManager"
+import { Trans } from "@gd/i18n"
+import { Button } from "@gd/ui"
+import ModalLayout from "../ModalLayout"
+import { ModalProps, useModal } from ".."
+import { rspc } from "@/utils/rspcClient"
+import { useGlobalStore } from "@/components/GlobalStoreContext"
 
 function AccountExpired(props: ModalProps) {
-  const navigate = useGDNavigate();
-  const modalsContext = useModal();
-  const globalStore = useGlobalStore();
+  const navigate = useGDNavigate()
+  const modalsContext = useModal()
+  const globalStore = useGlobalStore()
 
   const launchInstanceMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.launchInstance"]
-  }));
+  }))
 
   const email = () => {
-    const account = globalStore.currentlySelectedAccount();
-    if (!account) return "";
+    const account = globalStore.currentlySelectedAccount()
+    if (!account) return ""
 
-    return account.type.type === "microsoft" ? account.type.value.email : "";
-  };
+    return account.type.type === "microsoft" ? account.type.value.email : ""
+  }
 
   return (
     <ModalLayout noHeader={props.noHeader} title={props?.title}>
@@ -42,8 +42,8 @@ function AccountExpired(props: ModalProps) {
             type="secondary"
             size="large"
             onClick={() => {
-              launchInstanceMutation.mutate(props.data?.id);
-              modalsContext?.closeModal();
+              launchInstanceMutation.mutate(props.data?.id)
+              modalsContext?.closeModal()
             }}
           >
             <div class="flex items-center gap-2">
@@ -55,8 +55,8 @@ function AccountExpired(props: ModalProps) {
             type="primary"
             size="large"
             onClick={() => {
-              navigate("/?addMicrosoftAccount=true");
-              modalsContext?.closeModal();
+              navigate("/?addMicrosoftAccount=true")
+              modalsContext?.closeModal()
             }}
           >
             <div class="flex items-center gap-2">
@@ -67,7 +67,7 @@ function AccountExpired(props: ModalProps) {
         </div>
       </div>
     </ModalLayout>
-  );
+  )
 }
 
-export default AccountExpired;
+export default AccountExpired

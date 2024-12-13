@@ -1,11 +1,11 @@
-import { createStore } from "solid-js/store";
+import { createStore } from "solid-js/store"
 
 export interface BoundsSize {
-  width: number;
-  height: number;
-  useVertical: boolean;
-  useFallbackAd: boolean;
-  shouldShow: boolean;
+  width: number
+  height: number
+  useVertical: boolean
+  useFallbackAd: boolean
+  shouldShow: boolean
 }
 
 export const [adSize, _setAdSize] = createStore<BoundsSize>({
@@ -14,26 +14,26 @@ export const [adSize, _setAdSize] = createStore<BoundsSize>({
   useVertical: false,
   useFallbackAd: false,
   shouldShow: true
-});
+})
 
 const init = async () => {
-  const bounds = await window.getAdSize();
-  _setAdSize(bounds);
+  const bounds = await window.getAdSize()
+  _setAdSize(bounds)
   window.adSizeChanged((_, newBounds: Omit<BoundsSize, "shouldShow">) => {
     _setAdSize({
       ...newBounds,
       shouldShow: false
-    });
+    })
 
     setTimeout(() => {
       _setAdSize({
         ...newBounds,
         shouldShow: true
-      });
-    }, 100);
-  });
-};
+      })
+    }, 100)
+  })
+}
 
-init();
+init()
 
-export default adSize;
+export default adSize

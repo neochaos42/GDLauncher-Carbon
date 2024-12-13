@@ -1,14 +1,7 @@
-import {
-  createEffect,
-  createSignal,
-  For,
-  JSX,
-  onCleanup,
-  Show,
-} from "solid-js";
-import { Button } from "../Button";
-import { Portal } from "solid-js/web";
-import { useFloating } from "solid-floating-ui";
+import { createEffect, createSignal, For, JSX, onCleanup, Show } from "solid-js"
+import { Button } from "../Button"
+import { Portal } from "solid-js/web"
+import { useFloating } from "solid-floating-ui"
 import {
   autoUpdate,
   flip,
@@ -16,14 +9,14 @@ import {
   offset,
   Placement,
   shift,
-  size,
-} from "@floating-ui/dom";
-import { cva, type VariantProps } from "class-variance-authority";
+  size
+} from "@floating-ui/dom"
+import { cva, type VariantProps } from "class-variance-authority"
 
-type Option = {
-  label: string | JSX.Element | Element;
-  key: string | number;
-};
+interface Option {
+  label: string | JSX.Element | Element
+  key: string | number
+}
 
 const dropdownButton = cva(
   "flex justify-between transition-all transition-200 ease-in-out font-semibold py-2 items-center min-h-10 box-border",
@@ -31,164 +24,163 @@ const dropdownButton = cva(
     variants: {
       error: {
         true: "border-2 border-solid border-red-500",
-        false: "border-0",
+        false: "border-0"
       },
       disabled: {
         true: "text-lightSlate-700 cursor-not-allowed",
-        false: "",
+        false: ""
       },
       menuOpened: {
         true: "text-lightSlate-50 outline outline-offset-2 outline-darkSlate-500 hover:outline-darkSlate-500",
         false:
-          "text-lightSlate-700 hover:text-lightSlate-50 outline-none hover:outline-darkSlate-600",
+          "text-lightSlate-700 hover:text-lightSlate-50 outline-none hover:outline-darkSlate-600"
       },
       rounded: {
         true: "rounded-full",
-        false: "rounded-md",
+        false: "rounded-md"
       },
       btnDropdown: {
         true: "group-hover:bg-primary-300 border-l-1 border-solid border-primary-300 bg-primary-500 duration-100 hover:bg-primary-300",
-        false: "group px-4",
-      },
+        false: "group px-4"
+      }
     },
     compoundVariants: [
       {
         disabled: false,
         btnDropdown: false,
-        class: "bg-darkSlate-700",
+        class: "bg-darkSlate-700"
       },
       {
         disabled: true,
         btnDropdown: false,
-        class: "bg-darkSlate-800",
-      },
+        class: "bg-darkSlate-800"
+      }
     ],
     defaultVariants: {
       error: false,
       disabled: false,
       menuOpened: false,
       rounded: false,
-      btnDropdown: false,
-    },
+      btnDropdown: false
+    }
   }
-);
+)
 
-type DropdownButtonProps = VariantProps<typeof dropdownButton>;
+type DropdownButtonProps = VariantProps<typeof dropdownButton>
 
 type Props = {
-  options: Option[];
-  value?: string | number | null | undefined;
-  error?: string | boolean;
-  disabled?: boolean;
-  rounded?: boolean;
-  label?: string;
-  onChange?: (_option: Option) => void;
-  class?: string;
-  containerClass?: string;
-  id?: string;
-  bgColorClass?: string;
-  textColorClass?: string;
-  btnDropdown?: boolean;
-  icon?: JSX.Element;
-  placeholder?: string;
-  placement?: "bottom" | "top";
-  menuPlacement?: Placement;
-} & DropdownButtonProps;
+  options: Option[]
+  value?: string | number | null | undefined
+  error?: string | boolean
+  disabled?: boolean
+  rounded?: boolean
+  label?: string
+  onChange?: (_option: Option) => void
+  class?: string
+  containerClass?: string
+  id?: string
+  bgColorClass?: string
+  textColorClass?: string
+  btnDropdown?: boolean
+  icon?: JSX.Element
+  placeholder?: string
+  placement?: "bottom" | "top"
+  menuPlacement?: Placement
+} & DropdownButtonProps
 
 interface DropDownButtonProps {
-  children: JSX.Element;
-  options: Option[];
-  value: string | number;
-  error?: boolean;
-  disabled?: boolean;
-  loading?: boolean;
-  rounded?: boolean;
-  label?: string;
-  onChange?: (_value: Option) => void;
-  onClick?: () => void;
-  class?: string;
-  id?: string;
-  bgColorClass?: string;
-  btnDropdown?: boolean;
-  icon?: JSX.Element;
-  menuPlacement?: Placement;
+  children: JSX.Element
+  options: Option[]
+  value: string | number
+  error?: boolean
+  disabled?: boolean
+  loading?: boolean
+  rounded?: boolean
+  label?: string
+  onChange?: (_value: Option) => void
+  onClick?: () => void
+  class?: string
+  id?: string
+  bgColorClass?: string
+  btnDropdown?: boolean
+  icon?: JSX.Element
+  menuPlacement?: Placement
 }
 
 const Dropdown = (props: Props) => {
   const incomingSelectedValue = () =>
     props.value
       ? props.options?.find((option) => option.key === props.value)
-      : props.options[0];
+      : props.options[0]
 
   const [selectedValue, setSelectedValue] = createSignal<Option | undefined>(
     // eslint-disable-next-line solid/reactivity
     incomingSelectedValue()
-  );
+  )
 
-  const [menuOpened, setMenuOpened] = createSignal(false);
-  const [focusIn, setFocusIn] = createSignal(false);
+  const [menuOpened, setMenuOpened] = createSignal(false)
+  const [focusIn, setFocusIn] = createSignal(false)
   const [buttonRef, setButtonRef] = createSignal<
     HTMLButtonElement | undefined
-  >();
-  const [menuRef, setMenuRef] = createSignal<HTMLUListElement | undefined>();
+  >()
+  const [menuRef, setMenuRef] = createSignal<HTMLUListElement | undefined>()
 
   createEffect(() => {
-    setSelectedValue(incomingSelectedValue());
-  });
+    setSelectedValue(incomingSelectedValue())
+  })
 
   const toggleMenu = () => {
-    if (props.disabled) return;
-    setMenuOpened(true);
+    if (props.disabled) return
+    setMenuOpened(true)
     setTimeout(() => {
-      setMenuOpened(false);
-    }, 100);
-  };
+      setMenuOpened(false)
+    }, 100)
+  }
 
   const position = useFloating(buttonRef, menuRef, {
     placement: props.menuPlacement || "bottom-start",
     middleware: [offset(10), flip(), shift(), hide(), size()],
     whileElementsMounted: (reference, floating, update) =>
       autoUpdate(reference, floating, update, {
-        animationFrame: true,
-      }),
-  });
+        animationFrame: true
+      })
+  })
 
   createEffect(() => {
-    if (position.middlewareData.hide?.referenceHidden) setMenuOpened(false);
-  });
+    if (position.middlewareData.hide?.referenceHidden) setMenuOpened(false)
+  })
 
-  onCleanup(() => setMenuOpened(false));
+  onCleanup(() => setMenuOpened(false))
 
   createEffect(() => {
     if (menuOpened() && menuRef() && selectedValue()) {
       const selectedOptionIndex = props.options.findIndex(
         (option) => option.key === selectedValue()?.key
-      );
+      )
 
       if (selectedOptionIndex !== -1) {
-        const selectedOption = (menuRef() as HTMLUListElement).children[
+        const selectedOption = menuRef()!.children[
           selectedOptionIndex
-        ] as HTMLElement;
+        ] as HTMLElement
 
-        const menuElement = menuRef() as HTMLElement;
-        const menuRect = menuElement.getBoundingClientRect();
-        const optionRect = selectedOption.getBoundingClientRect();
+        const menuElement = menuRef() as HTMLElement
+        const menuRect = menuElement.getBoundingClientRect()
+        const optionRect = selectedOption.getBoundingClientRect()
 
         const isOptionInView =
-          optionRect.top >= menuRect.top &&
-          optionRect.bottom <= menuRect.bottom;
+          optionRect.top >= menuRect.top && optionRect.bottom <= menuRect.bottom
 
         if (!isOptionInView) {
           const scrollMiddle =
             optionRect.top -
             menuRect.top +
             menuElement.scrollTop -
-            (menuRect.height / 2 - optionRect.height / 2);
-          menuElement.scrollTop = scrollMiddle;
+            (menuRect.height / 2 - optionRect.height / 2)
+          menuElement.scrollTop = scrollMiddle
         }
       }
     }
-  });
+  })
 
   return (
     <>
@@ -200,15 +192,15 @@ const Dropdown = (props: Props) => {
             menuOpened: menuOpened(),
             rounded: props.rounded,
             btnDropdown: props.btnDropdown,
-            class: `${props.class} ${props.bgColorClass} ${props.textColorClass}`,
+            class: `${props.class} ${props.bgColorClass} ${props.textColorClass}`
           })}
           onClick={() => {
-            if (props.disabled) return;
-            setMenuOpened(!menuOpened());
+            if (props.disabled) return
+            setMenuOpened(!menuOpened())
           }}
           onBlur={() => {
             if (!focusIn()) {
-              setMenuOpened(false);
+              setMenuOpened(false)
             }
           }}
           ref={setButtonRef}
@@ -229,16 +221,16 @@ const Dropdown = (props: Props) => {
               ref={setMenuRef}
               class="absolute h-max max-h-60 bottom-0 overflow-y-auto overflow-x-hidden text-lightSlate-700 shadow-md shadow-darkSlate-900 list-none m-0 p-0 z-100 min-w-32 max-w-200"
               onMouseOut={() => {
-                setFocusIn(false);
+                setFocusIn(false)
               }}
               onMouseOver={() => {
-                setFocusIn(true);
+                setFocusIn(true)
               }}
               style={{
                 width: buttonRef()?.offsetWidth + "px" || "auto",
                 "max-width": buttonRef()?.offsetWidth + "px" || "auto",
                 top: `${position.y ?? 0}px`,
-                left: `${position.x ?? 0}px`,
+                left: `${position.x ?? 0}px`
               }}
             >
               <For each={props.options}>
@@ -247,15 +239,15 @@ const Dropdown = (props: Props) => {
                     class="first:rounded-t last:rounded-b hover:bg-darkSlate-800 py-2 px-4 block break-all text-lightSlate-700 no-underline w-full box-border"
                     classList={{
                       "bg-darkSlate-700": selectedValue()?.key !== option.key,
-                      "bg-darkSlate-800": selectedValue()?.key === option.key,
+                      "bg-darkSlate-800": selectedValue()?.key === option.key
                     }}
                     onClick={(e) => {
-                      e.preventDefault();
-                      e.stopImmediatePropagation();
-                      e.stopPropagation();
-                      setSelectedValue(option);
-                      props.onChange?.(option);
-                      toggleMenu();
+                      e.preventDefault()
+                      e.stopImmediatePropagation()
+                      e.stopPropagation()
+                      setSelectedValue(option)
+                      props.onChange?.(option)
+                      toggleMenu()
                     }}
                   >
                     {option.label}
@@ -270,13 +262,13 @@ const Dropdown = (props: Props) => {
         <div class="text-red-500 text-left mt-2 font-light">{props.error}</div>
       </Show>
     </>
-  );
-};
+  )
+}
 
 const DropDownButton = (props: DropDownButtonProps) => {
   const handleChange = (option: Option) => {
-    props.onChange?.(option);
-  };
+    props.onChange?.(option)
+  }
 
   return (
     <div class="flex">
@@ -285,7 +277,7 @@ const DropDownButton = (props: DropDownButtonProps) => {
         loading={props.loading}
         class="rounded-r-0 pr-4 pl-4 flex gap-1"
         onClick={() => {
-          if (!props.disabled && !props.loading) props?.onClick?.();
+          if (!props.disabled && !props.loading) props?.onClick?.()
         }}
       >
         <span>{props.children}</span>
@@ -301,9 +293,9 @@ const DropDownButton = (props: DropDownButtonProps) => {
         menuPlacement={props.menuPlacement}
       />
     </div>
-  );
-};
+  )
+}
 
-Dropdown.button = DropDownButton;
+Dropdown.button = DropDownButton
 
-export { Dropdown };
+export { Dropdown }

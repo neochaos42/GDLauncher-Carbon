@@ -1,45 +1,44 @@
-/* eslint-disable i18next/no-literal-string */
-import ContentWrapper from "@/components/ContentWrapper";
-import { useGDNavigate } from "@/managers/NavigationManager";
-import { Trans } from "@gd/i18n";
-import { Button, Skeleton, Tab, TabList, Tabs, Tooltip } from "@gd/ui";
+import ContentWrapper from "@/components/ContentWrapper"
+import { useGDNavigate } from "@/managers/NavigationManager"
+import { Trans } from "@gd/i18n"
+import { Button, Skeleton, Tab, TabList, Tabs, Tooltip } from "@gd/ui"
 import {
   Outlet,
   useLocation,
   useParams,
   useRouteData,
   useSearchParams
-} from "@solidjs/router";
-import { For, Match, Show, Switch, createSignal } from "solid-js";
-import fetchData from "../mods.overview";
-import { format } from "date-fns";
-import Authors from "@/pages/Library/Instance/Info/Authors";
-import ExploreVersionsNavbar from "@/components/ExploreVersionsNavbar";
+} from "@solidjs/router"
+import { For, Match, Show, Switch, createSignal } from "solid-js"
+import fetchData from "../mods.overview"
+import { format } from "date-fns"
+import Authors from "@/pages/Library/Instance/Info/Authors"
+import ExploreVersionsNavbar from "@/components/ExploreVersionsNavbar"
 import InfiniteScrollVersionsQueryWrapper, {
   useInfiniteVersionsQuery
-} from "@/components/InfiniteScrollVersionsQueryWrapper";
-import ModDownloadButton from "@/components/ModDownloadButton";
-import { rspc } from "@/utils/rspcClient";
+} from "@/components/InfiniteScrollVersionsQueryWrapper"
+import ModDownloadButton from "@/components/ModDownloadButton"
+import { rspc } from "@/utils/rspcClient"
 
 const getTabIndexFromPath = (path: string) => {
   if (path.match(/\/(modpacks|mods)\/.+\/.+/g)) {
     if (path.endsWith("/changelog")) {
-      return 1;
+      return 1
     } else if (path.endsWith("/screenshots")) {
-      return 2;
+      return 2
     } else if (path.endsWith("/versions")) {
-      return 3;
+      return 3
     } else {
-      return 0;
+      return 0
     }
   }
 
-  return 0;
-};
+  return 0
+}
 
 const ModsInfiniteScrollQueryWrapper = () => {
-  const params = useParams();
-  const routeData: ReturnType<typeof fetchData> = useRouteData();
+  const params = useParams()
+  const routeData: ReturnType<typeof fetchData> = useRouteData()
 
   return (
     <InfiniteScrollVersionsQueryWrapper
@@ -48,29 +47,29 @@ const ModsInfiniteScrollQueryWrapper = () => {
     >
       <ModExplore />
     </InfiniteScrollVersionsQueryWrapper>
-  );
-};
+  )
+}
 
 const ModExplore = () => {
-  const navigate = useGDNavigate();
-  const params = useParams();
-  const routeData: ReturnType<typeof fetchData> = useRouteData();
-  const infiniteQuery = useInfiniteVersionsQuery();
+  const navigate = useGDNavigate()
+  const params = useParams()
+  const routeData: ReturnType<typeof fetchData> = useRouteData()
+  const infiniteQuery = useInfiniteVersionsQuery()
 
-  const location = useLocation();
-  const indexTab = () => getTabIndexFromPath(location.pathname);
+  const location = useLocation()
+  const indexTab = () => getTabIndexFromPath(location.pathname)
 
-  const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams()
 
-  const instanceId = () => parseInt(searchParams.instanceId, 10);
+  const instanceId = () => parseInt(searchParams.instanceId, 10)
 
   const instanceDetails = rspc.createQuery(() => ({
     queryKey: ["instance.getInstanceDetails", instanceId()]
-  }));
+  }))
 
   const instanceMods = rspc.createQuery(() => ({
     queryKey: ["instance.getInstanceMods", instanceId()]
-  }));
+  }))
 
   const instancePages = () => [
     {
@@ -89,17 +88,17 @@ const ModExplore = () => {
       label: "Versions",
       path: `/mods/${params.id}/${params.platform}/versions`
     }
-  ];
+  ]
 
-  let refStickyTabs: HTMLDivElement;
-  const [isSticky, setIsSticky] = createSignal(false);
+  let refStickyTabs: HTMLDivElement
+  const [isSticky, setIsSticky] = createSignal(false)
 
-  const isFetching = () => routeData.modpackDetails?.isLoading;
+  const isFetching = () => routeData.modpackDetails?.isLoading
 
   const projectId = () =>
     routeData.isCurseforge
       ? routeData.modpackDetails.data?.data.id
-      : routeData.modpackDetails.data?.id;
+      : routeData.modpackDetails.data?.id
 
   return (
     <ContentWrapper>
@@ -109,11 +108,11 @@ const ModExplore = () => {
           "scrollbar-gutter": "stable"
         }}
         ref={(el) => {
-          infiniteQuery.setParentRef(el);
+          infiniteQuery.setParentRef(el)
         }}
         onScroll={() => {
-          const rect = refStickyTabs.getBoundingClientRect();
-          setIsSticky(rect.top <= 104);
+          const rect = refStickyTabs.getBoundingClientRect()
+          setIsSticky(rect.top <= 104)
         }}
       >
         <div class="flex flex-col justify-between ease-in-out transition-all items-stretch h-58">
@@ -148,11 +147,11 @@ const ModExplore = () => {
                     if (routeData.isCurseforge) {
                       window.openExternalLink(
                         `https://www.curseforge.com/minecraft/mc-mods/${routeData.modpackDetails.data?.data.slug}`
-                      );
+                      )
                     } else {
                       window.openExternalLink(
                         `https://modrinth.com/mod/${routeData.modpackDetails.data?.slug}`
-                      );
+                      )
                     }
                   }}
                 >
@@ -219,10 +218,9 @@ const ModExplore = () => {
                               {format(
                                 new Date(
                                   routeData.isCurseforge
-                                    ? (routeData.modpackDetails.data?.data
-                                        .dateCreated as string)
-                                    : (routeData.modpackDetails.data
-                                        ?.published as string)
+                                    ? routeData.modpackDetails.data?.data
+                                        .dateCreated!
+                                    : routeData.modpackDetails.data?.published!
                                 ).getTime(),
                                 "P"
                               )}
@@ -271,7 +269,7 @@ const ModExplore = () => {
             <div class="bg-darkSlate-800 w-full">
               <div
                 ref={(el) => {
-                  refStickyTabs = el;
+                  refStickyTabs = el
                 }}
                 class="sticky top-0 flex flex-col px-4 pb-0 z-10 bg-darkSlate-800"
               >
@@ -299,7 +297,7 @@ const ModExplore = () => {
                               onClick={() => {
                                 navigate(`${page.path}${location.search}`, {
                                   replace: true
-                                });
+                                })
                               }}
                             >
                               {page.label}
@@ -337,7 +335,7 @@ const ModExplore = () => {
         </div>
       </div>
     </ContentWrapper>
-  );
-};
+  )
+}
 
-export default ModsInfiniteScrollQueryWrapper;
+export default ModsInfiniteScrollQueryWrapper

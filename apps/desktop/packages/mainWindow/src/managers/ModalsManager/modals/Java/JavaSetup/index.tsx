@@ -1,20 +1,20 @@
-import { createSignal, Match, Switch } from "solid-js";
-import FirstStep from "./firstStep";
-import Automatic from "./automaticStep";
-import ManualStep from "./manualStep";
-import ModalLayout from "@/managers/ModalsManager/ModalLayout";
-import { ModalProps } from "@/managers/ModalsManager";
+import { createSignal, Match, Switch } from "solid-js"
+import FirstStep from "./firstStep"
+import Automatic from "./automaticStep"
+import ManualStep from "./manualStep"
+import ModalLayout from "@/managers/ModalsManager/ModalLayout"
+import { ModalProps } from "@/managers/ModalsManager"
 
-export type StepsProps = {
-  nextStep?: (_step: string) => void;
-};
+export interface StepsProps {
+  nextStep?: (_step: string) => void
+}
 
 const JavaSetup = (props: ModalProps) => {
-  const [currentStep, setCurrentStep] = createSignal<string>("intro");
+  const [currentStep, setCurrentStep] = createSignal<string>("intro")
 
   const nextStep = (step: string) => {
-    setCurrentStep(step);
-  };
+    setCurrentStep(step)
+  }
 
   return (
     <ModalLayout
@@ -36,7 +36,7 @@ const JavaSetup = (props: ModalProps) => {
         </Switch>
       </div>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default JavaSetup;
+export default JavaSetup

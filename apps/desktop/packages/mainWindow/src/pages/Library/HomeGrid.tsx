@@ -7,7 +7,7 @@ import {
   Popover,
   Skeleton,
   Slider
-} from "@gd/ui";
+} from "@gd/ui"
 import {
   For,
   Match,
@@ -18,28 +18,28 @@ import {
   createResource,
   createSignal,
   onMount
-} from "solid-js";
-import { Trans, useTransContext } from "@gd/i18n";
-import InstanceTile from "@/components/InstanceTile";
-import skull from "/assets/images/icons/skull.png";
-import DefaultImg from "/assets/images/default-instance-img.png";
-import UnstableCard from "@/components/UnstableCard";
-import FeaturedModpackTile from "./FeaturedModpackTile";
+} from "solid-js"
+import { Trans, useTransContext } from "@gd/i18n"
+import InstanceTile from "@/components/InstanceTile"
+import skull from "/assets/images/icons/skull.png"
+import DefaultImg from "/assets/images/default-instance-img.png"
+import UnstableCard from "@/components/UnstableCard"
+import FeaturedModpackTile from "./FeaturedModpackTile"
 import {
   InstancesGroupBy,
   InstancesSortBy,
   ListInstance,
   ValidListInstance
-} from "@gd/core_module/bindings";
-import { initNews } from "@/utils/news";
-import { rspc } from "@/utils/rspcClient";
-import { createStore, reconcile } from "solid-js/store";
-import { useGlobalStore } from "@/components/GlobalStoreContext";
+} from "@gd/core_module/bindings"
+import { initNews } from "@/utils/news"
+import { rspc } from "@/utils/rspcClient"
+import { createStore, reconcile } from "solid-js/store"
+import { useGlobalStore } from "@/components/GlobalStoreContext"
 
 const NewsWrapper = () => {
-  const newsInitializer = initNews();
+  const newsInitializer = initNews()
 
-  const [news] = createResource(() => newsInitializer);
+  const [news] = createResource(() => newsInitializer)
 
   return (
     <div class="flex gap-4">
@@ -47,9 +47,9 @@ const NewsWrapper = () => {
         <Switch>
           <Match when={(news()?.length || 0) > 0}>
             <News
-              slides={news()!}
+              slides={news()}
               onClick={(news) => {
-                window.openExternalLink(news.url || "");
+                window.openExternalLink(news.url || "")
               }}
               fallBackImg={DefaultImg}
             />
@@ -61,96 +61,97 @@ const NewsWrapper = () => {
       </div>
       <FeaturedModpackTile />
     </div>
-  );
-};
+  )
+}
 
-let initAnimationRan = false;
+let initAnimationRan = false
 
 const HomeGrid = () => {
-  const [t] = useTransContext();
+  const [t] = useTransContext()
 
-  const [filter, setFilter] = createSignal("");
+  const [filter, setFilter] = createSignal("")
 
-  const globalStore = useGlobalStore();
+  const globalStore = useGlobalStore()
 
-  const [instancesTileSize, setInstancesTileSize] = createSignal(2);
+  const [instancesTileSize, setInstancesTileSize] = createSignal(2)
 
   const [instances, setInstances] = createStore<
     {
-      id: string | number | null;
-      name: string;
-      instances: ListInstance[];
+      id: string | number | null
+      name: string
+      instances: ListInstance[]
     }[]
-  >([]);
+  >([])
 
   createEffect(() => {
-    setInstancesTileSize(globalStore.settings.data?.instancesTileSize!);
-  });
+    setInstancesTileSize(globalStore.settings.data?.instancesTileSize!)
+  })
 
   const settingsMutation = rspc.createMutation(() => ({
     mutationKey: ["settings.setSettings"]
-  }));
+  }))
 
-  let inputRef: HTMLInputElement | undefined;
+  let inputRef: HTMLInputElement | undefined
 
-  type Groups = {
-    [key: string | number]: {
-      id: string | number | null;
-      name: string;
-      instances: ListInstance[];
-    };
-  };
+  type Groups = Record<
+    string | number,
+    {
+      id: string | number | null
+      name: string
+      instances: ListInstance[]
+    }
+  >
 
   const filteredGroups = createMemo(() => {
-    let timeStart = performance.now();
+    const timeStart = performance.now()
 
-    const _groups: Groups = {};
+    const _groups: Groups = {}
 
-    const nameFilter = filter().replaceAll(" ", "").toLowerCase();
+    const nameFilter = filter().replaceAll(" ", "").toLowerCase()
 
     if (globalStore.settings.data?.instancesGroupBy === "group") {
-      _groups["favorites"] = {
+      _groups.favorites = {
         id: -1,
         name: t("favorites"),
         instances: []
-      };
+      }
     }
 
     for (const instance of globalStore.instances.data || []) {
-      let groupId = null;
-      let groupName = null;
+      let groupId = null
+      let groupName = null
 
       const validInstance =
-        instance.status.status === "valid" ? instance.status.value : undefined;
+        instance.status.status === "valid" ? instance.status.value : undefined
 
       if (globalStore.settings.data?.instancesGroupBy === "group") {
         const _groupName = globalStore.instanceGroups.data?.find(
           (group) => group.id === instance.group_id
-        )?.name;
+        )?.name
 
         groupName =
-          _groupName === "localize➽default" ? t("default") : _groupName;
-        groupId = instance.group_id;
+          _groupName === "localize➽default" ? t("default") : _groupName
+        groupId = instance.group_id
       } else if (
         globalStore.settings.data?.instancesGroupBy === "gameVersion"
       ) {
         if (instance.status.status === "valid") {
-          groupName = validInstance?.mc_version;
+          groupName = validInstance?.mc_version
         }
       } else if (globalStore.settings.data?.instancesGroupBy === "modloader") {
         if (instance.status.status === "valid") {
-          groupName = validInstance?.modloader || "vanilla";
+          groupName = validInstance?.modloader || "vanilla"
         }
       } else if (
         globalStore.settings.data?.instancesGroupBy === "modplatform"
       ) {
         if (instance.status.status === "valid") {
-          groupName = validInstance?.modpack?.type;
+          groupName = validInstance?.modpack?.type
         }
       }
 
       if (!groupName) {
-        continue;
+        continue
       }
 
       if (!_groups[groupName]) {
@@ -158,7 +159,7 @@ const HomeGrid = () => {
           id: groupId,
           name: groupName,
           instances: []
-        };
+        }
       }
 
       if (
@@ -168,35 +169,35 @@ const HomeGrid = () => {
           globalStore.settings.data?.instancesGroupBy === "group" &&
           instance.favorite
         ) {
-          _groups["favorites"].instances.push(instance);
+          _groups.favorites.instances.push(instance)
         }
-        _groups[groupName].instances.push(instance);
+        _groups[groupName].instances.push(instance)
       }
     }
 
     // sort groups
     for (const key in _groups) {
       _groups[key].instances.sort((a, b) => {
-        let comparisonResult = 0; // Default comparison result
+        let comparisonResult = 0 // Default comparison result
 
         if (globalStore.settings.data?.instancesSortBy === "name") {
-          comparisonResult = a.name.localeCompare(b.name);
+          comparisonResult = a.name.localeCompare(b.name)
         } else if (
           globalStore.settings.data?.instancesSortBy === "mostPlayed"
         ) {
-          comparisonResult = (a.seconds_played || 0) - (b.seconds_played || 0);
+          comparisonResult = (a.seconds_played || 0) - (b.seconds_played || 0)
         } else if (
           globalStore.settings.data?.instancesSortBy === "lastPlayed"
         ) {
-          const aLastPlayed = a.last_played ? Date.parse(a.last_played) : 0;
-          const bLastPlayed = b.last_played ? Date.parse(b.last_played) : 0;
-          comparisonResult = aLastPlayed - bLastPlayed;
+          const aLastPlayed = a.last_played ? Date.parse(a.last_played) : 0
+          const bLastPlayed = b.last_played ? Date.parse(b.last_played) : 0
+          comparisonResult = aLastPlayed - bLastPlayed
         } else if (
           globalStore.settings.data?.instancesSortBy === "lastUpdated"
         ) {
-          const aLastUpdated = a.date_updated ? Date.parse(a.date_updated) : 0;
-          const bLastUpdated = b.date_updated ? Date.parse(b.date_updated) : 0;
-          comparisonResult = aLastUpdated - bLastUpdated;
+          const aLastUpdated = a.date_updated ? Date.parse(a.date_updated) : 0
+          const bLastUpdated = b.date_updated ? Date.parse(b.date_updated) : 0
+          comparisonResult = aLastUpdated - bLastUpdated
         } else if (
           globalStore.settings.data?.instancesSortBy === "gameVersion"
         ) {
@@ -206,32 +207,32 @@ const HomeGrid = () => {
             (b.status.value as ValidListInstance).mc_version || "",
             undefined,
             { numeric: true, sensitivity: "base" }
-          );
+          )
         } else if (globalStore.settings.data?.instancesSortBy === "created") {
-          const aCreated = a.date_created ? Date.parse(a.date_created) : 0;
-          const bCreated = b.date_created ? Date.parse(b.date_created) : 0;
-          comparisonResult = aCreated - bCreated;
+          const aCreated = a.date_created ? Date.parse(a.date_created) : 0
+          const bCreated = b.date_created ? Date.parse(b.date_created) : 0
+          comparisonResult = aCreated - bCreated
         }
 
         // If descending order is selected, invert the comparison result
         if (!globalStore.settings.data?.instancesSortByAsc) {
-          comparisonResult = -comparisonResult;
+          comparisonResult = -comparisonResult
         }
 
         // Use name as a secondary sort criteria to ensure consistent order where primary criteria are equal
-        return comparisonResult || a.name.localeCompare(b.name);
-      });
+        return comparisonResult || a.name.localeCompare(b.name)
+      })
     }
 
     console.log(
       `Recomputing filtered groups ${performance.now() - timeStart} ms`
-    );
+    )
 
-    return _groups;
-  });
+    return _groups
+  })
 
   const iterableFilteredGroups = createMemo(() => {
-    const iterable = Object.values(filteredGroups());
+    const iterable = Object.values(filteredGroups())
 
     if (globalStore.settings.data?.instancesGroupBy === "gameVersion") {
       iterable.sort((a, b) => {
@@ -239,42 +240,42 @@ const HomeGrid = () => {
           return a.name.localeCompare(b.name, undefined, {
             numeric: true,
             sensitivity: "base"
-          });
+          })
         } else {
           return b.name.localeCompare(a.name, undefined, {
             numeric: true,
             sensitivity: "base"
-          });
+          })
         }
-      });
+      })
     } else {
       iterable.sort((a, b) => {
         if (a.name === t("favorites")) {
-          return -1;
+          return -1
         }
 
         if (b.name === t("favorites")) {
-          return 1;
+          return 1
         }
 
         if (globalStore.settings.data?.instancesGroupByAsc) {
-          return a.name.localeCompare(b.name);
+          return a.name.localeCompare(b.name)
         } else {
-          return b.name.localeCompare(a.name);
+          return b.name.localeCompare(a.name)
         }
-      });
+      })
     }
 
-    return iterable;
-  });
+    return iterable
+  })
 
   createEffect(() => {
-    setInstances(reconcile(iterableFilteredGroups()));
-  });
+    setInstances(reconcile(iterableFilteredGroups()))
+  })
 
   const sortByOptions: {
-    key: InstancesSortBy;
-    label: string;
+    key: InstancesSortBy
+    label: string
   }[] = [
     {
       key: "name",
@@ -300,11 +301,11 @@ const HomeGrid = () => {
       key: "created",
       label: t("general.created")
     }
-  ];
+  ]
 
   const groupByOptions: {
-    key: InstancesGroupBy;
-    label: string;
+    key: InstancesGroupBy
+    label: string
   }[] = [
     {
       key: "group",
@@ -322,7 +323,7 @@ const HomeGrid = () => {
       key: "modplatform",
       label: t("general.modplatform")
     }
-  ];
+  ]
 
   return (
     <div class="p-6">
@@ -369,7 +370,7 @@ const HomeGrid = () => {
                     <Match when={filter()}>
                       <div
                         onClick={() => {
-                          setFilter("");
+                          setFilter("")
                         }}
                         class="i-ri:close-line hover:bg-white"
                       />
@@ -401,23 +402,23 @@ const HomeGrid = () => {
                           steps={1}
                           value={instancesTileSize()}
                           onChange={(value) => {
-                            if (!value) return;
+                            if (!value) return
 
-                            setInstancesTileSize(value);
+                            setInstancesTileSize(value)
                           }}
                           OnRelease={(value) => {
                             if (
                               value ===
                               globalStore.settings.data?.instancesTileSize
                             ) {
-                              return;
+                              return
                             }
 
                             settingsMutation.mutate({
                               instancesTileSize: {
                                 Set: value
                               }
-                            });
+                            })
                           }}
                         />
                       </div>
@@ -437,7 +438,7 @@ const HomeGrid = () => {
                               instancesSortBy: {
                                 Set: val.key as InstancesSortBy
                               }
-                            });
+                            })
                           }}
                         />
                         <div
@@ -454,7 +455,7 @@ const HomeGrid = () => {
                                 Set: !globalStore.settings.data
                                   ?.instancesSortByAsc
                               }
-                            });
+                            })
                           }}
                         />
                       </div>
@@ -474,7 +475,7 @@ const HomeGrid = () => {
                               instancesGroupBy: {
                                 Set: val.key as InstancesGroupBy
                               }
-                            });
+                            })
                           }}
                         />
                         <div
@@ -491,7 +492,7 @@ const HomeGrid = () => {
                                 Set: !globalStore.settings.data
                                   ?.instancesGroupByAsc
                               }
-                            });
+                            })
                           }}
                         />
                       </div>
@@ -516,7 +517,7 @@ const HomeGrid = () => {
                             instancesTileSize: {
                               Set: 2
                             }
-                          });
+                          })
                         }}
                       >
                         <Trans key="general.reset_filters" />
@@ -560,25 +561,24 @@ const HomeGrid = () => {
                         >
                           <For each={group.instances}>
                             {(instance, j) => {
-                              let ref: HTMLDivElement | undefined;
+                              let ref: HTMLDivElement | undefined
 
                               const instancesCountInPreviousGroups = instances
                                 .slice(0, i())
                                 .reduce(
                                   (acc, group) => acc + group.instances.length,
                                   0
-                                );
+                                )
 
-                              const baseDelay = 300;
+                              const baseDelay = 300
 
                               const groupDelay =
-                                i() * 60 + 60 * instancesCountInPreviousGroups;
+                                i() * 60 + 60 * instancesCountInPreviousGroups
 
-                              const instanceDelay = j() * 60;
-                              instanceDelay;
+                              const instanceDelay = j() * 60
 
                               const totalDelay =
-                                baseDelay + groupDelay + instanceDelay;
+                                baseDelay + groupDelay + instanceDelay
 
                               onMount(() => {
                                 if (ref && !initAnimationRan) {
@@ -597,7 +597,7 @@ const HomeGrid = () => {
                                       easing: "linear",
                                       fill: "forwards"
                                     }
-                                  );
+                                  )
                                 }
 
                                 if (
@@ -605,10 +605,10 @@ const HomeGrid = () => {
                                   j() === group.instances.length - 1
                                 ) {
                                   requestAnimationFrame(() => {
-                                    initAnimationRan = true;
-                                  });
+                                    initAnimationRan = true
+                                  })
                                 }
-                              });
+                              })
 
                               return (
                                 <div
@@ -621,13 +621,13 @@ const HomeGrid = () => {
                                     size={instancesTileSize() as any}
                                   />
                                 </div>
-                              );
+                              )
                             }}
                           </For>
                         </div>
                       </Collapsable>
                     </Show>
-                  );
+                  )
                 }}
               </For>
             </div>
@@ -635,7 +635,7 @@ const HomeGrid = () => {
         </Match>
       </Switch>
     </div>
-  );
-};
+  )
+}
 
-export default HomeGrid;
+export default HomeGrid

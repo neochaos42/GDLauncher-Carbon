@@ -1,13 +1,13 @@
-export type ChangelogEntry = {
-  title: string;
-  description?: string;
-};
+export interface ChangelogEntry {
+  title: string
+  description?: string
+}
 
-export type Changelog = {
-  new: ChangelogEntry[];
-  fixed: ChangelogEntry[];
-  improved: ChangelogEntry[];
-};
+export interface Changelog {
+  new: ChangelogEntry[]
+  fixed: ChangelogEntry[]
+  improved: ChangelogEntry[]
+}
 
 const changelogs: Changelog = {
   new: [
@@ -122,6 +122,6 @@ const changelogs: Changelog = {
       title: "Added a parallax effect to the instance cover image"
     }
   ]
-};
+}
 
-export default changelogs;
+export default changelogs

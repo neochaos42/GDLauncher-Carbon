@@ -1,16 +1,16 @@
-import { rspc } from "@/utils/rspcClient";
+import { rspc } from "@/utils/rspcClient"
 
 const SettingsJavaData = () => {
-  let availableJavas = rspc.createQuery(() => ({
+  const availableJavas = rspc.createQuery(() => ({
     queryKey: ["java.getAvailableJavas"]
-  }));
-  let javaProfiles = rspc.createQuery(() => ({
+  }))
+  const javaProfiles = rspc.createQuery(() => ({
     queryKey: ["java.getJavaProfiles"]
-  }));
-  let totalRam = rspc.createQuery(() => ({
+  }))
+  const totalRam = rspc.createQuery(() => ({
     queryKey: ["systeminfo.getTotalRAM"]
-  }));
-  return { availableJavas, javaProfiles, totalRam };
-};
+  }))
+  return { availableJavas, javaProfiles, totalRam }
+}
 
-export default SettingsJavaData;
+export default SettingsJavaData

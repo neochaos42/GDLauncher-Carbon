@@ -1,24 +1,24 @@
-import { ModalProps } from "../..";
-import ModalLayout from "../../ModalLayout";
-import ExportFormat from "./atoms/ExportFormat";
-import FilesSelection from "./atoms/FilesSelection";
-import SelfContainedArchive from "./atoms/SelfContainedArchive";
-import ExportPath from "./atoms/ExportPath";
-import BeginExport from "./atoms/BeginExport";
-import { Match, Switch, createSignal } from "solid-js";
-import { ExportTarget } from "@gd/core_module/bindings";
-import { createStore } from "solid-js/store";
-import Exporting from "./atoms/Exporting";
-import ExportDone from "./atoms/ExportDone";
+import { ModalProps } from "../.."
+import ModalLayout from "../../ModalLayout"
+import ExportFormat from "./atoms/ExportFormat"
+import FilesSelection from "./atoms/FilesSelection"
+import SelfContainedArchive from "./atoms/SelfContainedArchive"
+import ExportPath from "./atoms/ExportPath"
+import BeginExport from "./atoms/BeginExport"
+import { Match, Switch, createSignal } from "solid-js"
+import { ExportTarget } from "@gd/core_module/bindings"
+import { createStore } from "solid-js/store"
+import Exporting from "./atoms/Exporting"
+import ExportDone from "./atoms/ExportDone"
 
-const [exportStep, setExportStep] = createSignal(0);
-export { exportStep, setExportStep };
+const [exportStep, setExportStep] = createSignal(0)
+export { exportStep, setExportStep }
 interface IPayload {
-  instance_id: number | undefined;
-  target: ExportTarget;
-  save_path: string | undefined;
-  self_contained_addons_bundling: boolean;
-  filter: {};
+  instance_id: number | undefined
+  target: ExportTarget
+  save_path: string | undefined
+  self_contained_addons_bundling: boolean
+  filter: {}
 }
 
 const [payload, setPayload] = createStore<IPayload>({
@@ -27,8 +27,8 @@ const [payload, setPayload] = createStore<IPayload>({
   save_path: undefined,
   self_contained_addons_bundling: false,
   filter: { entries: {} }
-});
-export { payload, setPayload };
+})
+export { payload, setPayload }
 const InstanceExport = (props: ModalProps) => {
   return (
     <ModalLayout
@@ -50,12 +50,12 @@ const InstanceExport = (props: ModalProps) => {
             <Exporting />
           </Match>
           <Match when={exportStep() === 2}>
-            <ExportDone path={payload.save_path as string} />
+            <ExportDone path={payload.save_path!} />
           </Match>
         </Switch>
       </div>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default InstanceExport;
+export default InstanceExport

@@ -1,11 +1,7 @@
-import { getInstanceIdFromPath } from "@/utils/routes";
-import { queryClient, rspc } from "@/utils/rspcClient";
-import { getCFModloaderIcon } from "@/utils/sidebar";
-import {
-  CFFEFile,
-  MRFEVersion,
-  Mod as ModType
-} from "@gd/core_module/bindings";
+import { getInstanceIdFromPath } from "@/utils/routes"
+import { queryClient, rspc } from "@/utils/rspcClient"
+import { getCFModloaderIcon } from "@/utils/sidebar"
+import { CFFEFile, MRFEVersion, Mod as ModType } from "@gd/core_module/bindings"
 import {
   Button,
   Checkbox,
@@ -14,9 +10,9 @@ import {
   Switch,
   Tooltip,
   createNotification
-} from "@gd/ui";
-import { useLocation, useParams } from "@solidjs/router";
-import { SetStoreFunction, produce } from "solid-js/store";
+} from "@gd/ui"
+import { useLocation, useParams } from "@solidjs/router"
+import { SetStoreFunction, produce } from "solid-js/store"
 import {
   For,
   Match,
@@ -25,27 +21,23 @@ import {
   Suspense,
   createEffect,
   createSignal
-} from "solid-js";
-import { getModImageUrl, getModpackPlatformIcon } from "@/utils/instances";
-import CurseforgeLogo from "/assets/images/icons/curseforge_logo.svg";
-import ModrinthLogo from "/assets/images/icons/modrinth_logo.svg";
-import { useGDNavigate } from "@/managers/NavigationManager";
-import CopyIcon from "@/components/CopyIcon";
-import { Trans } from "@gd/i18n";
+} from "solid-js"
+import { getModImageUrl, getModpackPlatformIcon } from "@/utils/instances"
+import CurseforgeLogo from "/assets/images/icons/curseforge_logo.svg"
+import ModrinthLogo from "/assets/images/icons/modrinth_logo.svg"
+import { useGDNavigate } from "@/managers/NavigationManager"
+import CopyIcon from "@/components/CopyIcon"
+import { Trans } from "@gd/i18n"
 
-type Props = {
-  mod: ModType;
-  setSelectedMods: SetStoreFunction<{
-    [id: string]: boolean;
-  }>;
-  selectMods: {
-    [id: string]: boolean;
-  };
-  isInstanceLocked: boolean | undefined;
-};
+interface Props {
+  mod: ModType
+  setSelectedMods: SetStoreFunction<Record<string, boolean>>
+  selectMods: Record<string, boolean>
+  isInstanceLocked: boolean | undefined
+}
 
 const CopiableEntity = (props: {
-  text: string | undefined | null | number;
+  text: string | undefined | null | number
 }) => {
   return (
     <div class="text-lightSlate-200 flex items-center w-60">
@@ -62,13 +54,13 @@ const CopiableEntity = (props: {
         </div>
       </Show>
     </div>
-  );
-};
+  )
+}
 
 const ModUpdateTooltip = (props: {
-  modId: string;
-  modName: string;
-  instanceId: number;
+  modId: string
+  modName: string
+  instanceId: number
 }) => {
   const updatePreview = rspc.createQuery(() => ({
     queryKey: [
@@ -78,7 +70,7 @@ const ModUpdateTooltip = (props: {
         mod_id: props.modId
       }
     ]
-  }));
+  }))
 
   return (
     <div class="text-lightSlate-200 h-40 flex flex-col items-center gap-4 w-80">
@@ -105,55 +97,55 @@ const ModUpdateTooltip = (props: {
         </SolidSwitch>
       </Suspense>
     </div>
-  );
-};
+  )
+}
 
 const Mod = (props: Props) => {
-  const [isHoveringInfoCard, setIsHoveringInfoCard] = createSignal(false);
-  const [isHoveringOptionsCard, setIsHoveringOptionsCard] = createSignal(false);
+  const [isHoveringInfoCard, setIsHoveringInfoCard] = createSignal(false)
+  const [isHoveringOptionsCard, setIsHoveringOptionsCard] = createSignal(false)
   const [updateModTaskId, setUpdateModTaskId] = createSignal<number | null>(
     null
-  );
+  )
 
-  const navigate = useGDNavigate();
-  const params = useParams();
-  const addNotification = createNotification();
-  const location = useLocation();
-  const instanceId = () => getInstanceIdFromPath(location.pathname);
+  const navigate = useGDNavigate()
+  const params = useParams()
+  const addNotification = createNotification()
+  const location = useLocation()
+  const instanceId = () => getInstanceIdFromPath(location.pathname)
 
   const task = rspc.createQuery(() => ({
     queryKey: ["vtask.getTask", updateModTaskId()]
-  }));
+  }))
 
   const updateModMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.updateMod"],
     onSuccess: (data) => {
-      setUpdateModTaskId(data);
+      setUpdateModTaskId(data)
     },
     onError: (err) => {
-      console.error(err);
+      console.error(err)
       addNotification({
         name: `Error updating mod`,
         content: err.message,
         type: "error"
-      });
+      })
     }
-  }));
+  }))
 
   createEffect(() => {
     if (task.data === null) {
-      setUpdateModTaskId(null);
+      setUpdateModTaskId(null)
     } else if (task.data?.progress.type === "Failed") {
       addNotification({
         name: `Error updating mod`,
         content: task.data?.progress.value.cause.reduce(
-          (acc, val) => acc + val + "\n",
+          (acc, val) => acc + val.display + "\n",
           ""
         ),
         type: "error"
-      });
+      })
     }
-  });
+  })
 
   const enableModMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.enableMod"],
@@ -161,7 +153,7 @@ const Mod = (props: Props) => {
       queryClient.setQueryData(
         ["instance.getInstanceMods", data.instance_id],
         (oldData: ModType[] | undefined) => {
-          const modIndex = oldData?.findIndex((mod) => mod.id === data.mod_id)!;
+          const modIndex = oldData?.findIndex((mod) => mod.id === data.mod_id)!
           return [
             ...oldData!.slice(0, modIndex),
             {
@@ -169,17 +161,17 @@ const Mod = (props: Props) => {
               enabled: true
             },
             ...oldData!.slice(modIndex + 1)
-          ];
+          ]
         }
-      );
+      )
     },
     onError: (err, data) => {
-      console.error(err);
+      console.error(err)
 
       queryClient.setQueryData(
         ["instance.getInstanceMods", data.instance_id],
         (oldData: ModType[] | undefined) => {
-          const modIndex = oldData?.findIndex((mod) => mod.id === data.mod_id)!;
+          const modIndex = oldData?.findIndex((mod) => mod.id === data.mod_id)!
           return [
             ...oldData!.slice(0, modIndex),
             {
@@ -187,11 +179,11 @@ const Mod = (props: Props) => {
               enabled: false
             },
             ...oldData!.slice(modIndex + 1)
-          ];
+          ]
         }
-      );
+      )
     }
-  }));
+  }))
 
   const disableModMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.disableMod"],
@@ -199,7 +191,7 @@ const Mod = (props: Props) => {
       queryClient.setQueryData(
         ["instance.getInstanceMods", data.instance_id],
         (oldData: ModType[] | undefined) => {
-          const modIndex = oldData?.findIndex((mod) => mod.id === data.mod_id)!;
+          const modIndex = oldData?.findIndex((mod) => mod.id === data.mod_id)!
           return [
             ...oldData!.slice(0, modIndex),
             {
@@ -207,17 +199,17 @@ const Mod = (props: Props) => {
               enabled: false
             },
             ...oldData!.slice(modIndex + 1)
-          ];
+          ]
         }
-      );
+      )
     },
     onError: (err, data) => {
-      console.error(err);
+      console.error(err)
 
       queryClient.setQueryData(
         ["instance.getInstanceMods", data.instance_id],
         (oldData: ModType[] | undefined) => {
-          const modIndex = oldData?.findIndex((mod) => mod.id === data.mod_id)!;
+          const modIndex = oldData?.findIndex((mod) => mod.id === data.mod_id)!
           return [
             ...oldData!.slice(0, modIndex),
             {
@@ -225,11 +217,11 @@ const Mod = (props: Props) => {
               enabled: true
             },
             ...oldData!.slice(modIndex + 1)
-          ];
+          ]
         }
-      );
+      )
     }
-  }));
+  }))
 
   const deleteModMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.deleteMod"],
@@ -237,18 +229,18 @@ const Mod = (props: Props) => {
       queryClient.setQueryData(
         ["instance.getInstanceMods", data.instance_id],
         (oldData: ModType[] | undefined) => {
-          const modIndex = oldData?.findIndex((mod) => mod.id === data.mod_id)!;
-          return [...oldData!.slice(0, modIndex), ...oldData!.slice(modIndex)];
+          const modIndex = oldData?.findIndex((mod) => mod.id === data.mod_id)!
+          return [...oldData!.slice(0, modIndex), ...oldData!.slice(modIndex)]
         }
-      );
+      )
     },
     onError: (err, data) => {
-      console.error(err);
+      console.error(err)
 
       queryClient.setQueryData(
         ["instance.getInstanceMods", data.instance_id],
         (oldData: ModType[] | undefined) => {
-          const modIndex = oldData?.findIndex((mod) => mod.id === data.mod_id)!;
+          const modIndex = oldData?.findIndex((mod) => mod.id === data.mod_id)!
           return [
             ...oldData!.slice(0, modIndex),
             {
@@ -256,34 +248,34 @@ const Mod = (props: Props) => {
               enabled: true
             },
             ...oldData!.slice(modIndex + 1)
-          ];
+          ]
         }
-      );
+      )
     }
-  }));
+  }))
 
   const imagePlatform = () => {
-    if (props.mod.curseforge?.has_image) return "curseforge";
-    else if (props.mod.modrinth?.has_image) return "modrinth";
-    else if (props.mod.metadata?.has_image) return "metadata";
-    else return null;
-  };
+    if (props.mod.curseforge?.has_image) return "curseforge"
+    else if (props.mod.modrinth?.has_image) return "modrinth"
+    else if (props.mod.metadata?.has_image) return "metadata"
+    else return null
+  }
 
-  const isCurseForge = () => props.mod.curseforge;
+  const isCurseForge = () => props.mod.curseforge
 
   const unsigned_murmur2 = () => {
-    const murmur2 = props.mod.metadata?.murmur_2;
-    if (!murmur2) return null;
-    return parseInt(murmur2, 10) >>> 0;
-  };
+    const murmur2 = props.mod.metadata?.murmur_2
+    if (!murmur2) return null
+    return parseInt(murmur2, 10) >>> 0
+  }
 
   const updateModStatus = () => {
     if (task.data?.progress.type === "Known") {
-      return Math.round(task.data?.progress.value * 100) + "%";
+      return Math.round(task.data?.progress.value * 100) + "%"
     }
 
-    return null;
-  };
+    return null
+  }
 
   return (
     <div
@@ -294,10 +286,10 @@ const Mod = (props: Props) => {
       onClick={() => {
         props.setSelectedMods(
           produce((draft) => {
-            if (!draft[props.mod.id]) draft[props.mod.id] = true;
-            else delete draft[props.mod.id];
+            if (!draft[props.mod.id]) draft[props.mod.id] = true
+            else delete draft[props.mod.id]
           })
-        );
+        )
       }}
     >
       <div class="flex justify-between items-center w-full gap-4">
@@ -366,11 +358,11 @@ const Mod = (props: Props) => {
                     updateModTaskId() !== null || updateModMutation.isPending
                 }}
                 onClick={(e) => {
-                  e.stopPropagation();
+                  e.stopPropagation()
                   updateModMutation.mutate({
                     instance_id: parseInt(params.id, 10),
                     mod_id: props.mod.id
-                  });
+                  })
                 }}
               />
             </Show>
@@ -387,7 +379,7 @@ const Mod = (props: Props) => {
                       props.mod.metadata?.version ||
                       props.mod.filename
                     }
-                    instanceId={parseInt(instanceId() as string, 10)}
+                    instanceId={parseInt(instanceId()!, 10)}
                   />
                 }
               >
@@ -400,11 +392,11 @@ const Mod = (props: Props) => {
                       updateModTaskId() !== null || updateModMutation.isPending
                   }}
                   onClick={(e) => {
-                    e.stopPropagation();
+                    e.stopPropagation()
                     updateModMutation.mutate({
                       instance_id: parseInt(params.id, 10),
                       mod_id: props.mod.id
-                    });
+                    })
                   }}
                 />
               </Tooltip>
@@ -425,17 +417,17 @@ const Mod = (props: Props) => {
               disabled={props.isInstanceLocked}
               checked={props.mod.enabled}
               onChange={(e) => {
-                if (instanceId() === undefined) return;
+                if (instanceId() === undefined) return
                 if (e.target.checked) {
                   enableModMutation.mutate({
-                    instance_id: parseInt(instanceId() as string, 10),
+                    instance_id: parseInt(instanceId()!, 10),
                     mod_id: props.mod.id
-                  });
+                  })
                 } else {
                   disableModMutation.mutate({
-                    instance_id: parseInt(instanceId() as string, 10),
+                    instance_id: parseInt(instanceId()!, 10),
                     mod_id: props.mod.id
-                  });
+                  })
                 }
               }}
             />
@@ -449,14 +441,14 @@ const Mod = (props: Props) => {
               <div
                 class="text-2xl text-lightSlate-700 duration-100 ease-in-out i-ri:delete-bin-2-fill"
                 onClick={(e) => {
-                  e.stopPropagation();
+                  e.stopPropagation()
 
-                  if (props.isInstanceLocked) return;
+                  if (props.isInstanceLocked) return
 
                   deleteModMutation.mutate({
                     instance_id: parseInt(params.id, 10),
                     mod_id: props.mod.id
-                  });
+                  })
                 }}
               />
             </Tooltip>
@@ -465,14 +457,14 @@ const Mod = (props: Props) => {
             <div
               class="text-2xl text-lightSlate-700 duration-100 ease-in-out i-ri:delete-bin-2-fill transition-color hover:text-red-500"
               onClick={(e) => {
-                e.stopPropagation();
+                e.stopPropagation()
 
-                if (props.isInstanceLocked) return;
+                if (props.isInstanceLocked) return
 
                 deleteModMutation.mutate({
                   instance_id: parseInt(params.id, 10),
                   mod_id: props.mod.id
-                });
+                })
               }}
             />
           </Show>
@@ -614,7 +606,7 @@ const Mod = (props: Props) => {
                               `/mods/${
                                 props.mod.curseforge?.project_id
                               }/curseforge?instanceId=${instanceId()}`
-                            );
+                            )
                           }}
                         >
                           <Trans key="instance.open_mod_page" />
@@ -627,7 +619,7 @@ const Mod = (props: Props) => {
                           onClick={() => {
                             window.openExternalLink(
                               `https://www.curseforge.com/minecraft/mc-mods/${props.mod.curseforge?.urlslug}`
-                            );
+                            )
                           }}
                         >
                           <Trans key="instance.open_in_browser" />
@@ -665,7 +657,7 @@ const Mod = (props: Props) => {
                               `/mods/${
                                 props.mod.modrinth?.project_id
                               }/modrith?instanceId=${instanceId()}`
-                            );
+                            )
                           }}
                         >
                           <Trans key="instance.open_mod_page" />
@@ -678,7 +670,7 @@ const Mod = (props: Props) => {
                           onClick={() => {
                             window.openExternalLink(
                               `https://modrinth.com/mod/${props.mod.modrinth?.urlslug}`
-                            );
+                            )
                           }}
                         >
                           <Trans key="instance.open_in_browser" />
@@ -728,7 +720,7 @@ const Mod = (props: Props) => {
                               `/mods/${
                                 props.mod.modrinth?.project_id
                               }/modrinth/versions?instanceId=${instanceId()}`
-                            );
+                            )
                           }}
                         >
                           <div>
@@ -747,7 +739,7 @@ const Mod = (props: Props) => {
                               `/mods/${
                                 props.mod.curseforge?.project_id
                               }/curseforge/versions?instanceId=${instanceId()}`
-                            );
+                            )
                           }}
                         >
                           <div>
@@ -779,7 +771,7 @@ const Mod = (props: Props) => {
         </span>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Mod;
+export default Mod

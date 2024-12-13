@@ -1,17 +1,17 @@
-import { Trans } from "@gd/i18n";
-import { useRouteData } from "@solidjs/router";
-import { For, Match, Suspense, Switch } from "solid-js";
-import fetchData from "../modpack.screenshots";
-import { Skeleton } from "@gd/ui";
-import { CFFEModAsset } from "@gd/core_module/bindings";
+import { Trans } from "@gd/i18n"
+import { useRouteData } from "@solidjs/router"
+import { For, Match, Suspense, Switch } from "solid-js"
+import fetchData from "../modpack.screenshots"
+import { Skeleton } from "@gd/ui"
+import { CFFEModAsset } from "@gd/core_module/bindings"
 
 const Screenshots = () => {
-  const routeData: ReturnType<typeof fetchData> = useRouteData();
+  const routeData: ReturnType<typeof fetchData> = useRouteData()
 
   const screenshots = () =>
     routeData.isCurseforge
       ? routeData.modpackDetails.data?.data?.screenshots
-      : routeData.modpackDetails.data?.gallery;
+      : routeData.modpackDetails.data?.gallery
 
   return (
     <Suspense fallback={<Skeleton.modpackScreenshotsPage />}>
@@ -60,7 +60,7 @@ const Screenshots = () => {
         </Switch>
       </div>
     </Suspense>
-  );
-};
+  )
+}
 
-export default Screenshots;
+export default Screenshots

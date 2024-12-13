@@ -1,20 +1,20 @@
-import { rspc } from "@/utils/rspcClient";
-import { ModalProps, useModal } from "..";
-import ModalLayout from "../ModalLayout";
-import { Button, createNotification } from "@gd/ui";
-import { Trans, useTransContext } from "@gd/i18n";
-import { useGlobalStore } from "@/components/GlobalStoreContext";
+import { rspc } from "@/utils/rspcClient"
+import { ModalProps, useModal } from ".."
+import ModalLayout from "../ModalLayout"
+import { Button, createNotification } from "@gd/ui"
+import { Trans, useTransContext } from "@gd/i18n"
+import { useGlobalStore } from "@/components/GlobalStoreContext"
 
 const ConfirmGDLAccountDeletion = (props: ModalProps) => {
-  const [t] = useTransContext();
-  const addNotification = createNotification();
-  const globalStore = useGlobalStore();
+  const [t] = useTransContext()
+  const addNotification = createNotification()
+  const globalStore = useGlobalStore()
 
-  const modalsContext = useModal();
+  const modalsContext = useModal()
 
   const requestAccountDeletionMutation = rspc.createMutation(() => ({
     mutationKey: ["account.requestGdlAccountDeletion"]
-  }));
+  }))
 
   return (
     <ModalLayout
@@ -30,7 +30,7 @@ const ConfirmGDLAccountDeletion = (props: ModalProps) => {
         <div class="flex justify-between w-full">
           <Button
             onClick={() => {
-              modalsContext?.closeModal();
+              modalsContext?.closeModal()
             }}
           >
             {t("instance_confirm_deletion.cancel")}
@@ -41,20 +41,20 @@ const ConfirmGDLAccountDeletion = (props: ModalProps) => {
               const uuid = globalStore.accounts.data?.find(
                 (account) =>
                   account.uuid === globalStore.settings.data?.gdlAccountId
-              )?.uuid;
+              )?.uuid
 
               if (!uuid) {
-                throw new Error("No active gdl account");
+                throw new Error("No active gdl account")
               }
 
-              await requestAccountDeletionMutation.mutateAsync(uuid);
+              await requestAccountDeletionMutation.mutateAsync(uuid)
               addNotification({
                 name: "Deletion Request Sent",
                 content: "Check your email",
                 type: "success"
-              });
+              })
 
-              modalsContext?.closeModal();
+              modalsContext?.closeModal()
             }}
           >
             {t("instance_confirm_deletion.delete")}
@@ -62,7 +62,7 @@ const ConfirmGDLAccountDeletion = (props: ModalProps) => {
         </div>
       </div>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default ConfirmGDLAccountDeletion;
+export default ConfirmGDLAccountDeletion

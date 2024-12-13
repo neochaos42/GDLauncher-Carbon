@@ -1,5 +1,5 @@
-import { Trans, useTransContext } from "@gd/i18n";
-import { Dropdown, Input, Skeleton } from "@gd/ui";
+import { Trans, useTransContext } from "@gd/i18n"
+import { Dropdown, Input, Skeleton } from "@gd/ui"
 import {
   createEffect,
   createMemo,
@@ -9,81 +9,81 @@ import {
   onCleanup,
   onMount,
   Switch
-} from "solid-js";
+} from "solid-js"
 import {
   CFFEModSearchSortField,
   MRFESearchIndex
-} from "@gd/core_module/bindings";
-import { RSPCError } from "@rspc/client";
-import { CurseForgeSortFields, ModrinthSortFields } from "@/utils/constants";
-import { setScrollTop } from "@/utils/browser";
-import ModRow from "@/components/ModRow";
-import { useRouteData } from "@solidjs/router";
-import fetchData from "./modpacksBrowser.data";
+} from "@gd/core_module/bindings"
+import { RSPCError } from "@rspc/client"
+import { CurseForgeSortFields, ModrinthSortFields } from "@/utils/constants"
+import { setScrollTop } from "@/utils/browser"
+import ModRow from "@/components/ModRow"
+import { useRouteData } from "@solidjs/router"
+import fetchData from "./modpacksBrowser.data"
 import {
   ErrorFetchingModpacks,
   FetchingModpacks,
   NoModpacksAvailable,
   NoMoreModpacks
-} from "./ModpacksStatus";
-import { useInfiniteModsQuery } from "@/components/InfiniteScrollModsQueryWrapper";
+} from "./ModpacksStatus"
+import { useInfiniteModsQuery } from "@/components/InfiniteScrollModsQueryWrapper"
 
 const ModpackBrowser = () => {
-  const [t] = useTransContext();
-  const routeData: ReturnType<typeof fetchData> = useRouteData();
+  const [t] = useTransContext()
+  const routeData: ReturnType<typeof fetchData> = useRouteData()
 
-  const infiniteQuery = useInfiniteModsQuery();
+  const infiniteQuery = useInfiniteModsQuery()
 
-  const modpacks = () => infiniteQuery.allRows();
+  const modpacks = () => infiniteQuery.allRows()
 
-  const allVirtualRows = () => infiniteQuery.rowVirtualizer.getVirtualItems();
+  const allVirtualRows = () => infiniteQuery.rowVirtualizer.getVirtualItems()
 
-  const lastItem = () => allVirtualRows()[allVirtualRows().length - 1];
+  const lastItem = () => allVirtualRows()[allVirtualRows().length - 1]
   createEffect(() => {
     if (!lastItem()) {
-      return;
+      return
     }
 
     const lastItemIndex = infiniteQuery?.infiniteQuery.hasNextPage
       ? lastItem().index - 1
-      : lastItem().index;
+      : lastItem().index
 
     if (
       modpacks().length - lastItemIndex < 5 &&
       infiniteQuery?.infiniteQuery.hasNextPage &&
       !infiniteQuery.infiniteQuery.isFetchingNextPage
     ) {
-      infiniteQuery.infiniteQuery.fetchNextPage();
+      infiniteQuery.infiniteQuery.fetchNextPage()
     }
-  });
+  })
 
-  const [headerHeight, setHeaderHeight] = createSignal(90);
+  const [headerHeight, setHeaderHeight] = createSignal(90)
 
-  let containrRef: HTMLDivElement;
-  let resizeObserver: ResizeObserver;
+  let containrRef: HTMLDivElement
+  let resizeObserver: ResizeObserver
 
   onMount(() => {
     resizeObserver = new ResizeObserver((entries) => {
       window.requestAnimationFrame(() => {
-        setHeaderHeight(entries[0].target.getBoundingClientRect().height);
-      });
-    });
+        setHeaderHeight(entries[0].target.getBoundingClientRect().height)
+      })
+    })
 
-    resizeObserver.observe(containrRef);
-  });
+    resizeObserver.observe(containrRef)
+  })
 
   onCleanup(() => {
     if (resizeObserver) {
-      resizeObserver.disconnect();
+      resizeObserver.disconnect()
     }
-  });
+  })
 
-  const isCurseforge = () => infiniteQuery.query.searchApi === "curseforge";
+  const isCurseforge = () => infiniteQuery.query.searchApi === "curseforge"
 
   const sortingFields = () =>
-    isCurseforge() ? CurseForgeSortFields : ModrinthSortFields;
+    isCurseforge() ? CurseForgeSortFields : ModrinthSortFields
 
-  const hasFiltersData = createMemo(() => sortingFields());
+  const hasFiltersData = createMemo(() => sortingFields())
 
   return (
     <div class="box-border h-full w-full relative">
@@ -103,8 +103,8 @@ const ModpackBrowser = () => {
                 icon={<div class="i-ri:search-line" />}
                 class="w-full text-lightSlate-700 rounded-full flex-1 max-w-none"
                 onInput={(e) => {
-                  const target = e.target as HTMLInputElement;
-                  infiniteQuery?.setQuery({ searchQuery: target.value });
+                  const target = e.target as HTMLInputElement
+                  infiniteQuery?.setQuery({ searchQuery: target.value })
                 }}
               />
               <div class="flex items-center gap-3">
@@ -123,11 +123,11 @@ const ModpackBrowser = () => {
                         }
                       : {
                           modrinth: val.key as MRFESearchIndex
-                        };
+                        }
 
                     infiniteQuery?.setQuery({
                       sortIndex: sortIndex
-                    });
+                    })
                   }}
                   rounded
                 />
@@ -141,10 +141,10 @@ const ModpackBrowser = () => {
                     infiniteQuery?.query.sortOrder === "descending"
                 }}
                 onClick={() => {
-                  const isAsc = infiniteQuery?.query.sortOrder === "ascending";
+                  const isAsc = infiniteQuery?.query.sortOrder === "ascending"
                   infiniteQuery?.setQuery({
                     sortOrder: isAsc ? "descending" : "ascending"
-                  });
+                  })
                 }}
               />
             </div>
@@ -166,10 +166,10 @@ const ModpackBrowser = () => {
               <div
                 class="h-full rounded-xl overflow-y-auto overflow-x-hidden pr-2 ml-5"
                 ref={(el) => {
-                  infiniteQuery.setParentRef(el);
+                  infiniteQuery.setParentRef(el)
                 }}
                 onScroll={(e) => {
-                  setScrollTop(e.target.scrollTop);
+                  setScrollTop(e.target.scrollTop)
                 }}
               >
                 <div
@@ -182,11 +182,11 @@ const ModpackBrowser = () => {
                   <For each={allVirtualRows()}>
                     {(virtualItem) => {
                       const isLoaderRow = () =>
-                        virtualItem.index > modpacks().length - 1;
-                      const modpack = () => modpacks()[virtualItem.index];
+                        virtualItem.index > modpacks().length - 1
+                      const modpack = () => modpacks()[virtualItem.index]
 
                       const hasNextPage = () =>
-                        infiniteQuery?.infiniteQuery.hasNextPage;
+                        infiniteQuery?.infiniteQuery.hasNextPage
 
                       return (
                         <div
@@ -218,7 +218,7 @@ const ModpackBrowser = () => {
                             </Switch>
                           </div>
                         </div>
-                      );
+                      )
                     }}
                   </For>
                 </div>
@@ -251,7 +251,7 @@ const ModpackBrowser = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ModpackBrowser;
+export default ModpackBrowser

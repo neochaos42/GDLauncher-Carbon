@@ -1,34 +1,34 @@
-import { For, JSX, Suspense, onMount } from "solid-js";
-import { Skeleton } from "@gd/ui";
-import { Props as RowContainerProps } from "@/components/Browser/RowContainer";
+import { For, JSX, Suspense, onMount } from "solid-js"
+import { Skeleton } from "@gd/ui"
+import { Props as RowContainerProps } from "@/components/Browser/RowContainer"
 import {
   CFFEMod,
   InstanceDetails,
   MRFEProject,
   Mod
-} from "@gd/core_module/bindings";
-import { Trans } from "@gd/i18n";
-import { VersionRowTypeData } from "../InfiniteScrollVersionsQueryWrapper";
+} from "@gd/core_module/bindings"
+import { Trans } from "@gd/i18n"
+import { VersionRowTypeData } from "../InfiniteScrollVersionsQueryWrapper"
 
-type Props = {
-  virtualVersions: any;
-  versions: VersionRowTypeData[];
-  totalVirtualHeight: number;
-  measureElement: (_el: HTMLDivElement) => void;
-  curseforgeProjectData: CFFEMod | undefined;
-  modrinthProjectData: MRFEProject | undefined;
-  instanceId?: number;
-  installedMod?: { id: string; remoteId: string };
-  instanceMods?: Mod[];
-  instanceDetails?: InstanceDetails;
-  isCurseforge: boolean;
-  isLoading: boolean;
-  children: (_: RowContainerProps) => JSX.Element;
-  type: "modpack" | "mod";
-};
+interface Props {
+  virtualVersions: any
+  versions: VersionRowTypeData[]
+  totalVirtualHeight: number
+  measureElement: (_el: HTMLDivElement) => void
+  curseforgeProjectData: CFFEMod | undefined
+  modrinthProjectData: MRFEProject | undefined
+  instanceId?: number
+  installedMod?: { id: string; remoteId: string }
+  instanceMods?: Mod[]
+  instanceDetails?: InstanceDetails
+  isCurseforge: boolean
+  isLoading: boolean
+  children: (_: RowContainerProps) => JSX.Element
+  type: "modpack" | "mod"
+}
 
 const MainContainer = (props: Props) => {
-  const gridCols = "grid-cols-[5fr_130px_130px_100px_50px_200px]";
+  const gridCols = "grid-cols-[5fr_130px_130px_100px_50px_200px]"
 
   return (
     <Suspense fallback={<Skeleton.modpackVersionList />}>
@@ -64,8 +64,8 @@ const MainContainer = (props: Props) => {
                   data-index={modFile.index}
                   ref={(el) => {
                     onMount(() => {
-                      props.measureElement(el);
-                    });
+                      props.measureElement(el)
+                    })
                   }}
                   class={`grid ${gridCols}`}
                   style={{
@@ -91,13 +91,13 @@ const MainContainer = (props: Props) => {
                     instanceDetails={props.instanceDetails}
                   />
                 </div>
-              );
+              )
             }}
           </For>
         </div>
       </div>
     </Suspense>
-  );
-};
+  )
+}
 
-export default MainContainer;
+export default MainContainer

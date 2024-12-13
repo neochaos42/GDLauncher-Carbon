@@ -1,101 +1,100 @@
-/* eslint-disable i18next/no-literal-string */
-import { getCFModloaderIcon } from "@/utils/sidebar";
+import { getCFModloaderIcon } from "@/utils/sidebar"
 import {
   ListInstance,
   CFFEModLoaderType,
   FESubtask,
   Translation
-} from "@gd/core_module/bindings";
-import { For, Match, Show, Switch, createSignal, mergeProps } from "solid-js";
-import { Trans, useTransContext } from "@gd/i18n";
-import { rspc } from "@/utils/rspcClient";
-import { ContextMenu, Popover, Spinner, Tooltip } from "@gd/ui";
-import DefaultImg from "/assets/images/default-instance-img.png";
-import { useGDNavigate } from "@/managers/NavigationManager";
-import { useModal } from "@/managers/ModalsManager";
-import { getModpackPlatformIcon } from "@/utils/instances";
-import { setInstanceId } from "@/utils/browser";
+} from "@gd/core_module/bindings"
+import { For, Match, Show, Switch, createSignal, mergeProps } from "solid-js"
+import { Trans, useTransContext } from "@gd/i18n"
+import { rspc } from "@/utils/rspcClient"
+import { ContextMenu, Popover, Spinner, Tooltip } from "@gd/ui"
+import DefaultImg from "/assets/images/default-instance-img.png"
+import { useGDNavigate } from "@/managers/NavigationManager"
+import { useModal } from "@/managers/ModalsManager"
+import { getModpackPlatformIcon } from "@/utils/instances"
+import { setInstanceId } from "@/utils/browser"
 import {
   setExportStep,
   setPayload
-} from "@/managers/ModalsManager/modals/InstanceExport";
-import { setCheckedFiles } from "@/managers/ModalsManager/modals/InstanceExport/atoms/ExportCheckboxParent";
-import { setClickedInstanceId } from "../InstanceTile";
-import { useGlobalStore } from "../GlobalStoreContext";
+} from "@/managers/ModalsManager/modals/InstanceExport"
+import { setCheckedFiles } from "@/managers/ModalsManager/modals/InstanceExport/atoms/ExportCheckboxParent"
+import { setClickedInstanceId } from "../InstanceTile"
+import { useGlobalStore } from "../GlobalStoreContext"
 
-type Variant = "default" | "sidebar" | "sidebar-small";
+type Variant = "default" | "sidebar" | "sidebar-small"
 
-type Props = {
-  modloader: CFFEModLoaderType | null | undefined;
-  instance: ListInstance;
-  selected?: boolean;
-  isLoading?: boolean;
-  percentage?: number;
-  version: string | undefined | null;
-  img: string | undefined;
-  variant?: Variant;
-  isInvalid?: boolean;
-  downloaded?: number;
-  totalDownload?: number;
-  isRunning?: boolean;
-  isPreparing?: boolean;
-  isDeleting?: boolean;
-  subTasks?: FESubtask[] | undefined;
-  failError?: string;
-  identifier: string;
-  onClick?: (_e: MouseEvent) => void;
-  size: 1 | 2 | 3 | 4 | 5;
-  shouldSetViewTransition: boolean;
-};
+interface Props {
+  modloader: CFFEModLoaderType | null | undefined
+  instance: ListInstance
+  selected?: boolean
+  isLoading?: boolean
+  percentage?: number
+  version: string | undefined | null
+  img: string | undefined
+  variant?: Variant
+  isInvalid?: boolean
+  downloaded?: number
+  totalDownload?: number
+  isRunning?: boolean
+  isPreparing?: boolean
+  isDeleting?: boolean
+  subTasks?: FESubtask[] | undefined
+  failError?: string
+  identifier: string
+  onClick?: (_e: MouseEvent) => void
+  size: 1 | 2 | 3 | 4 | 5
+  shouldSetViewTransition: boolean
+}
 
 const Tile = (props: Props) => {
   const mergedProps = mergeProps(
     { variant: "default", isLoading: false },
     props
-  );
+  )
 
-  const globalStore = useGlobalStore();
+  const globalStore = useGlobalStore()
 
-  const [copiedError, setCopiedError] = createSignal(false);
+  const [copiedError, setCopiedError] = createSignal(false)
 
-  const rspcContext = rspc.useContext();
-  const [t] = useTransContext();
-  const navigate = useGDNavigate();
-  const modalsContext = useModal();
+  const rspcContext = rspc.useContext()
+  const [t] = useTransContext()
+  const navigate = useGDNavigate()
+  const modalsContext = useModal()
 
   const launchInstanceMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.launchInstance"]
-  }));
+  }))
 
   const killInstanceMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.killInstance"]
-  }));
+  }))
 
   const openFolderMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.openInstanceFolder"]
-  }));
+  }))
 
   const duplicateInstanceMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.duplicateInstance"]
-  }));
+  }))
 
   const handleOpenFolder = () => {
     openFolderMutation.mutate({
       instance_id: props.instance.id,
       folder: "Root"
-    });
-  };
+    })
+  }
 
-  const isLoading = () => props.isLoading;
+  const isLoading = () => props.isLoading
 
   const handlePlay = () => {
     if (props.isPreparing) {
-      return;
+      return
     }
 
     if (props.isRunning) {
-      killInstanceMutation.mutate(props.instance.id);
-      return;
+      killInstanceMutation.mutate(props.instance.id)
+      return
     }
 
     if (
@@ -109,13 +108,13 @@ const Tile = (props: Props) => {
         {
           id: props.instance.id
         }
-      );
+      )
 
-      return;
+      return
     }
 
-    launchInstanceMutation.mutate(props.instance.id);
-  };
+    launchInstanceMutation.mutate(props.instance.id)
+  }
 
   const handleDelete = () => {
     // deleteInstanceMutation.mutate(props.instance.id);
@@ -127,26 +126,26 @@ const Tile = (props: Props) => {
         id: props.instance.id,
         name: props.instance.name
       }
-    );
-  };
+    )
+  }
 
   const handleSettings = () => {
-    setClickedInstanceId(props.identifier);
+    setClickedInstanceId(props.identifier)
     requestAnimationFrame(() => {
-      navigate(`/library/${props.instance.id}/settings`);
-    });
-  };
+      navigate(`/library/${props.instance.id}/settings`)
+    })
+  }
 
   const validInstance = () =>
     props.instance.status.status === "valid"
       ? props.instance.status.value
-      : undefined;
+      : undefined
 
   const handleEdit = async () => {
     const instanceDetails = await rspcContext.client.query([
       "instance.getInstanceDetails",
       props.instance.id
-    ]);
+    ])
 
     modalsContext?.openModal(
       {
@@ -160,17 +159,17 @@ const Tile = (props: Props) => {
         modloaderVersion: instanceDetails?.modloaders[0].version,
         img: props.img
       }
-    );
-  };
+    )
+  }
 
   const handleDuplicate = () => {
     if (!props.isInvalid) {
       duplicateInstanceMutation.mutate({
         instance: props.instance.id,
         new_name: props.instance.name
-      });
+      })
     }
-  };
+  }
 
   const menuItems = () => [
     {
@@ -210,8 +209,8 @@ const Tile = (props: Props) => {
       icon: "i-mingcute:file-export-fill",
       label: t("instance.export_instance"),
       action: () => {
-        const instanceId = props.instance.id;
-        setInstanceId(instanceId);
+        const instanceId = props.instance.id
+        setInstanceId(instanceId)
         setPayload({
           target: "Curseforge",
           save_path: undefined,
@@ -219,12 +218,12 @@ const Tile = (props: Props) => {
           filter: { entries: {} },
 
           instance_id: instanceId
-        });
-        setExportStep(0);
-        setCheckedFiles([]);
+        })
+        setExportStep(0)
+        setCheckedFiles([])
         modalsContext?.openModal({
           name: "exportInstance"
-        });
+        })
       },
       disabled: isLoading() || isInQueue() || props.isDeleting
     },
@@ -235,16 +234,16 @@ const Tile = (props: Props) => {
       action: handleDelete,
       disabled: isLoading() || isInQueue() || props.isDeleting
     }
-  ];
+  ]
 
   const getTranslationArgs = (translation: Translation) => {
     if ("args" in translation) {
-      return translation.args;
+      return translation.args
     }
-    return {};
-  };
+    return {}
+  }
 
-  const isInQueue = () => props.isPreparing && !isLoading();
+  const isInQueue = () => props.isPreparing && !isLoading()
 
   return (
     <Switch>
@@ -273,15 +272,13 @@ const Tile = (props: Props) => {
                               copiedError()
                           }}
                           onClick={() => {
-                            navigator.clipboard.writeText(
-                              props.failError as string
-                            );
+                            navigator.clipboard.writeText(props.failError!)
 
-                            setCopiedError(true);
+                            setCopiedError(true)
 
                             setTimeout(() => {
-                              setCopiedError(false);
-                            }, 2000);
+                              setCopiedError(false)
+                            }, 2000)
                           }}
                         />
                       </Tooltip>
@@ -295,14 +292,14 @@ const Tile = (props: Props) => {
             <div
               class="flex justify-center flex-col relative select-none group items-start duration-200 ease-in-out"
               onClick={(e) => {
-                e.stopPropagation();
+                e.stopPropagation()
                 if (
                   !isLoading() &&
                   !isInQueue() &&
                   !props.isInvalid &&
                   !props.isDeleting
                 ) {
-                  props?.onClick?.(e);
+                  props?.onClick?.(e)
                 }
               }}
             >
@@ -430,7 +427,7 @@ const Tile = (props: Props) => {
                       }
                     >
                       <h3 class="text-center m-0 text-3xl">
-                        {Math.round(props.percentage as number)}%
+                        {Math.round(props.percentage!)}%
                       </h3>
                       <div class="h-10 text-lightSlate-300">
                         <For each={props.subTasks}>
@@ -550,8 +547,8 @@ const Tile = (props: Props) => {
                         : {}
                     }
                     onClick={(e) => {
-                      e.stopPropagation();
-                      handlePlay();
+                      e.stopPropagation()
+                      handlePlay()
                     }}
                   >
                     <div
@@ -614,9 +611,7 @@ const Tile = (props: Props) => {
                       <Show when={props.modloader}>
                         <img
                           class="w-4 h-4"
-                          src={getCFModloaderIcon(
-                            props.modloader as CFFEModLoaderType
-                          )}
+                          src={getCFModloaderIcon(props.modloader!)}
                         />
                       </Show>
                     </span>
@@ -641,7 +636,7 @@ const Tile = (props: Props) => {
         </ContextMenu>
       </Match>
     </Switch>
-  );
-};
+  )
+}
 
-export default Tile;
+export default Tile

@@ -1,52 +1,52 @@
-import { setTaskIds } from "@/utils/import";
-import { taskIds } from "@/utils/import";
-import { rspc } from "@/utils/rspcClient";
-import { Progressbar } from "@gd/ui";
-import { Match, Switch, createEffect, createSignal } from "solid-js";
+import { setTaskIds } from "@/utils/import"
+import { taskIds } from "@/utils/import"
+import { rspc } from "@/utils/rspcClient"
+import { Progressbar } from "@gd/ui"
+import { Match, Switch, createEffect, createSignal } from "solid-js"
 
-const [isDownloaded, setIsDownloaded] = createSignal(false);
-export { isDownloaded };
+const [isDownloaded, setIsDownloaded] = createSignal(false)
+export { isDownloaded }
 
 const SingleImport = (props: {
-  instanceIndex: number;
-  instanceName: string;
-  taskId?: number;
-  importState: string;
+  instanceIndex: number
+  instanceName: string
+  taskId?: number
+  importState: string
 }) => {
-  const [progress, setProgress] = createSignal(0);
-  const [state, setState] = createSignal("idle");
+  const [progress, setProgress] = createSignal(0)
+  const [state, setState] = createSignal("idle")
 
   const _task = rspc.createQuery(() => ({
     queryKey: ["vtask.getTask", props.taskId || null]
-  }));
+  }))
 
   createEffect(async () => {
     if (taskIds() !== undefined) {
-      const task = _task.data;
+      const task = _task.data
       try {
-        if (task && task.progress) {
+        if (task?.progress) {
           if (task.progress.type == "Known") {
-            setProgress(Math.floor(task.progress.value * 100));
+            setProgress(Math.floor(task.progress.value * 100))
           }
         }
-        const isFailed = task && task.progress.type === "Failed";
-        const isDownloaded = task === null && progress() !== 0;
+        const isFailed = task && task.progress.type === "Failed"
+        const isDownloaded = task === null && progress() !== 0
         if (isDownloaded || isFailed) {
-          const taskIdsArray = taskIds();
-          taskIdsArray[props.instanceIndex] = undefined;
-          setTaskIds(taskIdsArray);
+          const taskIdsArray = taskIds()
+          taskIdsArray[props.instanceIndex] = undefined
+          setTaskIds(taskIdsArray)
         }
         if (isFailed) {
-          setState("failed");
+          setState("failed")
         } else if (isDownloaded) {
-          setState("completed");
-          setIsDownloaded(true);
+          setState("completed")
+          setIsDownloaded(true)
         }
       } catch (e) {
-        console.error(e);
+        console.error(e)
       }
     }
-  });
+  })
 
   return (
     <div class="flex gap-2 px-4 justify-between rounded-md">
@@ -69,6 +69,6 @@ const SingleImport = (props: {
         </Match>
       </Switch>
     </div>
-  );
-};
-export default SingleImport;
+  )
+}
+export default SingleImport

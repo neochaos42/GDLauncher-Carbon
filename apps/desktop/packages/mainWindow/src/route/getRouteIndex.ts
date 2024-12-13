@@ -1,26 +1,26 @@
-import { useMatch } from "@solidjs/router";
-import { JSXElement } from "solid-js";
+import { useMatch } from "@solidjs/router"
+import { JSXElement } from "solid-js"
 
 export interface Route {
-  label: JSXElement;
-  path: string;
+  label: JSXElement
+  path: string
 }
 
 const getRouteIndex = (
   routes: Route[],
   _pathname: string, //  for reactivity
-  isExact: boolean = false
+  isExact = false
 ) => {
   return routes.findIndex((route) => {
-    const matchesBase = useMatch(() => route.path)();
-    const matchesChildren = useMatch(() => `${route.path}/*`)();
+    const matchesBase = useMatch(() => route.path)()
+    const matchesChildren = useMatch(() => `${route.path}/*`)()
 
     if (isExact) {
-      return matchesBase;
+      return matchesBase
     }
 
-    return matchesBase || matchesChildren;
-  });
-};
+    return matchesBase || matchesChildren
+  })
+}
 
-export default getRouteIndex;
+export default getRouteIndex

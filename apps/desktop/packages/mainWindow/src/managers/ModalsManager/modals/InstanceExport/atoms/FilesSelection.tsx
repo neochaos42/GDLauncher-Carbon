@@ -1,8 +1,8 @@
-import { useTransContext } from "@gd/i18n";
-import ExportCheckboxParent from "./ExportCheckboxParent";
+import { useTransContext } from "@gd/i18n"
+import ExportCheckboxParent from "./ExportCheckboxParent"
 
 const FilesSelection = () => {
-  const [t] = useTransContext();
+  const [t] = useTransContext()
   return (
     <div class="w-full flex flex-col gap-2 pt-2">
       <span>{t("instance.select_files_text")}</span>
@@ -10,6 +10,6 @@ const FilesSelection = () => {
         <ExportCheckboxParent />
       </div>
     </div>
-  );
-};
-export default FilesSelection;
+  )
+}
+export default FilesSelection

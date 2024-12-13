@@ -1,4 +1,4 @@
-import { Theme } from ".";
+import { Theme } from "."
 
 const additionalStyles = `
   html, body {
@@ -27,7 +27,7 @@ const additionalStyles = `
     border-color: #000 #dfdfdf #dfdfdf #000 !important;
     box-shadow: -1px -1px 0 #dfdfdf inset, 1px 1px 0 #808080 inset !important;
   }
-`;
+`
 
 const win95: Theme = {
   accent: "0 0 128", // Navy Blue
@@ -119,7 +119,7 @@ const win95: Theme = {
   font: "W95FA",
   "font-mono": "W95FA",
   "ads-sidebar-background": "rgb(var(--accent))",
-  "additional-styles": additionalStyles,
-};
+  "additional-styles": additionalStyles
+}
 
-export { win95 };
+export { win95 }

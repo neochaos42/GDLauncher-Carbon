@@ -5,37 +5,37 @@ import {
   JSX,
   splitProps,
   Switch,
-  Match,
-} from "solid-js";
-import { Spinner } from "../Spinner";
+  Match
+} from "solid-js"
+import { Spinner } from "../Spinner"
 
-type Size = "small" | "medium" | "large";
+type Size = "small" | "medium" | "large"
 type Type =
   | "primary"
   | "secondary"
   | "glow"
   | "outline"
   | "transparent"
-  | "text";
+  | "text"
 
 interface Props
   extends Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, "type"> {
-  children: HTMLElement | string | JSX.Element;
-  style?: any;
-  textColor?: string;
-  backgroundColor?: string;
-  type?: Type;
-  rounded?: boolean;
-  disabled?: boolean;
-  icon?: Element | any;
-  iconRight?: boolean;
-  uppercase?: boolean;
-  loading?: boolean;
-  size?: Size;
-  percentage?: number;
-  variant?: string;
-  cursor?: string;
-  fullWidth?: boolean;
+  children: HTMLElement | string | JSX.Element
+  style?: JSX.CSSProperties
+  textColor?: string
+  backgroundColor?: string
+  type?: Type
+  rounded?: boolean
+  disabled?: boolean
+  icon?: JSX.Element
+  iconRight?: boolean
+  uppercase?: boolean
+  loading?: boolean
+  size?: Size
+  percentage?: number
+  variant?: string
+  cursor?: string
+  fullWidth?: boolean
 }
 
 const getVariant = (
@@ -52,15 +52,15 @@ const getVariant = (
   backgroundColor?: string,
   fullWidth?: boolean
 ) => {
-  const isLarge = size === "large";
-  const isMedium = size === "medium";
-  const isSmall = size === "small";
+  const isLarge = size === "large"
+  const isMedium = size === "medium"
+  const isSmall = size === "small"
 
   const commonStyle = {
     ...(textColor && { [textColor]: true }),
     ...(backgroundColor && {
       [backgroundColor]: true,
-      "hover:brightness-120": true,
+      "hover:brightness-120": true
     }),
     "transition-all": true,
     "overflow-hidden": true,
@@ -93,8 +93,8 @@ const getVariant = (
     "scale-x-100": isLoading,
     "p-0": isLoading,
     "text-lightSlate-50": !isDisabled,
-    "flex-row-reverse": iconRight,
-  };
+    "flex-row-reverse": iconRight
+  }
 
   const variants = {
     primary: {
@@ -106,7 +106,7 @@ const getVariant = (
         true,
       // "filter brightness-75": isDisabled,
       "text-[#404759]": isDisabled,
-      "border-0": true,
+      "border-0": true
     },
     secondary: {
       ...commonStyle,
@@ -115,7 +115,7 @@ const getVariant = (
       "border-darkSlate-600": !isDisabled,
       "bg-darkSlate-700": true,
       "text-lightSlate-700": isDisabled,
-      "cursor-not-allowed": isDisabled,
+      "cursor-not-allowed": isDisabled
     },
     outline: {
       ...commonStyle,
@@ -127,7 +127,7 @@ const getVariant = (
       "hover:border-primary-300": !isDisabled,
       "hover:text-primary-300": !isDisabled,
       "bg-transparent": !isDisabled,
-      "bg-darkSlate-700": isDisabled,
+      "bg-darkSlate-700": isDisabled
     },
     glow: {
       ...commonStyle,
@@ -135,7 +135,7 @@ const getVariant = (
       [`drop-shadow-[0_0px_12px_rgb(var(--${variant}-500))]`]: !isDisabled,
       "bg-[#404759]": isDisabled,
       "text-[#8A8B8F]": isDisabled,
-      "border-0": true,
+      "border-0": true
     },
     transparent: {
       ...commonStyle,
@@ -145,23 +145,23 @@ const getVariant = (
       "border-1": true,
       "border-transparent": true,
       "hover:border-1": !isDisabled,
-      "hover:border-white": !isDisabled,
+      "hover:border-white": !isDisabled
     },
     text: {
       ...commonStyle,
       "bg-transparent": true,
       "text-lightSlate-50": true,
       "hover:bg-darkSlate-900": true,
-      "border-0": true,
-    },
-  };
+      "border-0": true
+    }
+  }
 
-  return variants[type];
-};
+  return variants[type]
+}
 
 const Loading = (props: {
-  children: HTMLElement | string | JSX.Element;
-  percentage: number | undefined;
+  children: HTMLElement | string | JSX.Element
+  percentage: number | undefined
 }) => {
   return (
     <Switch>
@@ -184,11 +184,11 @@ const Loading = (props: {
         </div>
       </Match>
     </Switch>
-  );
-};
+  )
+}
 
 function Button(props: Props) {
-  const c = children(() => props.children);
+  const c = children(() => props.children)
 
   const [_, others] = splitProps(props, [
     "icon",
@@ -196,8 +196,8 @@ function Button(props: Props) {
     "uppercase",
     "loading",
     "size",
-    "children",
-  ]);
+    "children"
+  ])
 
   const mergedProps = mergeProps(
     {
@@ -205,10 +205,10 @@ function Button(props: Props) {
       size: "large",
       uppercase: false,
       iconRight: false,
-      rounded: false,
+      rounded: false
     },
     props
-  );
+  )
 
   return (
     <button
@@ -228,13 +228,13 @@ function Button(props: Props) {
           props.backgroundColor,
           props.fullWidth
         ),
-        ...props.classList,
+        ...props.classList
       }}
       style={{
         ...(mergedProps.type === "transparent" && {
-          background: "rgba(0, 0, 0, 0.9)",
+          background: "rgba(0, 0, 0, 0.9)"
         }),
-        ...props.style,
+        ...props.style
       }}
     >
       <Show when={props.icon}>{props.icon}</Show>
@@ -245,7 +245,7 @@ function Button(props: Props) {
         {c()}
       </Show>
     </button>
-  );
+  )
 }
 
-export { Button };
+export { Button }

@@ -1,47 +1,47 @@
-import { rspc } from "@/utils/rspcClient";
-import { Mod } from "@gd/core_module/bindings";
-import { Trans } from "@gd/i18n";
-import { Button, Progressbar, Spinner, Tooltip } from "@gd/ui";
-import { Match, Show, Switch, createEffect, createSignal } from "solid-js";
+import { rspc } from "@/utils/rspcClient"
+import { Mod } from "@gd/core_module/bindings"
+import { Trans } from "@gd/i18n"
+import { Button, Progressbar, Spinner, Tooltip } from "@gd/ui"
+import { Match, Show, Switch, createEffect, createSignal } from "solid-js"
 
-type ModDownloadButtonProps = {
-  projectId: number | string | undefined;
-  fileId?: number | string;
-  instanceId: number | null | undefined;
-  size: "small" | "medium" | "large";
-  isCurseforge: boolean;
-  instanceMods: Mod[] | undefined;
-  instanceLocked: boolean | undefined;
-};
+interface ModDownloadButtonProps {
+  projectId: number | string | undefined
+  fileId?: number | string
+  instanceId: number | null | undefined
+  size: "small" | "medium" | "large"
+  isCurseforge: boolean
+  instanceMods: Mod[] | undefined
+  instanceLocked: boolean | undefined
+}
 
 const ModDownloadButton = (props: ModDownloadButtonProps) => {
-  const [loading, setLoading] = createSignal(false);
-  const [taskId, setTaskId] = createSignal<number | null>(null);
-  const [progress, setProgress] = createSignal<number | null>(null);
+  const [loading, setLoading] = createSignal(false)
+  const [taskId, setTaskId] = createSignal<number | null>(null)
+  const [progress, setProgress] = createSignal<number | null>(null)
 
   const installLatestModMutation = rspc.createMutation(() => ({
     mutationKey: "instance.installLatestMod",
     onSuccess(taskId) {
-      setTaskId(taskId);
+      setTaskId(taskId)
     },
     onMutate() {
-      setLoading(true);
+      setLoading(true)
     }
-  }));
+  }))
 
   createEffect(async () => {
     if (taskId() !== null) {
       const task = rspc.createQuery(() => ({
         queryKey: ["vtask.getTask", taskId()]
-      }));
+      }))
 
       createEffect(() => {
         if (task?.data?.progress.type === "Known") {
-          setProgress(Math.round(task?.data?.progress.value * 100));
+          setProgress(Math.round(task?.data?.progress.value * 100))
         }
-      });
+      })
     }
-  });
+  })
 
   const installedMod = () =>
     props.instanceMods?.find(
@@ -50,21 +50,21 @@ const ModDownloadButton = (props: ModDownloadButtonProps) => {
           ? mod.curseforge?.project_id
           : mod.modrinth?.project_id
         )?.toString() === props.projectId?.toString()
-    );
+    )
 
   const installModMutation = rspc.createMutation(() => ({
     mutationKey: "instance.installMod"
-  }));
+  }))
 
   createEffect(() => {
     if (installModMutation.isPending) {
-      setLoading(true);
+      setLoading(true)
     }
 
     if (installModMutation.isSuccess) {
-      setTaskId(installModMutation.data);
+      setTaskId(installModMutation.data)
     }
-  });
+  })
 
   const latestModInstallObj = () => {
     return props.isCurseforge
@@ -73,8 +73,8 @@ const ModDownloadButton = (props: ModDownloadButtonProps) => {
         }
       : {
           Modrinth: props.projectId!.toString()
-        };
-  };
+        }
+  }
 
   const modInstallObj = () => {
     return props.isCurseforge
@@ -89,53 +89,53 @@ const ModDownloadButton = (props: ModDownloadButtonProps) => {
             project_id: props.projectId!.toString(),
             version_id: props.fileId!.toString()
           }
-        };
-  };
+        }
+  }
 
   const isInstalled = () => {
-    if (!installedMod()) return false;
+    if (!installedMod()) return false
 
     if (!props.fileId) {
-      return !!installedMod();
+      return !!installedMod()
     } else {
       if (props.isCurseforge) {
         return (
           installedMod()?.curseforge?.file_id ===
           parseInt(props.fileId.toString(), 10)
-        );
+        )
       } else {
-        return installedMod()?.modrinth?.version_id === props.fileId.toString();
+        return installedMod()?.modrinth?.version_id === props.fileId.toString()
       }
     }
-  };
+  }
 
   const handleDownload = async () => {
-    if (!props.instanceId || isInstalled()) return;
+    if (!props.instanceId || isInstalled()) return
 
     if (!props.fileId) {
       await installLatestModMutation.mutateAsync({
         instance_id: props.instanceId,
         mod_source: latestModInstallObj()
-      });
+      })
     } else {
-      const replacesMod = installedMod()?.id || null;
+      const replacesMod = installedMod()?.id || null
 
       await installModMutation.mutateAsync({
         mod_source: modInstallObj(),
         instance_id: props.instanceId,
         install_deps: !replacesMod,
         replaces_mod: replacesMod
-      });
+      })
     }
-  };
+  }
 
   createEffect(() => {
     if (isInstalled()) {
-      setLoading(false);
-      setTaskId(null);
-      setProgress(null);
+      setLoading(false)
+      setTaskId(null)
+      setProgress(null)
     }
-  });
+  })
 
   return (
     <Tooltip
@@ -195,7 +195,7 @@ const ModDownloadButton = (props: ModDownloadButtonProps) => {
         </Show>
       </Button>
     </Tooltip>
-  );
-};
+  )
+}
 
-export default ModDownloadButton;
+export default ModDownloadButton

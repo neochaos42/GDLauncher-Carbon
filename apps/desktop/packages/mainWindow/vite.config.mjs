@@ -1,13 +1,13 @@
-import { resolve, join } from "node:path";
-import { defineConfig } from "vite";
-import solidPlugin from "vite-plugin-solid";
-import Unocss from "unocss/vite";
-import pkg from "../../package.json";
-import { unocssConfig, appVersion } from "@gd/config";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
+import { resolve, join } from "node:path"
+import { defineConfig } from "vite"
+import solidPlugin from "vite-plugin-solid"
+import Unocss from "unocss/vite"
+import pkg from "../../package.json"
+import { unocssConfig, appVersion } from "@gd/config"
+import { dirname } from "path"
+import { fileURLToPath } from "url"
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
   mode: process.env.NODE_ENV,
@@ -20,7 +20,7 @@ export default defineConfig({
         [
           /^bg-img-(.*)$/,
           ([, d]) => {
-            const img = d.split("-")[0];
+            const img = d.split("-")[0]
             return {
               background:
                 process.env.NODE_ENV === "development"
@@ -29,7 +29,7 @@ export default defineConfig({
               "background-size": "cover",
               "background-repeat": "no-repeat",
               "box-sizing": "border-box"
-            };
+            }
           }
         ],
         [
@@ -64,4 +64,4 @@ export default defineConfig({
   server: {
     port: pkg.env.PORT
   }
-});
+})

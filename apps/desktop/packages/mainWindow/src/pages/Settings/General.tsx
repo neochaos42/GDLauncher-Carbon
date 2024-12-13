@@ -1,40 +1,40 @@
-import { Button, Dropdown, Input, Switch } from "@gd/ui";
-import GDLauncherWideLogo from "/assets/images/gdlauncher_wide_logo_blue.svg";
-import { Trans, useTransContext } from "@gd/i18n";
-import { rspc } from "@/utils/rspcClient";
-import SettingsData from "./settings.general.data";
-import { useRouteData } from "@solidjs/router";
-import { Show, createEffect } from "solid-js";
-import { createStore } from "solid-js/store";
+import { Button, Dropdown, Input, Switch } from "@gd/ui"
+import GDLauncherWideLogo from "/assets/images/gdlauncher_wide_logo_blue.svg"
+import { Trans, useTransContext } from "@gd/i18n"
+import { rspc } from "@/utils/rspcClient"
+import SettingsData from "./settings.general.data"
+import { useRouteData } from "@solidjs/router"
+import { Show, createEffect } from "solid-js"
+import { createStore } from "solid-js/store"
 import {
   FELauncherActionOnGameLaunch,
   FEReleaseChannel,
   FESettings
-} from "@gd/core_module/bindings";
-import Row from "./components/Row";
-import RightHandSide from "./components/RightHandSide";
-import PageTitle from "./components/PageTitle";
-import Title from "./components/Title";
-import RowsContainer from "./components/RowsContainer";
-import { useModal } from "@/managers/ModalsManager";
+} from "@gd/core_module/bindings"
+import Row from "./components/Row"
+import RightHandSide from "./components/RightHandSide"
+import PageTitle from "./components/PageTitle"
+import Title from "./components/Title"
+import RowsContainer from "./components/RowsContainer"
+import { useModal } from "@/managers/ModalsManager"
 
 const General = () => {
-  const routeData: ReturnType<typeof SettingsData> = useRouteData();
-  const [t] = useTransContext();
-  const modalsContext = useModal();
+  const routeData: ReturnType<typeof SettingsData> = useRouteData()
+  const [t] = useTransContext()
+  const modalsContext = useModal()
 
   const [settings, setSettings] = createStore<FESettings>(
     // @ts-ignore
     routeData?.data?.data || {}
-  );
+  )
 
   const settingsMutation = rspc.createMutation(() => ({
     mutationKey: ["settings.setSettings"]
-  }));
+  }))
 
   createEffect(() => {
-    if (routeData.data.data) setSettings(routeData.data.data);
-  });
+    if (routeData.data.data) setSettings(routeData.data.data)
+  })
 
   const templateGameResolution = () => {
     return [
@@ -42,19 +42,19 @@ const General = () => {
       { label: "1046 x 588 (150%)", key: "Standard:1046x588" },
       { label: "1208 x 679 (200%)", key: "Standard:1208x679" },
       { label: "1479 x 831 (300%)", key: "Standard:1479x831" }
-    ];
-  };
+    ]
+  }
 
   const gameResolutionDropdownKey = () => {
-    if (!settings.gameResolution) return "default";
+    if (!settings.gameResolution) return "default"
 
     if (settings.gameResolution.type === "Standard") {
-      const gameResolution = settings.gameResolution.value.join("x");
-      return `Standard:${gameResolution}`;
+      const gameResolution = settings.gameResolution.value.join("x")
+      return `Standard:${gameResolution}`
     }
 
-    return "custom";
-  };
+    return "custom"
+  }
 
   return (
     <>
@@ -93,7 +93,7 @@ const General = () => {
                   releaseChannel: {
                     Set: channel.key as FEReleaseChannel
                   }
-                });
+                })
               }}
             />
           </RightHandSide>
@@ -116,7 +116,7 @@ const General = () => {
                   concurrentDownloads: {
                     Set: parseInt(downloads.key as string, 10)
                   }
-                });
+                })
               }}
             />
           </RightHandSide>
@@ -137,33 +137,33 @@ const General = () => {
                 ]}
                 onChange={(option) => {
                   let value: {
-                    type: "Standard" | "Custom";
-                    value: [number, number];
-                  } | null = null;
+                    type: "Standard" | "Custom"
+                    value: [number, number]
+                  } | null = null
 
                   if (option.key === "custom") {
                     value = {
                       type: "Custom",
                       value: [854, 480]
-                    };
+                    }
                   } else if (option.key === "default") {
-                    value = null;
+                    value = null
                   } else {
                     const [width, height] = option.key
                       .toString()
                       .split(":")[1]
-                      .split("x");
+                      .split("x")
                     value = {
                       type: "Standard",
                       value: [parseInt(width, 10), parseInt(height, 10)]
-                    };
+                    }
                   }
 
                   settingsMutation.mutate({
                     gameResolution: {
                       Set: value
                     }
-                  });
+                  })
                 }}
               />
               <Show when={settings.gameResolution?.type === "Custom"}>
@@ -187,7 +187,7 @@ const General = () => {
                               ]
                             }
                           }
-                        });
+                        })
                       }}
                     />
                   </div>
@@ -210,7 +210,7 @@ const General = () => {
                               ]
                             }
                           }
-                        });
+                        })
                       }}
                     />
                   </div>
@@ -231,7 +231,7 @@ const General = () => {
                   showNews: {
                     Set: e.currentTarget.checked
                   }
-                });
+                })
               }}
             />
           </RightHandSide>
@@ -263,7 +263,7 @@ const General = () => {
                   discordIntegration: {
                     Set: e.currentTarget.checked
                   }
-                });
+                })
               }}
             />
           </RightHandSide>
@@ -308,36 +308,36 @@ const General = () => {
                 }
               ]}
               onChange={(downloads) => {
-                let action: FELauncherActionOnGameLaunch | undefined;
+                let action: FELauncherActionOnGameLaunch | undefined
 
                 switch (downloads.key) {
                   case "minimizeWindow":
-                    action = "minimizeWindow";
-                    break;
+                    action = "minimizeWindow"
+                    break
                   case "closeWindow":
-                    action = "closeWindow";
-                    break;
+                    action = "closeWindow"
+                    break
                   case "hideWindow":
-                    action = "hideWindow";
-                    break;
+                    action = "hideWindow"
+                    break
                   case "quitApp":
-                    action = "quitApp";
-                    break;
+                    action = "quitApp"
+                    break
                   case "none":
-                    action = "none";
-                    break;
+                    action = "none"
+                    break
                 }
 
                 if (!action) {
-                  console.error("Invalid action", downloads.key);
-                  return;
+                  console.error("Invalid action", downloads.key)
+                  return
                 }
 
                 settingsMutation.mutate({
                   launcherActionOnGameLaunch: {
                     Set: action
                   }
-                });
+                })
               }}
             />
           </RightHandSide>
@@ -358,7 +358,7 @@ const General = () => {
                   showAppCloseWarning: {
                     Set: e.currentTarget.checked
                   }
-                });
+                })
               }}
             />
           </RightHandSide>
@@ -379,7 +379,7 @@ const General = () => {
                   deletionThroughRecycleBin: {
                     Set: e.currentTarget.checked
                   }
-                });
+                })
               }}
             />
           </RightHandSide>
@@ -396,7 +396,7 @@ const General = () => {
                   reducedMotion: {
                     Set: e.currentTarget.checked
                   }
-                });
+                })
               }}
             />
           </RightHandSide>
@@ -409,7 +409,7 @@ const General = () => {
             <Button
               size="small"
               onClick={() => {
-                modalsContext?.openModal({ name: "onBoarding" });
+                modalsContext?.openModal({ name: "onBoarding" })
               }}
             >
               <Trans key="settings:rerun_onboarding" />
@@ -423,7 +423,7 @@ const General = () => {
             onClick={() => {
               modalsContext?.openModal({
                 name: "changelogs"
-              });
+              })
             }}
           />
           <RightHandSide>
@@ -432,7 +432,7 @@ const General = () => {
                 <Button
                   type="secondary"
                   onClick={() => {
-                    window.relaunch();
+                    window.relaunch()
                   }}
                 >
                   <div class="flex items-center gap-2">
@@ -459,7 +459,7 @@ const General = () => {
         </Row>
       </RowsContainer>
     </>
-  );
-};
+  )
+}
 
-export default General;
+export default General

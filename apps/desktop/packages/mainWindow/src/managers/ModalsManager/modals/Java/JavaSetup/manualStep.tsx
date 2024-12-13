@@ -1,6 +1,6 @@
-import { Button } from "@gd/ui";
-import { StepsProps } from ".";
-import { Trans } from "@gd/i18n";
+import { Button } from "@gd/ui"
+import { StepsProps } from "."
+import { Trans } from "@gd/i18n"
 
 const ManualStep = (props: StepsProps) => {
   return (
@@ -36,7 +36,7 @@ const ManualStep = (props: StepsProps) => {
             size="large"
             style={{ width: "100%", "max-width": "100%" }}
             onClick={() => {
-              props.nextStep?.("intro");
+              props.nextStep?.("intro")
             }}
           >
             <Trans key="java.step_back" />
@@ -46,7 +46,7 @@ const ManualStep = (props: StepsProps) => {
             size="large"
             style={{ width: "100%", "max-width": "100%" }}
             onClick={() => {
-              props.nextStep?.("automatic");
+              props.nextStep?.("automatic")
             }}
           >
             <Trans
@@ -59,7 +59,7 @@ const ManualStep = (props: StepsProps) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ManualStep;
+export default ManualStep

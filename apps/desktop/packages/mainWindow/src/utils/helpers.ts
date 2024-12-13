@@ -1,20 +1,20 @@
-import { RSPCError } from "@rspc/client";
+import { RSPCError } from "@rspc/client"
 
 export const parseTwoDigitNumber = (number: number) => {
-  return number.toString().length === 1 ? `0${number}` : number;
-};
+  return number.toString().length === 1 ? `0${number}` : number
+}
 
 export const msToSeconds = (ms: number) => {
-  return Math.floor((ms % (1000 * 60)) / 1000);
-};
+  return Math.floor((ms % (1000 * 60)) / 1000)
+}
 
 export const msToMinutes = (ms: number) => {
-  return Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
-};
+  return Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60))
+}
 
 export const strToMs = (string: string) => {
-  return new Date(string)?.getTime();
-};
+  return new Date(string)?.getTime()
+}
 
 export const convertSecondsToHumanTime = (seconds: number): string => {
   const timeUnits = [
@@ -25,179 +25,179 @@ export const convertSecondsToHumanTime = (seconds: number): string => {
     { name: "hour", length: 60 * 60 },
     { name: "minute", length: 60 },
     { name: "second", length: 1 }
-  ];
+  ]
 
-  let remainingSeconds = seconds;
-  let result: string[] = [];
+  let remainingSeconds = seconds
+  const result: string[] = []
 
   for (const timeUnit of timeUnits) {
-    const timeValue = Math.floor(remainingSeconds / timeUnit.length);
+    const timeValue = Math.floor(remainingSeconds / timeUnit.length)
 
     if (timeValue > 0) {
-      remainingSeconds = remainingSeconds % timeUnit.length;
-      const unit = timeValue > 1 ? timeUnit.name + "s" : timeUnit.name;
-      result.push(`${timeValue} ${unit}`);
+      remainingSeconds = remainingSeconds % timeUnit.length
+      const unit = timeValue > 1 ? timeUnit.name + "s" : timeUnit.name
+      result.push(`${timeValue} ${unit}`)
     }
   }
 
   if (result.length === 0) {
-    return "0 seconds";
+    return "0 seconds"
   }
 
   if (result.length === 1) {
-    return result[0];
+    return result[0]
   } else if (result.length === 2) {
-    return result.join(" and ");
+    return result.join(" and ")
   } else {
-    const lastPart = result.pop();
-    return result.join(", ") + ", and " + lastPart;
+    const lastPart = result.pop()
+    return result.join(", ") + ", and " + lastPart
   }
-};
+}
 
 export const getTitleByDays = (days: string) => {
-  const parsedDays = Number.parseInt(days, 10);
-  if (parsedDays === 0) return "Today";
-  else if (parsedDays === 1) return "Yesterday";
+  const parsedDays = Number.parseInt(days, 10)
+  if (parsedDays === 0) return "Today"
+  else if (parsedDays === 1) return "Yesterday"
   else if (parsedDays > 1 && parsedDays < 30)
-    return `${Math.floor(parsedDays)} days ago`;
+    return `${Math.floor(parsedDays)} days ago`
   else if (parsedDays >= 30 && parsedDays < 365)
-    return `${Math.floor(parsedDays / 30)} months ago`;
-  else return `${Math.floor(parsedDays / 365)} years ago`;
-};
+    return `${Math.floor(parsedDays / 30)} months ago`
+  else return `${Math.floor(parsedDays / 365)} years ago`
+}
 
 export const blobToBase64 = (
   blob: Blob
 ): Promise<string | ArrayBuffer | null> => {
   return new Promise((resolve, _) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result);
-    reader.readAsDataURL(blob);
-  });
-};
+    const reader = new FileReader()
+    reader.onloadend = () => resolve(reader.result)
+    reader.readAsDataURL(blob)
+  })
+}
 
 export const bytesToMB = (bytes: number) => {
-  const bytesInMB = 1024 * 1024;
-  return bytes / bytesInMB;
-};
+  const bytesInMB = 1024 * 1024
+  return bytes / bytesInMB
+}
 
 export const streamToJson = async function* (
   stream: ReadableStream<Uint8Array>
   // eslint-disable-next-line no-undef
 ): AsyncIterable<unknown> {
-  const reader = stream.getReader();
-  const decoder = new TextDecoder();
-  let done: boolean | undefined, value: Uint8Array | undefined;
-  let accumulatedString = "";
+  const reader = stream.getReader()
+  const decoder = new TextDecoder()
+  let done: boolean | undefined, value: Uint8Array | undefined
+  let accumulatedString = ""
 
   try {
     while (!done) {
-      ({ done, value } = await reader.read());
+      ;({ done, value } = await reader.read())
       if (value) {
-        const string = decoder.decode(value, { stream: true }); // keep stream: true
+        const string = decoder.decode(value, { stream: true }) // keep stream: true
 
-        accumulatedString += string; // accumulate incoming strings
+        accumulatedString += string // accumulate incoming strings
 
         // Try to find complete JSON objects in the accumulated string
-        let startIndex = 0;
+        let startIndex = 0
         while (
           (startIndex = accumulatedString.indexOf("{", startIndex)) !== -1
         ) {
           try {
-            const jsonString = accumulatedString.slice(startIndex);
-            const jsonObject = JSON.parse(jsonString);
-            yield jsonObject;
+            const jsonString = accumulatedString.slice(startIndex)
+            const jsonObject = JSON.parse(jsonString)
+            yield jsonObject
 
             // If a JSON object was successfully parsed, remove it from the accumulated string
             accumulatedString = accumulatedString.slice(
               startIndex + jsonString.length
-            );
-            startIndex = 0;
+            )
+            startIndex = 0
           } catch (_) {
             // If parsing failed, continue accumulating more strings
-            startIndex++;
+            startIndex++
           }
         }
       }
     }
   } finally {
-    reader.releaseLock();
+    reader.releaseLock()
   }
-};
+}
 
-export const safeJsonParse = (str: string): Array<unknown> => {
+export const safeJsonParse = (str: string): unknown[] => {
   const jsonStrings = str.split(/\}\s*\{/).map((jsonStr, index, array) => {
     if (index === 0 && array.length > 1) {
-      jsonStr += "}";
+      jsonStr += "}"
     } else if (index === array.length - 1 && array.length > 1) {
-      jsonStr = "{" + jsonStr;
+      jsonStr = "{" + jsonStr
     } else if (array.length > 1) {
-      jsonStr = "{" + jsonStr + "}";
+      jsonStr = "{" + jsonStr + "}"
     }
-    return jsonStr;
-  });
+    return jsonStr
+  })
 
   return jsonStrings.map((jsonStr) => {
     try {
-      return JSON.parse(jsonStr);
+      return JSON.parse(jsonStr)
     } catch (error) {
-      console.error("Failed to parse JSON:", error);
+      console.error("Failed to parse JSON:", error)
     }
-  });
-};
+  })
+}
 
 export const hasKey = <O extends object>(
   obj: O,
   key: PropertyKey
-): key is keyof O => key in obj;
+): key is keyof O => key in obj
 
 export const formatDownloadCount = (count: number) => {
-  let formattedCount;
+  let formattedCount
 
   if (count >= 1000000) {
-    formattedCount = (count / 1000000).toFixed(1);
+    formattedCount = (count / 1000000).toFixed(1)
   } else if (count >= 1000) {
-    formattedCount = (count / 1000).toFixed(1);
+    formattedCount = (count / 1000).toFixed(1)
   } else {
-    return count;
+    return count
   }
 
   // Remove the decimal point and trailing zero if the number is a whole number
   if (formattedCount.endsWith(".0")) {
-    formattedCount = formattedCount.slice(0, -2);
+    formattedCount = formattedCount.slice(0, -2)
   }
 
-  return formattedCount + (count >= 1000000 ? "M" : "K");
-};
+  return formattedCount + (count >= 1000000 ? "M" : "K")
+}
 
 export const truncateText = (text: string, maxLength: number): string => {
   if (text.length <= maxLength) {
-    return text;
+    return text
   }
 
-  return text.slice(0, maxLength) + "...";
-};
+  return text.slice(0, maxLength) + "..."
+}
 
 export const generateSequence = (
   min: number,
   max: number
 ): Record<number, string> => {
-  let current = min;
-  const sequence: Record<number, string> = {};
+  let current = min
+  const sequence: Record<number, string> = {}
 
   while (current <= max) {
-    sequence[current] = `${Math.floor(current / 1024)} GB`;
-    current *= 2;
+    sequence[current] = `${Math.floor(current / 1024)} GB`
+    current *= 2
   }
 
-  return sequence;
-};
+  return sequence
+}
 
 export const parseError = (error: RSPCError) => {
-  const parsedError = JSON.parse(error.message);
+  const parsedError = JSON.parse(error.message)
 
-  return parsedError.cause[0].display;
-};
+  return parsedError.cause[0].display
+}
 
 export const capitalize = (word: string) => {
-  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-};
+  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+}

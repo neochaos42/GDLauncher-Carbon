@@ -1,4 +1,4 @@
-import adSize from "@/utils/adhelper";
+import adSize from "@/utils/adhelper"
 
 export const AdsBanner = () => {
   return (
@@ -10,5 +10,5 @@ export const AdsBanner = () => {
     >
       <owadview class="relative z-100" />
     </div>
-  );
-};
+  )
+}

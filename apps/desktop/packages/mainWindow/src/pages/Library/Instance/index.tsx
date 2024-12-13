@@ -1,8 +1,7 @@
-/* eslint-disable i18next/no-literal-string */
-import getRouteIndex from "@/route/getRouteIndex";
-import { Trans, useTransContext } from "@gd/i18n";
-import { Tabs, TabList, Tab, Button, ContextMenu } from "@gd/ui";
-import { Outlet, useLocation, useParams, useRouteData } from "@solidjs/router";
+import getRouteIndex from "@/route/getRouteIndex"
+import { Trans, useTransContext } from "@gd/i18n"
+import { Tabs, TabList, Tab, Button, ContextMenu } from "@gd/ui"
+import { Outlet, useLocation, useParams, useRouteData } from "@solidjs/router"
 import {
   For,
   JSX,
@@ -13,97 +12,97 @@ import {
   createSignal,
   onCleanup,
   onMount
-} from "solid-js";
-import { useGDNavigate } from "@/managers/NavigationManager";
-import { queryClient, rspc } from "@/utils/rspcClient";
-import fetchData from "./instance.data";
+} from "solid-js"
+import { useGDNavigate } from "@/managers/NavigationManager"
+import { queryClient, rspc } from "@/utils/rspcClient"
+import fetchData from "./instance.data"
 import {
   FEModResponse,
   MRFEProject,
   InstanceDetails,
   ListInstance
-} from "@gd/core_module/bindings";
+} from "@gd/core_module/bindings"
 import {
   getInstanceImageUrl,
   getPreparingState,
   getRunningState
-} from "@/utils/instances";
-import DefaultImg from "/assets/images/default-instance-img.png";
+} from "@/utils/instances"
+import DefaultImg from "/assets/images/default-instance-img.png"
 // import { ContextMenu } from "@/components/ContextMenu";
-import { useModal } from "@/managers/ModalsManager";
-import { convertSecondsToHumanTime } from "@/utils/helpers";
-import Authors from "./Info/Authors";
-import { getCFModloaderIcon } from "@/utils/sidebar";
-import { setInstanceId } from "@/utils/browser";
-import { getInstanceIdFromPath } from "@/utils/routes";
+import { useModal } from "@/managers/ModalsManager"
+import { convertSecondsToHumanTime } from "@/utils/helpers"
+import Authors from "./Info/Authors"
+import { getCFModloaderIcon } from "@/utils/sidebar"
+import { setInstanceId } from "@/utils/browser"
+import { getInstanceIdFromPath } from "@/utils/routes"
 import {
   setPayload,
   setExportStep
-} from "@/managers/ModalsManager/modals/InstanceExport";
-import { setCheckedFiles } from "@/managers/ModalsManager/modals/InstanceExport/atoms/ExportCheckboxParent";
-import { isFullScreen } from "./Tabs/Log";
-import FeatureStatusBadge from "@/components/FeatureStatusBadge";
+} from "@/managers/ModalsManager/modals/InstanceExport"
+import { setCheckedFiles } from "@/managers/ModalsManager/modals/InstanceExport/atoms/ExportCheckboxParent"
+import { isFullScreen } from "./Tabs/Log"
+import FeatureStatusBadge from "@/components/FeatureStatusBadge"
 
-type InstancePage = {
-  label: string | JSX.Element;
-  path: string;
-};
+interface InstancePage {
+  label: string | JSX.Element
+  path: string
+}
 
 const Instance = () => {
-  const navigate = useGDNavigate();
-  const params = useParams();
-  const rspcContext = rspc.useContext();
-  const location = useLocation();
-  const [editableName, setEditableName] = createSignal(false);
-  const [isFavorite, setIsFavorite] = createSignal(false);
-  const [tabsTranslate, setTabsTranslate] = createSignal(0);
-  const [isSticky, setIsSticky] = createSignal(false);
-  const routeData: ReturnType<typeof fetchData> = useRouteData();
+  const navigate = useGDNavigate()
+  const params = useParams()
+  const rspcContext = rspc.useContext()
+  const location = useLocation()
+  const [editableName, setEditableName] = createSignal(false)
+  const [isFavorite, setIsFavorite] = createSignal(false)
+  const [tabsTranslate, setTabsTranslate] = createSignal(0)
+  const [isSticky, setIsSticky] = createSignal(false)
+  const routeData: ReturnType<typeof fetchData> = useRouteData()
   const [newName, setNewName] = createSignal(
     routeData.instanceDetails.data?.name || ""
-  );
+  )
   const [modpackDetails, setModpackDetails] = createSignal<
     FEModResponse | MRFEProject | undefined
-  >(undefined);
-  const [scrollTop, setScrollTop] = createSignal(0);
+  >(undefined)
+  const [scrollTop, setScrollTop] = createSignal(0)
 
-  const [t] = useTransContext();
-  const modalsContext = useModal();
-  let backButtonRef: HTMLSpanElement;
-  let headerRef: HTMLElement;
-  let innerContainerRef: HTMLDivElement | undefined;
-  let refStickyTabs: HTMLDivElement;
-  let nameRef: HTMLHeadingElement | undefined;
+  const [t] = useTransContext()
+  const modalsContext = useModal()
+  let backButtonRef: HTMLSpanElement
+  let headerRef: HTMLElement
+  let innerContainerRef: HTMLDivElement | undefined
+  let refStickyTabs: HTMLDivElement
+  let nameRef: HTMLHeadingElement | undefined
 
   const handleScroll = () => {
-    if (!headerRef?.parentElement) return;
+    if (!headerRef?.parentElement) return
 
     // Use requestAnimationFrame for smooth updates
     requestAnimationFrame(() => {
-      setScrollTop(headerRef.parentElement?.scrollTop || 0);
+      setScrollTop(headerRef.parentElement?.scrollTop || 0)
 
       // Handle sticky tabs
-      const rect = refStickyTabs.getBoundingClientRect();
-      setIsSticky(rect.top <= 104);
+      const rect = refStickyTabs.getBoundingClientRect()
+      setIsSticky(rect.top <= 104)
       if (rect.top <= 104) {
-        setTabsTranslate(0);
+        setTabsTranslate(0)
       } else {
-        setTabsTranslate(-backButtonRef.offsetWidth);
+        setTabsTranslate(-backButtonRef.offsetWidth)
       }
-    });
-  };
+    })
+  }
 
   onMount(() => {
-    headerRef.parentElement?.addEventListener("scroll", handleScroll);
-    checkContainerSize();
-    window?.addEventListener("resize", checkContainerSize);
-    setTabsTranslate(-backButtonRef.offsetWidth);
-  });
+    headerRef.parentElement?.addEventListener("scroll", handleScroll)
+    checkContainerSize()
+    window?.addEventListener("resize", checkContainerSize)
+    setTabsTranslate(-backButtonRef.offsetWidth)
+  })
 
   onCleanup(() => {
-    headerRef.parentElement?.removeEventListener("scroll", handleScroll);
-    window?.removeEventListener("resize", checkContainerSize);
-  });
+    headerRef.parentElement?.removeEventListener("scroll", handleScroll)
+    window?.removeEventListener("resize", checkContainerSize)
+  })
 
   const setFavoriteMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.setFavorite"],
@@ -111,73 +110,73 @@ const Instance = () => {
       obj
     ): Promise<
       | {
-          instancesUngrouped: ListInstance[];
-          instanceDetails: InstanceDetails;
+          instancesUngrouped: ListInstance[]
+          instanceDetails: InstanceDetails
         }
       | undefined
     > => {
       await queryClient.cancelQueries({
         queryKey: ["instance.getInstanceDetails", parseInt(params.id, 10)]
-      });
+      })
       await queryClient.cancelQueries({
         queryKey: ["instance.getAllInstances"]
-      });
+      })
 
       const instancesUngrouped: ListInstance[] | undefined =
-        queryClient.getQueryData(["instance.getAllInstances"]);
+        queryClient.getQueryData(["instance.getAllInstances"])
 
       const instanceDetails: InstanceDetails | undefined =
         queryClient.getQueryData([
           "instance.getInstanceDetails",
           parseInt(params.id, 10)
-        ]);
+        ])
 
       queryClient.setQueryData(
         ["instance.getInstanceDetails", parseInt(params.id, 10)],
         (old: InstanceDetails | undefined) => {
-          const newDetails = old;
-          if (newDetails) newDetails.favorite = obj.favorite;
-          if (newDetails) return newDetails;
-          else return old;
+          const newDetails = old
+          if (newDetails) newDetails.favorite = obj.favorite
+          if (newDetails) return newDetails
+          else return old
         }
-      );
+      )
 
       if (instancesUngrouped && instanceDetails)
-        return { instancesUngrouped, instanceDetails };
+        return { instancesUngrouped, instanceDetails }
     },
     onSettled() {
       queryClient.invalidateQueries({
         queryKey: ["instance.getInstanceDetails", parseInt(params.id, 10)]
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: ["instance.getAllInstances"]
-      });
-      setIsFavorite((prev) => !prev);
+      })
+      setIsFavorite((prev) => !prev)
     },
     onError(
       _error,
       _variables,
       context:
         | {
-            instancesUngrouped: ListInstance[];
-            instanceDetails: InstanceDetails;
+            instancesUngrouped: ListInstance[]
+            instanceDetails: InstanceDetails
           }
         | undefined
     ) {
       if (context?.instanceDetails) {
-        setIsFavorite(context.instanceDetails.favorite);
+        setIsFavorite(context.instanceDetails.favorite)
         queryClient.setQueryData(
           ["instance.getInstanceDetails"],
           context.instanceDetails
-        );
+        )
       }
     }
-  }));
+  }))
 
   createEffect(() => {
     if (routeData.instanceDetails.data)
-      setIsFavorite(routeData.instanceDetails.data?.favorite);
-  });
+      setIsFavorite(routeData.instanceDetails.data?.favorite)
+  })
 
   const instancePages = () => [
     {
@@ -219,55 +218,55 @@ const Instance = () => {
     //   label: "Versions",
     //   path: `/library/${params.id}/versions`,
     // },
-  ];
+  ]
 
   const selectedIndex = () =>
-    getRouteIndex(instancePages(), location.pathname, true);
+    getRouteIndex(instancePages(), location.pathname, true)
 
   const launchInstanceMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.launchInstance"]
-  }));
+  }))
 
   const updateInstanceMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.updateInstance"]
-  }));
+  }))
 
   const killInstanceMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.killInstance"]
-  }));
+  }))
 
   const isRunning = () =>
     routeData.instanceDetails.data?.state &&
-    getRunningState(routeData.instanceDetails.data?.state);
+    getRunningState(routeData.instanceDetails.data?.state)
 
   const isPreparing = () =>
     routeData.instanceDetails.data?.state &&
-    getPreparingState(routeData.instanceDetails.data?.state);
+    getPreparingState(routeData.instanceDetails.data?.state)
 
   const curseforgeData = () =>
     routeData.instanceDetails.data?.modpack?.modpack.type === "curseforge" &&
-    routeData.instanceDetails.data?.modpack?.modpack.value;
+    routeData.instanceDetails.data?.modpack?.modpack.value
 
   createEffect(async () => {
-    const isCurseforge = curseforgeData();
+    const isCurseforge = curseforgeData()
     if (isCurseforge) {
       setModpackDetails(
         await rspcContext.client.query([
           "modplatforms.curseforge.getMod",
           {
-            modId: isCurseforge.project_id as number
+            modId: isCurseforge.project_id
           }
         ])
-      );
+      )
     }
-  });
+  })
 
   const modrinthData = () =>
     routeData.instanceDetails.data?.modpack?.modpack.type === "modrinth" &&
-    routeData.instanceDetails.data?.modpack?.modpack.value;
+    routeData.instanceDetails.data?.modpack?.modpack.value
 
   createEffect(async () => {
-    const isModrinth = modrinthData();
+    const isModrinth = modrinthData()
 
     if (isModrinth) {
       setModpackDetails(
@@ -275,9 +274,9 @@ const Instance = () => {
           "modplatforms.modrinth.getProject",
           isModrinth.project_id
         ])
-      );
+      )
     }
-  });
+  })
 
   const handleNameChange = () => {
     if (newName()) {
@@ -287,30 +286,30 @@ const Instance = () => {
         memory: null,
         notes: null,
         instance: parseInt(params.id, 10)
-      });
+      })
     }
-    setEditableName(false);
-  };
+    setEditableName(false)
+  }
 
   const checkContainerSize = () => {
-    if (!headerRef || !innerContainerRef) return;
-    let containerStyle = window.getComputedStyle(headerRef);
-    let containerWidth = parseInt(containerStyle.getPropertyValue("width"));
+    if (!headerRef || !innerContainerRef) return
+    const containerStyle = window.getComputedStyle(headerRef)
+    const containerWidth = parseInt(containerStyle.getPropertyValue("width"))
 
     if (containerWidth <= 800) {
-      innerContainerRef.classList.remove("flex-row");
-      innerContainerRef.classList.add("flex-col");
-      innerContainerRef.classList.add("gap-4");
+      innerContainerRef.classList.remove("flex-row")
+      innerContainerRef.classList.add("flex-col")
+      innerContainerRef.classList.add("gap-4")
     } else {
-      innerContainerRef.classList.remove("flex-col");
-      innerContainerRef.classList.add("flex-row");
-      innerContainerRef.classList.remove("gap-4");
+      innerContainerRef.classList.remove("flex-col")
+      innerContainerRef.classList.add("flex-row")
+      innerContainerRef.classList.remove("gap-4")
     }
-  };
+  }
 
   const openFolderMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.openInstanceFolder"]
-  }));
+  }))
 
   const handleEdit = () => {
     modalsContext?.openModal(
@@ -331,15 +330,15 @@ const Instance = () => {
             )
           : null
       }
-    );
-  };
+    )
+  }
 
   const handleOpenFolder = () => {
     openFolderMutation.mutate({
       instance_id: parseInt(params.id, 10),
       folder: "Root"
-    });
-  };
+    })
+  }
 
   const menuItems = () => [
     {
@@ -356,25 +355,25 @@ const Instance = () => {
       icon: "i-mingcute:file-export-fill",
       label: t("instance.export_instance"),
       action: () => {
-        const instanceId = getInstanceIdFromPath(location.pathname);
-        setInstanceId(parseInt(instanceId as string, 10));
+        const instanceId = getInstanceIdFromPath(location.pathname)
+        setInstanceId(parseInt(instanceId!, 10))
 
         setPayload({
           target: "Curseforge",
           save_path: undefined,
           self_contained_addons_bundling: false,
           filter: { entries: {} },
-          instance_id: parseInt(instanceId as string, 10)
-        });
-        setCheckedFiles([]);
-        setExportStep(0);
+          instance_id: parseInt(instanceId!, 10)
+        })
+        setCheckedFiles([])
+        setExportStep(0)
 
         modalsContext?.openModal({
           name: "exportInstance"
-        });
+        })
       }
     }
-  ];
+  ]
 
   createEffect(() => {
     if (
@@ -383,9 +382,9 @@ const Instance = () => {
         (instance) => instance.id === parseInt(params.id, 10)
       )
     ) {
-      navigate("/library");
+      navigate("/library")
     }
-  });
+  })
 
   return (
     <main
@@ -398,7 +397,7 @@ const Instance = () => {
     >
       <header
         ref={(el) => {
-          headerRef = el;
+          headerRef = el
         }}
         class="relative flex flex-col justify-between ease-in-out transition-all items-stretch min-h-60 transition-100 overflow-hidden"
       >
@@ -490,17 +489,17 @@ const Instance = () => {
                         <h1
                           ref={nameRef}
                           onInput={(e) => {
-                            setNewName(e.target.innerHTML);
+                            setNewName(e.target.innerHTML)
                           }}
                           class="z-10 m-0 border-box focus-visible:border-0 focus:outline-none focus-visible:outline-none cursor-text min-h-10"
                           contentEditable={editableName()}
                           onFocusIn={() => {
-                            setEditableName(true);
+                            setEditableName(true)
                           }}
                           onKeyDown={(e) => {
                             if (e.key === "Enter") {
-                              e.preventDefault();
-                              handleNameChange();
+                              e.preventDefault()
+                              handleNameChange()
                             }
                           }}
                           style={{
@@ -538,11 +537,11 @@ const Instance = () => {
                               routeData.instanceDetails.data?.name &&
                               nameRef
                             ) {
-                              setNewName(routeData.instanceDetails.data?.name);
+                              setNewName(routeData.instanceDetails.data?.name)
                               nameRef.innerHTML =
-                                routeData.instanceDetails.data?.name;
+                                routeData.instanceDetails.data?.name
                             }
-                            setEditableName(false);
+                            setEditableName(false)
                           }}
                         />
                       </div>
@@ -587,10 +586,7 @@ const Instance = () => {
                             <div class="i-ri:time-fill" />
                             <span class="whitespace-nowrap">
                               {convertSecondsToHumanTime(
-                                (
-                                  routeData.instanceDetails
-                                    .data as InstanceDetails
-                                ).secondsPlayed
+                                routeData.instanceDetails.data!.secondsPlayed
                               )}
                             </span>
                           </div>
@@ -615,11 +611,11 @@ const Instance = () => {
                             if (isRunning()) {
                               killInstanceMutation.mutate(
                                 parseInt(params.id, 10)
-                              );
+                              )
                             } else {
                               launchInstanceMutation.mutate(
                                 parseInt(params.id, 10)
-                              );
+                              )
                             }
                           }}
                         >
@@ -657,7 +653,7 @@ const Instance = () => {
                 "px-6": instancePages()[selectedIndex()]?.noPadding
               }}
               ref={(el) => {
-                refStickyTabs = el;
+                refStickyTabs = el
               }}
             >
               <div class="flex items-center h-full">
@@ -668,7 +664,7 @@ const Instance = () => {
                     "scale-x-0": !isSticky()
                   }}
                   ref={(el) => {
-                    backButtonRef = el;
+                    backButtonRef = el
                   }}
                 >
                   <Button
@@ -692,7 +688,7 @@ const Instance = () => {
                         {(page: InstancePage) => (
                           <Tab
                             onClick={() => {
-                              navigate(page.path);
+                              navigate(page.path)
                             }}
                           >
                             {page.label}
@@ -717,9 +713,9 @@ const Instance = () => {
                   loading={isPreparing() !== undefined}
                   onClick={() => {
                     if (isRunning()) {
-                      killInstanceMutation.mutate(parseInt(params.id, 10));
+                      killInstanceMutation.mutate(parseInt(params.id, 10))
                     } else {
-                      launchInstanceMutation.mutate(parseInt(params.id, 10));
+                      launchInstanceMutation.mutate(parseInt(params.id, 10))
                     }
                   }}
                 >
@@ -749,7 +745,7 @@ const Instance = () => {
         </div>
       </div>
     </main>
-  );
-};
+  )
+}
 
-export default Instance;
+export default Instance

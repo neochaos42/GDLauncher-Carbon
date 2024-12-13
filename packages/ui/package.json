@@ -1,7 +1,7 @@
 {
   "name": "@gd/ui",
   "module": "./dist/ui.es.js",
-  "types": "./dist/src/index.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/ui.es.js"
@@ -14,7 +14,8 @@
     "dev-storybook": "cross-env-shell STORYBOOK=true vite build --watch",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "lint": "tsc && eslint --ext .js,.jsx,.ts,.tsx,.mjs,.cjs . && prettier --check \"**/*.{js,jsx,ts,tsx,mjs,cjs}\""
+    "lint": "tsc && eslint . --quiet && prettier --check .",
+    "lint-fix": "tsc && eslint . --quiet --fix && prettier --write ."
   },
   "devDependencies": {
     "@babel/core": "^7.22.5",
@@ -27,29 +28,19 @@
     "@storybook/blocks": "^7.0.22",
     "@storybook/testing-library": "^0.1.0",
     "@testing-library/jest-dom": "^5.16.5",
-    "@typescript-eslint/parser": "^5.59.11",
-    "@unocss/eslint-config": "^0.62.3",
-    "@unocss/transformer-directives": "^0.62.3",
     "babel-loader": "^9.1.2",
     "class-variance-authority": "^0.7.0",
-    "concurrently": "^8.2.0",
-    "eslint": "^8.31.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-solid": "^0.12.1",
-    "eslint-plugin-storybook": "^0.6.12",
-    "jsdom": "^22.1.0",
-    "prettier": "^2.8.8",
+    "concurrently": "^9.1.0",
+    "jsdom": "^25.0.1",
     "solid-floating-ui": "^0.3.1",
-    "solid-js": "1.8.15",
+    "solid-js": "^1.9.3",
     "solid-testing-library": "^0.5.0",
     "storybook": "^7.0.22",
     "storybook-solidjs": "^1.0.0-beta.2",
     "storybook-solidjs-vite": "^1.0.0-beta.2",
-    "typescript": "^5.6.3",
-    "unocss": "^0.62.3",
-    "vite": "^4.3.9",
-    "vite-plugin-dts": "^2.3.0",
+    "unocss": "^0.65.1",
+    "vite": "^6.0.3",
+    "vite-plugin-dts": "^4.3.0",
     "vitest": "^0.32.2"
   }
 }

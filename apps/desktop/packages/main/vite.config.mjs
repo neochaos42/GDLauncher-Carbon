@@ -1,26 +1,26 @@
-import { builtinModules } from "module";
-import { resolve } from "path";
-import os from "os";
-import { defineConfig, loadEnv } from "vite";
-import { sentryVitePlugin } from "@sentry/vite-plugin";
-import { appVersion } from "@gd/config";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
+import { builtinModules } from "module"
+import { resolve } from "path"
+import os from "os"
+import { defineConfig, loadEnv } from "vite"
+import { sentryVitePlugin } from "@sentry/vite-plugin"
+import { appVersion } from "@gd/config"
+import { dirname } from "path"
+import { fileURLToPath } from "url"
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, resolve(__dirname, "../../../../"), "");
-  const isDev = mode === "development";
+  const env = loadEnv(mode, resolve(__dirname, "../../../../"), "")
+  const isDev = mode === "development"
 
   const definitions = {
     __APP_VERSION__: JSON.stringify(appVersion)
-  };
+  }
 
   if (isDev) {
     definitions["import.meta.env.RUNTIME_PATH"] = JSON.stringify(
       env.RUNTIME_PATH
-    );
+    )
   }
 
   return {
@@ -66,5 +66,5 @@ export default defineConfig(({ mode }) => {
       },
       sourcemap: true
     }
-  };
-});
+  }
+})

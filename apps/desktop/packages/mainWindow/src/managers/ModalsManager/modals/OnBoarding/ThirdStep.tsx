@@ -1,48 +1,48 @@
-import { useModal } from "../..";
-import { Button } from "@gd/ui";
-import { rspc } from "@/utils/rspcClient";
-import { For, Match, Show, Switch, createSignal } from "solid-js";
-import { ImportEntityStatus } from "@gd/core_module/bindings";
-import EntityCard from "@/components/Card/EntityCard";
-import SingleEntity, { setInstances, setStep } from "./SingleEntity";
+import { useModal } from "../.."
+import { Button } from "@gd/ui"
+import { rspc } from "@/utils/rspcClient"
+import { For, Match, Show, Switch, createSignal } from "solid-js"
+import { ImportEntityStatus } from "@gd/core_module/bindings"
+import EntityCard from "@/components/Card/EntityCard"
+import SingleEntity, { setInstances, setStep } from "./SingleEntity"
 
-import { Trans } from "@gd/i18n";
-import { isDownloaded } from "./SingleImport";
-import { taskIds } from "@/utils/import";
-import { ENTITIES } from "@/utils/constants";
+import { Trans } from "@gd/i18n"
+import { isDownloaded } from "./SingleImport"
+import { taskIds } from "@/utils/import"
+import { ENTITIES } from "@/utils/constants"
 
 interface Props {
-  prevStep: () => void;
-  isImportInstance?: boolean;
+  prevStep: () => void
+  isImportInstance?: boolean
 }
 
 const [currentEntity, setCurrentEntity] = createSignal<
   ImportEntityStatus | undefined
->();
+>()
 
 const ThirdStep = (props: Props) => {
-  const modalsContext = useModal();
+  const modalsContext = useModal()
 
-  const [entity, setEntity] = createSignal<ImportEntityStatus | undefined>();
+  const [entity, setEntity] = createSignal<ImportEntityStatus | undefined>()
 
   const entities = rspc.createQuery(() => ({
     queryKey: ["instance.getImportableEntities"]
-  }));
+  }))
 
   const handleClickEntity = (ent: ImportEntityStatus) => {
     if (ent.supported) {
       if (currentEntity() && !(currentEntity()?.entity === ent.entity)) {
-        setStep("selectionStep");
-        setInstances([]);
+        setStep("selectionStep")
+        setInstances([])
       }
       if (taskIds().every((x) => x === undefined)) {
-        setStep("selectionStep");
-        setInstances([]);
+        setStep("selectionStep")
+        setInstances([])
       }
-      setEntity(ent);
-      setCurrentEntity(ent);
+      setEntity(ent)
+      setCurrentEntity(ent)
     }
-  };
+  }
 
   return (
     <div
@@ -57,10 +57,7 @@ const ThirdStep = (props: Props) => {
           </div>
         </Match>
         <Match when={entity()}>
-          <SingleEntity
-            entity={entity() as ImportEntityStatus}
-            setEntity={setEntity}
-          />
+          <SingleEntity entity={entity()!} setEntity={setEntity} />
         </Match>
         <Match when={!entity()}>
           <div class="flex-1 w-full">
@@ -87,7 +84,7 @@ const ThirdStep = (props: Props) => {
             <div class="w-full flex justify-between">
               <Button
                 onClick={() => {
-                  props.prevStep();
+                  props.prevStep()
                 }}
                 size="large"
                 type="secondary"
@@ -96,7 +93,7 @@ const ThirdStep = (props: Props) => {
               </Button>
               <Button
                 onClick={() => {
-                  modalsContext?.closeModal();
+                  modalsContext?.closeModal()
                 }}
                 size="large"
                 type="primary"
@@ -112,7 +109,7 @@ const ThirdStep = (props: Props) => {
         </Match>
       </Switch>
     </div>
-  );
-};
+  )
+}
 
-export default ThirdStep;
+export default ThirdStep

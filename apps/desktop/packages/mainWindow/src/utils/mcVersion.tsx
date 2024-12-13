@@ -1,10 +1,10 @@
-import { ManifestVersion, McType } from "@gd/core_module/bindings";
-import { Match, Switch, createSignal } from "solid-js";
+import { ManifestVersion, McType } from "@gd/core_module/bindings"
+import { Match, Switch, createSignal } from "solid-js"
 
-export const [mcVersions, setMcVersions] = createSignal<ManifestVersion[]>([]);
+export const [mcVersions, setMcVersions] = createSignal<ManifestVersion[]>([])
 export const [mappedMcVersions, setMappedMcVersions] = createSignal<
   { label: string; key: string }[]
->([]);
+>([])
 
 export const mapMcTypeToColor = (
   type: McType,
@@ -37,5 +37,5 @@ export const mapMcTypeToColor = (
         >{`[${type}]`}</span>
       </Match>
     </Switch>
-  );
-};
+  )
+}

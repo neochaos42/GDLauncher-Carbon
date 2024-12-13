@@ -1,15 +1,15 @@
-import RightHandSide from "@/pages/Settings/components/RightHandSide";
-import Row from "@/pages/Settings/components/Row";
-import RowsContainer from "@/pages/Settings/components/RowsContainer";
-import { Trans } from "@gd/i18n";
-import { Popover, Slider, Switch } from "@gd/ui";
-import { createSignal } from "solid-js";
-import { Show } from "solid-js";
+import RightHandSide from "@/pages/Settings/components/RightHandSide"
+import Row from "@/pages/Settings/components/Row"
+import RowsContainer from "@/pages/Settings/components/RowsContainer"
+import { Trans } from "@gd/i18n"
+import { Popover, Slider, Switch } from "@gd/ui"
+import { createSignal } from "solid-js"
+import { Show } from "solid-js"
 
-type DensityRowProps = {
-  selected: boolean;
-  onClick: () => void;
-};
+interface DensityRowProps {
+  selected: boolean
+  onClick: () => void
+}
 
 function LowDensityRows(props: DensityRowProps) {
   return (
@@ -23,7 +23,7 @@ function LowDensityRows(props: DensityRowProps) {
         <div class="absolute top-1 right-1 w-4 h-4 i-ri:checkbox-fill text-green-600" />
       </Show>
     </div>
-  );
+  )
 }
 
 function MediumDensityRows(props: DensityRowProps) {
@@ -39,7 +39,7 @@ function MediumDensityRows(props: DensityRowProps) {
         <div class="absolute top-1 right-1 w-4 h-4 i-ri:checkbox-fill text-green-600" />
       </Show>
     </div>
-  );
+  )
 }
 
 function HighDensityRows(props: DensityRowProps) {
@@ -57,13 +57,13 @@ function HighDensityRows(props: DensityRowProps) {
         <div class="absolute top-1 right-1 w-4 h-4 i-ri:checkbox-fill text-green-600" />
       </Show>
     </div>
-  );
+  )
 }
 
-type ColumnProps = {
-  selected: boolean;
-  onClick: () => void;
-};
+interface ColumnProps {
+  selected: boolean
+  onClick: () => void
+}
 
 function TimestampColumn(props: ColumnProps) {
   return (
@@ -82,7 +82,7 @@ function TimestampColumn(props: ColumnProps) {
         <div class="absolute top-1 right-1 w-4 h-4 i-ri:checkbox-fill text-green-600" />
       </Show>
     </div>
-  );
+  )
 }
 
 function LoggerColumn(props: ColumnProps) {
@@ -102,7 +102,7 @@ function LoggerColumn(props: ColumnProps) {
         <div class="absolute top-1 right-1 w-4 h-4 i-ri:checkbox-fill text-green-600" />
       </Show>
     </div>
-  );
+  )
 }
 
 function SourceKindColumn(props: ColumnProps) {
@@ -122,7 +122,7 @@ function SourceKindColumn(props: ColumnProps) {
         <div class="absolute top-1 right-1 w-4 h-4 i-ri:checkbox-fill text-green-600" />
       </Show>
     </div>
-  );
+  )
 }
 
 function ThreadNameColumn(props: ColumnProps) {
@@ -142,7 +142,7 @@ function ThreadNameColumn(props: ColumnProps) {
         <div class="absolute top-1 right-1 w-4 h-4 i-ri:checkbox-fill text-green-600" />
       </Show>
     </div>
-  );
+  )
 }
 
 function LogLevelColumn(props: ColumnProps) {
@@ -162,34 +162,34 @@ function LogLevelColumn(props: ColumnProps) {
         <div class="absolute top-1 right-1 w-4 h-4 i-ri:checkbox-fill text-green-600" />
       </Show>
     </div>
-  );
+  )
 }
 
-export type LogDensity = "low" | "medium" | "high";
+export type LogDensity = "low" | "medium" | "high"
 
-export type Columns = {
-  timestamp: boolean;
-  logger: boolean;
-  sourceKind: boolean;
-  threadName: boolean;
-  level: boolean;
-};
+export interface Columns {
+  timestamp: boolean
+  logger: boolean
+  sourceKind: boolean
+  threadName: boolean
+  level: boolean
+}
 
-type Props = {
-  logsDensity: LogDensity;
-  setLogsDensity: (_: LogDensity) => void;
-  columns: Columns;
-  setColumns: (_: Columns) => void;
-  fontMultiplier: 0 | 1 | 2;
-  setFontMultiplier: (_: 0 | 1 | 2) => void;
-  autoFollowPreference: boolean;
-  setAutoFollowPreference: (_: boolean) => void;
-  startLogMessageOnNewLine: boolean;
-  setStartLogMessageOnNewLine: (_: boolean) => void;
-};
+interface Props {
+  logsDensity: LogDensity
+  setLogsDensity: (_: LogDensity) => void
+  columns: Columns
+  setColumns: (_: Columns) => void
+  fontMultiplier: 0 | 1 | 2
+  setFontMultiplier: (_: 0 | 1 | 2) => void
+  autoFollowPreference: boolean
+  setAutoFollowPreference: (_: boolean) => void
+  startLogMessageOnNewLine: boolean
+  setStartLogMessageOnNewLine: (_: boolean) => void
+}
 
 export default function LogsOptions(props: Props) {
-  const [isOpen, setIsOpen] = createSignal(false);
+  const [isOpen, setIsOpen] = createSignal(false)
 
   return (
     <Popover
@@ -270,7 +270,7 @@ export default function LogsOptions(props: Props) {
                       }
                     }}
                     onChange={(val) => {
-                      props.setFontMultiplier(val as 0 | 1 | 2);
+                      props.setFontMultiplier(val as 0 | 1 | 2)
                     }}
                   />
                 </div>
@@ -366,7 +366,7 @@ export default function LogsOptions(props: Props) {
                   <Switch
                     checked={props.autoFollowPreference}
                     onChange={(e) => {
-                      props.setAutoFollowPreference(e.currentTarget.checked);
+                      props.setAutoFollowPreference(e.currentTarget.checked)
                     }}
                   />
                 </div>
@@ -382,9 +382,7 @@ export default function LogsOptions(props: Props) {
                   <Switch
                     checked={props.startLogMessageOnNewLine}
                     onChange={(e) => {
-                      props.setStartLogMessageOnNewLine(
-                        e.currentTarget.checked
-                      );
+                      props.setStartLogMessageOnNewLine(e.currentTarget.checked)
                     }}
                   />
                 </div>
@@ -402,5 +400,5 @@ export default function LogsOptions(props: Props) {
         }}
       />
     </Popover>
-  );
+  )
 }

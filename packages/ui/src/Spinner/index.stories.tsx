@@ -1,5 +1,5 @@
-import { Spinner } from "./index.jsx";
-import type { Meta, StoryObj } from "storybook-solidjs";
+import { Spinner } from "./index.jsx"
+import type { Meta, StoryObj } from "storybook-solidjs"
 
 const meta: Meta<typeof Spinner> = {
   /* 👇 The title prop is optional.
@@ -7,11 +7,11 @@ const meta: Meta<typeof Spinner> = {
    * to learn how to generate automatic titles
    */
   title: "Spinner",
-  component: Spinner,
-};
+  component: Spinner
+}
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof Spinner>;
+type Story = StoryObj<typeof Spinner>
 
-export const Main: Story = {};
+export const Main: Story = {}

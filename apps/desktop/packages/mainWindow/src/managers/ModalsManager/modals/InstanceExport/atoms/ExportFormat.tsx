@@ -1,16 +1,16 @@
-import { For } from "solid-js";
-import { Card } from "./Card";
+import { For } from "solid-js"
+import { Card } from "./Card"
 import {
   ExportTarget,
   ImportEntity,
   ImportEntitySelectionType,
   ImportEntityStatus
-} from "@gd/core_module/bindings";
-import { useTransContext } from "@gd/i18n";
-import { ENTITIES } from "@/utils/constants";
+} from "@gd/core_module/bindings"
+import { useTransContext } from "@gd/i18n"
+import { ENTITIES } from "@/utils/constants"
 
 const ExportFormat = () => {
-  const [t] = useTransContext();
+  const [t] = useTransContext()
 
   const options: ImportEntityStatus[] = [
     {
@@ -23,12 +23,12 @@ const ExportFormat = () => {
       supported: true,
       selection_type: "file" satisfies ImportEntitySelectionType
     }
-  ];
+  ]
 
   const exportTargets: Partial<Record<ImportEntity, ExportTarget>> = {
     CurseForge: "Curseforge",
     Modrinth: "Modrinth"
-  };
+  }
 
   return (
     <div class="flex flex-col">
@@ -41,13 +41,13 @@ const ExportFormat = () => {
               icon={ENTITIES[entity.entity].icon}
               translation={ENTITIES[entity.entity].translation}
               onClick={[() => {}, entity]}
-              instanceTitle={exportTargets[entity.entity] as ExportTarget}
+              instanceTitle={exportTargets[entity.entity]!}
             />
           )}
         </For>
       </ul>
     </div>
-  );
-};
+  )
+}
 
-export default ExportFormat;
+export default ExportFormat

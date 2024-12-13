@@ -1,5 +1,5 @@
-import { Dropdown } from "./index.jsx";
-import type { Meta, StoryObj } from "storybook-solidjs";
+import { Dropdown } from "./index.jsx"
+import type { Meta, StoryObj } from "storybook-solidjs"
 
 const meta: Meta<typeof Dropdown> = {
   /* 👇 The title prop is optional.
@@ -7,12 +7,12 @@ const meta: Meta<typeof Dropdown> = {
    * to learn how to generate automatic titles
    */
   title: "Dropdown",
-  component: Dropdown,
-};
+  component: Dropdown
+}
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof Dropdown>;
+type Story = StoryObj<typeof Dropdown>
 
 export const Main: Story = {
   args: {
@@ -20,13 +20,13 @@ export const Main: Story = {
       { label: "Label1", key: "key1" },
       { label: "Label2", key: "key2" },
       { label: "Label3", key: "key3" },
-      { label: "Label4", key: "key4" },
+      { label: "Label4", key: "key4" }
     ],
     value: "key2",
     onChange: (option) => console.log("change:", option),
     error: false,
     disabled: false,
     rounded: true,
-    label: "Name",
-  },
-};
+    label: "Name"
+  }
+}

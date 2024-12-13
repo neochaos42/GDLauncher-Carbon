@@ -1,12 +1,12 @@
-import { useTransContext } from "@gd/i18n";
-import { Input } from "@gd/ui";
-import { createSignal } from "solid-js";
-import { setPayload, payload } from "..";
+import { useTransContext } from "@gd/i18n"
+import { Input } from "@gd/ui"
+import { createSignal } from "solid-js"
+import { setPayload, payload } from ".."
 
 const ExportPath = () => {
-  const [path, setPath] = createSignal<string | undefined>(undefined);
-  const [inputValue, setInputValue] = createSignal(path());
-  const [t] = useTransContext();
+  const [path, setPath] = createSignal<string | undefined>(undefined)
+  const [inputValue, setInputValue] = createSignal(path())
+  const [t] = useTransContext()
 
   return (
     <div class="flex flex-col pt-4 gap-2 w-full">
@@ -15,12 +15,12 @@ const ExportPath = () => {
         <Input
           value={path()}
           onInput={(e) => {
-            setInputValue(e.currentTarget.value);
+            setInputValue(e.currentTarget.value)
           }}
           onBlur={() => {
             if (inputValue() && inputValue() !== path()) {
-              setPath(inputValue());
-              setPayload({ ...payload, save_path: inputValue() });
+              setPath(inputValue())
+              setPayload({ ...payload, save_path: inputValue() })
             }
           }}
           class="flex-1"
@@ -28,7 +28,7 @@ const ExportPath = () => {
           icon={
             <div
               onClick={() => {
-                setPath("");
+                setPath("")
               }}
               class="i-material-symbols:close"
             />
@@ -51,21 +51,21 @@ const ExportPath = () => {
                     ]
                   }
                 ]
-              });
+              })
 
               if (result.canceled) {
-                return;
+                return
               }
 
-              setPath(result.filePath);
+              setPath(result.filePath)
 
-              setPayload({ ...payload, save_path: result.filePath });
+              setPayload({ ...payload, save_path: result.filePath })
             }}
             class="text-2xl cursor-pointer i-material-symbols:folder-open-outline"
           />
         </div>
       </div>
     </div>
-  );
-};
-export default ExportPath;
+  )
+}
+export default ExportPath

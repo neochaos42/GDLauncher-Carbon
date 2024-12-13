@@ -1,19 +1,19 @@
-import { For, Show, JSX, mergeProps, Switch, Match } from "solid-js";
+import { For, Show, JSX, mergeProps, Switch, Match } from "solid-js"
 
-type CustomStep = {
-  icon?: string | JSX.Element;
-  label: string;
-  onClick?: () => void;
-};
+interface CustomStep {
+  icon?: string | JSX.Element
+  label: string
+  onClick?: () => void
+}
 
-type Props = {
-  steps: string[] | CustomStep[];
-  currentStep?: number;
-  class?: string;
-};
+interface Props {
+  steps: string[] | CustomStep[]
+  currentStep?: number
+  class?: string
+}
 
 const Steps = (props: Props) => {
-  const mergedProps = mergeProps({ currentStep: 0 }, props);
+  const mergedProps = mergeProps({ currentStep: 0 }, props)
 
   return (
     <div class={`flex flex-col gap-3 w-full ${props.class || ""}`}>
@@ -26,10 +26,10 @@ const Steps = (props: Props) => {
                 classList={{
                   "text-sm": typeof step === "string",
                   "bg-primary-500": i() <= mergedProps.currentStep,
-                  "bg-darkSlate-500": i() > mergedProps.currentStep,
+                  "bg-darkSlate-500": i() > mergedProps.currentStep
                 }}
                 onClick={() => {
-                  if (typeof step === "object" && step?.onClick) step.onClick();
+                  if (typeof step === "object" && step?.onClick) step.onClick()
                 }}
               >
                 <Switch>
@@ -54,7 +54,7 @@ const Steps = (props: Props) => {
                     "border-solid border-primary-500":
                       i() < mergedProps.currentStep,
                     "border-dashed border-darkSlate-500":
-                      i() >= mergedProps.currentStep,
+                      i() >= mergedProps.currentStep
                   }}
                 />
               </Show>
@@ -63,7 +63,7 @@ const Steps = (props: Props) => {
         </For>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export { Steps };
+export { Steps }

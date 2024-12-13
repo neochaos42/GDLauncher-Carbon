@@ -1,6 +1,6 @@
-import adSize from "@/utils/adhelper";
-import BisectBannerImage from "/assets/images/bisect_banner.webp";
-import BisectBannerVerticalImage from "/assets/images/bisect_banner_vertical.webp";
+import adSize from "@/utils/adhelper"
+import BisectBannerImage from "/assets/images/bisect_banner.webp"
+import BisectBannerVerticalImage from "/assets/images/bisect_banner_vertical.webp"
 
 export const BisectBanner = () => {
   return (
@@ -22,9 +22,9 @@ export const BisectBanner = () => {
         }}
         data-cursor-pointer
         onClick={() => {
-          window.open("https://www.bisecthosting.com/gdl");
+          window.open("https://www.bisecthosting.com/gdl")
         }}
       />
     </div>
-  );
-};
+  )
+}

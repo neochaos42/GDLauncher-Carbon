@@ -6,73 +6,73 @@ import {
   Show,
   mergeProps,
   onCleanup
-} from "solid-js";
-import { Portal } from "solid-js/web";
-import { useContextMenu } from "./ContextMenuContext";
+} from "solid-js"
+import { Portal } from "solid-js/web"
+import { useContextMenu } from "./ContextMenuContext"
 
 interface MenuItem {
-  icon?: string;
-  label: string;
-  action: () => void;
-  id?: string;
+  icon?: string
+  label: string
+  action: () => void
+  id?: string
 }
 
 interface ContextMenuProps {
-  menuItems: MenuItem[];
-  children: JSX.Element;
-  trigger?: "context" | "click";
+  menuItems: MenuItem[]
+  children: JSX.Element
+  trigger?: "context" | "click"
 }
 
 const ContextMenu = (props: ContextMenuProps) => {
-  const [x, setX] = createSignal(0);
-  const [y, setY] = createSignal(0);
-  const [menuRef, setMenuRef] = createSignal<HTMLDivElement | undefined>();
+  const [x, setX] = createSignal(0)
+  const [y, setY] = createSignal(0)
+  const [menuRef, setMenuRef] = createSignal<HTMLDivElement | undefined>()
   const [containerRef, setContainerRef] = createSignal<
     HTMLDivElement | undefined
-  >();
+  >()
 
-  const ContextMenu = useContextMenu();
+  const ContextMenu = useContextMenu()
 
   const mergedProps = mergeProps(
     {
       trigger: "context"
     },
     props
-  );
+  )
 
   const openContextMenu = (e: MouseEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (containerRef()) {
-      ContextMenu?.setOpenMenu(containerRef() as HTMLDivElement);
+      ContextMenu?.setOpenMenu(containerRef()!)
     }
 
     // Initially set the position to cursor location
-    setX(e.clientX);
-    setY(e.clientY);
+    setX(e.clientX)
+    setY(e.clientY)
 
     // Wait for the next frame when the menu has been painted
     requestAnimationFrame(() => {
       if (menuRef()) {
-        const menuElement = menuRef() as HTMLDivElement;
-        const boundingClientRect = menuElement.getBoundingClientRect();
+        const menuElement = menuRef()!
+        const boundingClientRect = menuElement.getBoundingClientRect()
 
-        let newX = e.clientX; // No change to X coordinate
-        let newY = e.clientY - boundingClientRect.height;
+        const newX = e.clientX // No change to X coordinate
+        let newY = e.clientY - boundingClientRect.height
 
         // If the new y position is less than 0, set it to 0 to prevent the menu from going out of view to the top
         if (newY < 0) {
-          newY = 0;
+          newY = 0
         }
 
-        setX(newX);
-        setY(newY);
+        setX(newX)
+        setY(newY)
       }
-    });
-  };
+    })
+  }
 
   const closeContextMenu = () => {
-    ContextMenu?.closeMenu();
-  };
+    ContextMenu?.closeMenu()
+  }
 
   // const handleClickOutside = (e: MouseEvent) => {
   //   if (containerRef() && !containerRef()?.contains(e.target as Node)) {
@@ -86,26 +86,26 @@ const ContextMenu = (props: ContextMenuProps) => {
       !containerRef()?.contains(e.target as Node) &&
       containerRef() == ContextMenu?.openMenu()
     ) {
-      closeContextMenu();
+      closeContextMenu()
     }
-  };
+  }
 
-  const isContextTrigger = () => mergedProps.trigger === "context";
+  const isContextTrigger = () => mergedProps.trigger === "context"
 
   onMount(() => {
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener("click", handleClickOutside)
     if (isContextTrigger()) {
-      containerRef()?.addEventListener("contextmenu", openContextMenu);
+      containerRef()?.addEventListener("contextmenu", openContextMenu)
     } else {
-      containerRef()?.addEventListener("click", openContextMenu);
+      containerRef()?.addEventListener("click", openContextMenu)
     }
-  });
+  })
 
   onCleanup(() => {
-    document.removeEventListener("click", handleClickOutside);
-    containerRef()?.removeEventListener("contextmenu", openContextMenu);
-    containerRef()?.removeEventListener("click", openContextMenu);
-  });
+    document.removeEventListener("click", handleClickOutside)
+    containerRef()?.removeEventListener("contextmenu", openContextMenu)
+    containerRef()?.removeEventListener("click", openContextMenu)
+  })
 
   return (
     <div ref={setContainerRef}>
@@ -144,7 +144,7 @@ const ContextMenu = (props: ContextMenuProps) => {
         </Portal>
       </Show>
     </div>
-  );
-};
+  )
+}
 
-export { ContextMenu };
+export { ContextMenu }

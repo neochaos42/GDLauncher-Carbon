@@ -1,28 +1,28 @@
-import { rspc } from "@/utils/rspcClient";
-import { ModalProps, useModal } from "..";
-import ModalLayout from "../ModalLayout";
-import { Button } from "@gd/ui";
-import { Trans, useTransContext } from "@gd/i18n";
-import { useGlobalStore } from "@/components/GlobalStoreContext";
-import { useGDNavigate } from "@/managers/NavigationManager";
+import { rspc } from "@/utils/rspcClient"
+import { ModalProps, useModal } from ".."
+import ModalLayout from "../ModalLayout"
+import { Button } from "@gd/ui"
+import { Trans, useTransContext } from "@gd/i18n"
+import { useGlobalStore } from "@/components/GlobalStoreContext"
+import { useGDNavigate } from "@/managers/NavigationManager"
 
-type Props = {
-  uuid: string;
-};
+interface Props {
+  uuid: string
+}
 
 const ConfirmMsWithGDLAccountRemoval = (props: ModalProps) => {
-  const [t] = useTransContext();
-  const navigate = useGDNavigate();
-  const data: () => Props = () => props?.data;
+  const [t] = useTransContext()
+  const navigate = useGDNavigate()
+  const data: () => Props = () => props?.data
 
-  const modalsContext = useModal();
+  const modalsContext = useModal()
 
-  const globalStore = useGlobalStore();
-  const accountsLength = () => globalStore.accounts.data?.length;
+  const globalStore = useGlobalStore()
+  const accountsLength = () => globalStore.accounts.data?.length
 
   const deleteAccountMutation = rspc.createMutation(() => ({
     mutationKey: ["account.deleteAccount"]
-  }));
+  }))
 
   return (
     <ModalLayout
@@ -38,7 +38,7 @@ const ConfirmMsWithGDLAccountRemoval = (props: ModalProps) => {
         <div class="flex justify-between w-full">
           <Button
             onClick={() => {
-              modalsContext?.closeModal();
+              modalsContext?.closeModal()
             }}
           >
             {t("instance_confirm_deletion.cancel")}
@@ -46,11 +46,11 @@ const ConfirmMsWithGDLAccountRemoval = (props: ModalProps) => {
           <Button
             type="secondary"
             onClick={async () => {
-              await deleteAccountMutation.mutateAsync(data().uuid);
-              modalsContext?.closeModal();
+              await deleteAccountMutation.mutateAsync(data().uuid)
+              modalsContext?.closeModal()
 
               if (accountsLength() === 1) {
-                navigate("/");
+                navigate("/")
               }
             }}
           >
@@ -59,7 +59,7 @@ const ConfirmMsWithGDLAccountRemoval = (props: ModalProps) => {
         </div>
       </div>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default ConfirmMsWithGDLAccountRemoval;
+export default ConfirmMsWithGDLAccountRemoval

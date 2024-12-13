@@ -1,38 +1,38 @@
-import { rspc } from "@/utils/rspcClient";
-import { useGDNavigate } from "@/managers/NavigationManager";
-import { createNotification } from "@gd/ui";
-import { createSignal } from "solid-js";
-import RowContainer, { Props } from "@/components/Browser/RowContainer";
-import { Modpack } from "@gd/core_module/bindings";
+import { rspc } from "@/utils/rspcClient"
+import { useGDNavigate } from "@/managers/NavigationManager"
+import { createNotification } from "@gd/ui"
+import { createSignal } from "solid-js"
+import RowContainer, { Props } from "@/components/Browser/RowContainer"
+import { Modpack } from "@gd/core_module/bindings"
 
 const VersionRow = (props: Props) => {
-  const navigate = useGDNavigate();
-  const addNotification = createNotification();
+  const navigate = useGDNavigate()
+  const addNotification = createNotification()
 
   const loadIconMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.loadIconUrl"]
-  }));
+  }))
 
   const defaultGroup = rspc.createQuery(() => ({
     queryKey: ["instance.getDefaultGroup"]
-  }));
+  }))
 
-  const [loading, setLoading] = createSignal(false);
+  const [loading, setLoading] = createSignal(false)
 
   const prepareInstanceMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.prepareInstance"]
-  }));
+  }))
 
   const createInstanceMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.createInstance"]
-  }));
+  }))
 
   const onPrimaryAction = async () => {
     if (props.modVersion.mainThumbnail) {
-      loadIconMutation.mutate(props.modVersion.mainThumbnail);
+      loadIconMutation.mutate(props.modVersion.mainThumbnail)
     }
 
-    setLoading(true);
+    setLoading(true)
     try {
       const instanceId = await createInstanceMutation.mutateAsync({
         group: defaultGroup.data || 1,
@@ -53,29 +53,29 @@ const VersionRow = (props: Props) => {
                 }
           } as Modpack
         }
-      });
+      })
 
-      await prepareInstanceMutation.mutateAsync(instanceId);
+      await prepareInstanceMutation.mutateAsync(instanceId)
 
-      setLoading(true);
+      setLoading(true)
       addNotification({
         name: "Downloading modpack",
         content: "Your modpack is being downloaded.",
         type: "success"
-      });
+      })
     } catch (err) {
-      console.log(err);
-      setLoading(false);
+      console.log(err)
+      setLoading(false)
       addNotification({
         name: "Error while creating instance",
         content: "Check the console for more information.",
         type: "error"
-      });
+      })
     } finally {
-      setLoading(false);
-      navigate(`/library`);
+      setLoading(false)
+      navigate(`/library`)
     }
-  };
+  }
 
   return (
     <RowContainer
@@ -84,7 +84,7 @@ const VersionRow = (props: Props) => {
       disabled={false}
       onPrimaryAction={onPrimaryAction}
     />
-  );
-};
+  )
+}
 
-export default VersionRow;
+export default VersionRow

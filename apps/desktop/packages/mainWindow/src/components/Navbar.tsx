@@ -1,42 +1,42 @@
-import { useLocation, useMatch, useRouteData } from "@solidjs/router";
-import { For, Match, Show, Switch, createEffect } from "solid-js";
-import GDLauncherWideLogo from "/assets/images/gdlauncher_wide_logo_blue.svg";
-import { NAVBAR_ROUTES } from "@/constants";
-import { Tab, TabList, Tabs, Spacing, Tooltip, Button } from "@gd/ui";
-import getRouteIndex from "@/route/getRouteIndex";
-import { useGDNavigate } from "@/managers/NavigationManager";
-import fetchData from "@/pages/app.data";
-import { AccountsDropdown } from "./AccountsDropdown";
-import { AccountStatus, AccountType } from "@gd/core_module/bindings";
-import { createStore } from "solid-js/store";
-import { port } from "@/utils/rspcClient";
+import { useLocation, useMatch, useRouteData } from "@solidjs/router"
+import { For, Match, Show, Switch, createEffect } from "solid-js"
+import GDLauncherWideLogo from "/assets/images/gdlauncher_wide_logo_blue.svg"
+import { NAVBAR_ROUTES } from "@/constants"
+import { Tab, TabList, Tabs, Spacing, Tooltip, Button } from "@gd/ui"
+import getRouteIndex from "@/route/getRouteIndex"
+import { useGDNavigate } from "@/managers/NavigationManager"
+import fetchData from "@/pages/app.data"
+import { AccountsDropdown } from "./AccountsDropdown"
+import { AccountStatus, AccountType } from "@gd/core_module/bindings"
+import { createStore } from "solid-js/store"
+import { port } from "@/utils/rspcClient"
 import updateAvailable, {
   updateDownloaded,
   updateProgress
-} from "@/utils/updater";
-import { Trans } from "@gd/i18n";
-import { useModal } from "@/managers/ModalsManager";
+} from "@/utils/updater"
+import { Trans } from "@gd/i18n"
+import { useModal } from "@/managers/ModalsManager"
 
 interface AccountsStatus {
   label: {
-    name: string;
-    icon: string | undefined;
-    uuid: string;
-    type: AccountType;
-    status: AccountStatus | undefined;
-  };
-  key: string;
+    name: string
+    icon: string | undefined
+    uuid: string
+    type: AccountType
+    status: AccountStatus | undefined
+  }
+  key: string
 }
 
 const AppNavbar = () => {
-  const location = useLocation();
-  const navigate = useGDNavigate();
-  const [accounts, setAccounts] = createStore<AccountsStatus[]>([]);
-  const modalsContext = useModal();
+  const location = useLocation()
+  const navigate = useGDNavigate()
+  const [accounts, setAccounts] = createStore<AccountsStatus[]>([])
+  const modalsContext = useModal()
 
-  const isLogin = useMatch(() => "/");
-  const isSettings = useMatch(() => "/settings");
-  const isSettingsNested = useMatch(() => "/settings/*");
+  const isLogin = useMatch(() => "/")
+  const isSettings = useMatch(() => "/settings")
+  const isSettingsNested = useMatch(() => "/settings/*")
 
   // const blockingMutation = rspc.createMutation(() => ({
   //   mutationKey: "longRunning"
@@ -45,13 +45,13 @@ const AppNavbar = () => {
   const selectedIndex = () =>
     !!isSettings() || !!isSettingsNested()
       ? 5
-      : getRouteIndex(NAVBAR_ROUTES, location.pathname);
+      : getRouteIndex(NAVBAR_ROUTES, location.pathname)
 
-  const routeData = useRouteData<typeof fetchData>();
+  const routeData = useRouteData<typeof fetchData>()
 
   createEffect(() => {
     const mappedAccounts = routeData.accounts.data?.map((account) => {
-      const accountStatusQuery = {} as any;
+      const accountStatusQuery = {} as any
 
       return {
         label: {
@@ -62,13 +62,13 @@ const AppNavbar = () => {
           status: accountStatusQuery.data
         },
         key: account?.uuid
-      };
-    });
+      }
+    })
 
     if (mappedAccounts) {
-      setAccounts(mappedAccounts);
+      setAccounts(mappedAccounts)
     }
-  });
+  })
 
   return (
     <Show when={!isLogin()}>
@@ -105,7 +105,7 @@ const AppNavbar = () => {
                         <div class="no-underline">{route.label}</div>
                       </div>
                     </Tab>
-                  );
+                  )
                 }}
               </For>
               <Spacing class="hidden w-full lg:block" />
@@ -117,7 +117,7 @@ const AppNavbar = () => {
                   onClick={() => {
                     modalsContext?.openModal({
                       name: "instanceCreation"
-                    });
+                    })
                   }}
                 >
                   <i class="flex i-ri:add-fill" />
@@ -144,7 +144,7 @@ const AppNavbar = () => {
                     if (!(!!isSettings() || !!isSettingsNested()))
                       navigate("/settings", {
                         getLastInstance: true
-                      });
+                      })
                   }}
                 >
                   <Tab>
@@ -193,9 +193,9 @@ const AppNavbar = () => {
                         }}
                         onClick={() => {
                           if (updateDownloaded()) {
-                            window.installUpdate();
+                            window.installUpdate()
                           } else {
-                            modalsContext?.openModal({ name: "appUpdate" });
+                            modalsContext?.openModal({ name: "appUpdate" })
                           }
                         }}
                       />
@@ -216,7 +216,7 @@ const AppNavbar = () => {
         </div>
       </nav>
     </Show>
-  );
-};
+  )
+}
 
-export default AppNavbar;
+export default AppNavbar

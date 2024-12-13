@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from "storybook-solidjs";
-import { Tabs } from "./Tabs.jsx";
-import { Tab } from "./Tab.jsx";
-import { TabList } from "./TabList.jsx";
-import { TabPanel } from "./TabPanel.jsx";
+import type { Meta, StoryObj } from "storybook-solidjs"
+import { Tabs } from "./Tabs.jsx"
+import { Tab } from "./Tab.jsx"
+import { TabList } from "./TabList.jsx"
+import { TabPanel } from "./TabPanel.jsx"
 
 const meta: Meta<typeof Tabs> = {
   /* 👇 The title prop is optional.
@@ -18,14 +18,14 @@ const meta: Meta<typeof Tabs> = {
     // },
     orientation: {
       options: ["horizontal", "vertical"],
-      control: { type: "radio" },
-    },
-  },
-};
+      control: { type: "radio" }
+    }
+  }
+}
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof Tabs>;
+type Story = StoryObj<typeof Tabs>
 
 export const Main: Story = {
   render: (args) => (
@@ -39,5 +39,5 @@ export const Main: Story = {
       <TabPanel>2</TabPanel>
       <TabPanel>3</TabPanel>
     </Tabs>
-  ),
-};
+  )
+}

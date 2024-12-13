@@ -1,9 +1,9 @@
-import { useGDNavigate } from "@/managers/NavigationManager";
-import { formatDownloadCount, truncateText } from "@/utils/helpers";
-import { rspc } from "@/utils/rspcClient";
-import { Trans } from "@gd/i18n";
-import { Button, createNotification, Popover, Spinner } from "@gd/ui";
-import { formatDistanceToNowStrict } from "date-fns";
+import { useGDNavigate } from "@/managers/NavigationManager"
+import { formatDownloadCount, truncateText } from "@/utils/helpers"
+import { rspc } from "@/utils/rspcClient"
+import { Trans } from "@gd/i18n"
+import { Button, createNotification, Popover, Spinner } from "@gd/ui"
+import { formatDistanceToNowStrict } from "date-fns"
 import {
   createSignal,
   getOwner,
@@ -14,8 +14,8 @@ import {
   runWithOwner,
   Show,
   Switch
-} from "solid-js";
-import OverviewPopover from "../OverviewPopover";
+} from "solid-js"
+import OverviewPopover from "../OverviewPopover"
 import {
   getDataCreation,
   getDownloads,
@@ -26,64 +26,64 @@ import {
   isCurseForgeData,
   ModProps,
   ModRowProps
-} from "@/utils/mods";
-import Categories from "./Categories";
-import Authors from "./Authors";
-import ModDownloadButton from "../ModDownloadButton";
-import { Modpack } from "@gd/core_module/bindings";
+} from "@/utils/mods"
+import Categories from "./Categories"
+import Authors from "./Authors"
+import ModDownloadButton from "../ModDownloadButton"
+import { Modpack } from "@gd/core_module/bindings"
 
 const ModRow = (props: ModRowProps) => {
-  const owner = getOwner();
-  const [loading, setLoading] = createSignal(false);
-  const [isRowSmall, setIsRowSmall] = createSignal(false);
-  const rspcContext = rspc.useContext();
+  const owner = getOwner()
+  const [loading, setLoading] = createSignal(false)
+  const [isRowSmall, setIsRowSmall] = createSignal(false)
+  const rspcContext = rspc.useContext()
 
-  const mergedProps = mergeProps({ type: "Modpack" }, props);
-  const navigate = useGDNavigate();
-  const addNotification = createNotification();
+  const mergedProps = mergeProps({ type: "Modpack" }, props)
+  const navigate = useGDNavigate()
+  const addNotification = createNotification()
 
   const prepareInstanceMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.prepareInstance"],
     onSuccess() {
-      setLoading(false);
+      setLoading(false)
       addNotification({
         name: "Instance successfully created.",
         type: "success"
-      });
+      })
     },
     onError() {
-      setLoading(false);
+      setLoading(false)
       addNotification({
         name: "Error while creating the instance.",
         type: "error"
-      });
+      })
     },
     onSettled() {
-      setLoading(false);
-      navigate(`/library`);
+      setLoading(false)
+      navigate(`/library`)
     }
-  }));
+  }))
 
-  const instanceId = () => (props as ModProps)?.instanceId;
+  const instanceId = () => (props as ModProps)?.instanceId
 
   const loadIconMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.loadIconUrl"]
-  }));
+  }))
 
   const createInstanceMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.createInstance"],
     onSuccess(instanceId) {
-      setLoading(true);
-      prepareInstanceMutation.mutate(instanceId);
+      setLoading(true)
+      prepareInstanceMutation.mutate(instanceId)
     },
     onError() {
-      setLoading(false);
+      setLoading(false)
       addNotification({
         name: "Error while downloading the modpack.",
         type: "error"
-      });
+      })
     }
-  }));
+  }))
 
   const handleExplore = () => {
     navigate(
@@ -92,8 +92,8 @@ const ModRow = (props: ModRowProps) => {
       )}/${
         isCurseForgeData(props.data) ? "curseforge" : "modrinth"
       }?instanceId=${instanceId()}`
-    );
-  };
+    )
+  }
 
   const instanceCreationObj = (
     fileId?: number | string,
@@ -108,36 +108,36 @@ const ModRow = (props: ModRowProps) => {
           }
         : {
             project_id: projectId?.toString() || props.data.modrinth.project_id,
-            version_id: fileId?.toString() as string
+            version_id: fileId?.toString()!
           }
-    } as Modpack;
-  };
+    } as Modpack
+  }
 
-  let containerRef: HTMLDivElement;
-  let resizeObserver: ResizeObserver;
+  let containerRef: HTMLDivElement
+  let resizeObserver: ResizeObserver
 
   onMount(() => {
     resizeObserver = new ResizeObserver((entries) => {
       // eslint-disable-next-line solid/reactivity
       window.requestAnimationFrame(() => {
-        for (let entry of entries) {
-          const cr = entry.contentRect;
-          const shouldSetRowSmall = cr.width < 712;
+        for (const entry of entries) {
+          const cr = entry.contentRect
+          const shouldSetRowSmall = cr.width < 712
           if (isRowSmall() !== shouldSetRowSmall) {
-            setIsRowSmall(shouldSetRowSmall);
+            setIsRowSmall(shouldSetRowSmall)
           }
         }
-      });
-    });
+      })
+    })
 
-    resizeObserver.observe(containerRef);
-  });
+    resizeObserver.observe(containerRef)
+  })
 
   onCleanup(() => {
     if (resizeObserver) {
-      resizeObserver.disconnect();
+      resizeObserver.disconnect()
     }
-  });
+  })
 
   const Title = () => {
     return (
@@ -198,8 +198,8 @@ const ModRow = (props: ModRowProps) => {
           </div>
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <div
@@ -211,7 +211,7 @@ const ModRow = (props: ModRowProps) => {
       <Show when={getLogoUrl(props)}>
         <img
           class="absolute right-0 top-0 bottom-0 select-none w-1/2 z-0"
-          src={getLogoUrl(props) as string}
+          src={getLogoUrl(props)!}
         />
       </Show>
       <div class="flex w-full">
@@ -251,14 +251,14 @@ const ModRow = (props: ModRowProps) => {
                           disabled={loading()}
                           onClick={async () => {
                             runWithOwner(owner, async () => {
-                              if (props.type !== "Modpack") return;
+                              if (props.type !== "Modpack") return
 
-                              setLoading(true);
+                              setLoading(true)
 
-                              const imgUrl = getLogoUrl(props);
-                              if (imgUrl) loadIconMutation.mutate(imgUrl);
+                              const imgUrl = getLogoUrl(props)
+                              if (imgUrl) loadIconMutation.mutate(imgUrl)
 
-                              let fileVersion = undefined;
+                              let fileVersion = undefined
                               if (!isCurseForgeData(props.data)) {
                                 const mrVersions =
                                   await rspcContext.client.query([
@@ -266,9 +266,9 @@ const ModRow = (props: ModRowProps) => {
                                     {
                                       project_id: getProjectId(props).toString()
                                     }
-                                  ]);
+                                  ])
 
-                                fileVersion = mrVersions[0].id;
+                                fileVersion = mrVersions[0].id
                               }
 
                               createInstanceMutation.mutate({
@@ -279,8 +279,8 @@ const ModRow = (props: ModRowProps) => {
                                 version: {
                                   Modpack: instanceCreationObj(fileVersion)
                                 }
-                              });
-                            });
+                              })
+                            })
                           }}
                         >
                           <Show when={loading()}>
@@ -321,7 +321,7 @@ const ModRow = (props: ModRowProps) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ModRow;
+export default ModRow

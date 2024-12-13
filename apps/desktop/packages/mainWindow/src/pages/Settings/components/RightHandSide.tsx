@@ -1,14 +1,14 @@
-import { JSX, children } from "solid-js";
+import { JSX, children } from "solid-js"
 
-type Props = {
-  children: JSX.Element;
-  class?: string;
-};
-
-function RightHandSide(props: Props) {
-  const c = children(() => props.children);
-
-  return <div class={props.class}>{c()}</div>;
+interface Props {
+  children: JSX.Element
+  class?: string
 }
 
-export default RightHandSide;
+function RightHandSide(props: Props) {
+  const c = children(() => props.children)
+
+  return <div class={props.class}>{c()}</div>
+}
+
+export default RightHandSide

@@ -1,16 +1,16 @@
-import { Button, Checkbox, Dropdown, Input } from "@gd/ui";
-import { For, Show } from "solid-js";
-import { Trans, useTransContext } from "@gd/i18n";
-import ResourcePack from "./ResourcePack";
-import skull from "/assets/images/icons/skull.png";
+import { Button, Checkbox, Dropdown, Input } from "@gd/ui"
+import { For, Show } from "solid-js"
+import { Trans, useTransContext } from "@gd/i18n"
+import ResourcePack from "./ResourcePack"
+import skull from "/assets/images/icons/skull.png"
 
-type IResourcepack = {
-  title: string;
-  enabled: boolean;
-  mcversion: string;
-  modloaderVersion: string;
-  resourcePackVersion: string;
-};
+interface IResourcepack {
+  title: string
+  enabled: boolean
+  mcversion: string
+  modloaderVersion: string
+  resourcePackVersion: string
+}
 
 const resourcePacks: IResourcepack[] = [
   {
@@ -119,7 +119,7 @@ const resourcePacks: IResourcepack[] = [
     modloaderVersion: "2.1.3",
     resourcePackVersion: "1.17"
   }
-];
+]
 
 const NoResourcePacks = () => {
   return (
@@ -145,11 +145,11 @@ const NoResourcePacks = () => {
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const ResourcePacks = () => {
-  const [t] = useTransContext();
+  const [t] = useTransContext()
   return (
     <div>
       <div class="flex flex-col bg-darkSlate-800 z-10 transition-all duration-100 ease-in-out sticky pt-10 top-30">
@@ -245,7 +245,7 @@ const ResourcePacks = () => {
         </Show>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ResourcePacks;
+export default ResourcePacks

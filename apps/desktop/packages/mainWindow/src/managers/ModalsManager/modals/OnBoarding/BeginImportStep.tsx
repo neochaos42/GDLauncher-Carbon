@@ -1,23 +1,23 @@
-import { For, createSignal } from "solid-js";
-import SingleImport from "./SingleImport";
-import { rspc } from "@/utils/rspcClient";
-import { setTaskIds, taskIds } from "@/utils/import";
-import { globalInstances } from "./SingleEntity";
+import { For, createSignal } from "solid-js"
+import SingleImport from "./SingleImport"
+import { rspc } from "@/utils/rspcClient"
+import { setTaskIds, taskIds } from "@/utils/import"
+import { globalInstances } from "./SingleEntity"
 
 const BeginImportStep = (props: {
-  singleInstance?: string;
-  instances?: Array<string>;
+  singleInstance?: string
+  instances?: string[]
 }) => {
-  const [state, setState] = createSignal<string[]>([]);
+  const [state, setState] = createSignal<string[]>([])
   const importInstanceMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.importInstance"],
     onSuccess(taskId) {
-      setTaskIds([...(taskIds() || []), taskId]);
+      setTaskIds([...(taskIds() || []), taskId])
     },
     onError() {
-      setTaskIds([...(taskIds() || []), undefined]);
+      setTaskIds([...(taskIds() || []), undefined])
     }
-  }));
+  }))
 
   async function createMutations() {
     for (let i = 0; i < props.instances!.length; i++) {
@@ -27,19 +27,19 @@ const BeginImportStep = (props: {
           index: globalInstances().findIndex(
             (x) => x.instance_name === props.instances![i]
           )
-        });
+        })
 
-        setState([...state(), "success"]);
+        setState([...state(), "success"])
       } catch (error) {
-        console.error(error);
-        setState([...state(), "error"]);
-        continue;
+        console.error(error)
+        setState([...state(), "error"])
+        continue
       }
-      await new Promise((r) => setTimeout(r, 100));
+      await new Promise((r) => setTimeout(r, 100))
     }
   }
 
-  if (taskIds().every((x) => x === undefined)) createMutations();
+  if (taskIds().every((x) => x === undefined)) createMutations()
 
   return (
     <div class="w-full overflow-y-auto p-2 h-[240px]">
@@ -54,6 +54,6 @@ const BeginImportStep = (props: {
         )}
       </For>
     </div>
-  );
-};
-export default BeginImportStep;
+  )
+}
+export default BeginImportStep

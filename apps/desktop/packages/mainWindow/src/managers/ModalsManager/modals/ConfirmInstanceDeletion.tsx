@@ -1,13 +1,13 @@
-import { rspc } from "@/utils/rspcClient";
-import { ModalProps, useModal } from "..";
-import ModalLayout from "../ModalLayout";
-import { Button, createNotification } from "@gd/ui";
-import { Trans, useTransContext } from "@gd/i18n";
+import { rspc } from "@/utils/rspcClient"
+import { ModalProps, useModal } from ".."
+import ModalLayout from "../ModalLayout"
+import { Button, createNotification } from "@gd/ui"
+import { Trans, useTransContext } from "@gd/i18n"
 
 const ConfirmInstanceDeletion = (props: ModalProps) => {
-  const [t] = useTransContext();
-  const modalsContext = useModal();
-  const addNotification = createNotification();
+  const [t] = useTransContext()
+  const modalsContext = useModal()
+  const addNotification = createNotification()
 
   const deleteInstanceMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.deleteInstance"],
@@ -16,9 +16,9 @@ const ConfirmInstanceDeletion = (props: ModalProps) => {
         name: "Cannot delete instance",
         content: error.message,
         type: "error"
-      });
+      })
     }
-  }));
+  }))
 
   return (
     <ModalLayout
@@ -43,7 +43,7 @@ const ConfirmInstanceDeletion = (props: ModalProps) => {
         <div class="flex justify-between w-full">
           <Button
             onClick={() => {
-              modalsContext?.closeModal();
+              modalsContext?.closeModal()
             }}
           >
             {t("instance_confirm_deletion.cancel")}
@@ -51,8 +51,8 @@ const ConfirmInstanceDeletion = (props: ModalProps) => {
           <Button
             type="secondary"
             onClick={() => {
-              deleteInstanceMutation.mutate(props?.data?.id);
-              modalsContext?.closeModal();
+              deleteInstanceMutation.mutate(props?.data?.id)
+              modalsContext?.closeModal()
             }}
           >
             {t("instance_confirm_deletion.delete")}
@@ -60,7 +60,7 @@ const ConfirmInstanceDeletion = (props: ModalProps) => {
         </div>
       </div>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default ConfirmInstanceDeletion;
+export default ConfirmInstanceDeletion

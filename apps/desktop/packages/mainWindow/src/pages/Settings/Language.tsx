@@ -1,20 +1,19 @@
-/* eslint-disable i18next/no-literal-string */
-import { Trans, supportedLanguages } from "@gd/i18n";
-import PageTitle from "./components/PageTitle";
-import Row from "./components/Row";
-import RowsContainer from "./components/RowsContainer";
-import { Radio } from "@gd/ui";
-import { getOwner, runWithOwner } from "solid-js";
-import { rspc } from "@/utils/rspcClient";
-import Title from "./components/Title";
-import changeLanguage from "@/utils/language";
+import { Trans, supportedLanguages } from "@gd/i18n"
+import PageTitle from "./components/PageTitle"
+import Row from "./components/Row"
+import RowsContainer from "./components/RowsContainer"
+import { Radio } from "@gd/ui"
+import { getOwner, runWithOwner } from "solid-js"
+import { rspc } from "@/utils/rspcClient"
+import Title from "./components/Title"
+import changeLanguage from "@/utils/language"
 
 const Language = () => {
-  let settings = rspc.createQuery(() => ({
+  const settings = rspc.createQuery(() => ({
     queryKey: ["settings.getSettings"]
-  }));
+  }))
 
-  const owner = getOwner();
+  const owner = getOwner()
 
   return (
     <>
@@ -30,8 +29,8 @@ const Language = () => {
             <Radio.group
               onChange={(value) => {
                 runWithOwner(owner, () => {
-                  changeLanguage(value as string);
-                });
+                  changeLanguage(value as string)
+                })
               }}
               value={settings.data?.language}
               options={Object.entries(supportedLanguages).map(
@@ -54,7 +53,7 @@ const Language = () => {
         </Row>
       </RowsContainer>
     </>
-  );
-};
+  )
+}
 
-export default Language;
+export default Language

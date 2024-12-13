@@ -1,6 +1,6 @@
-import { ModalProps } from "..";
-import ModalLayout from "../ModalLayout";
-import { Trans } from "@gd/i18n";
+import { ModalProps } from ".."
+import ModalLayout from "../ModalLayout"
+import { Trans } from "@gd/i18n"
 
 const WhyAreAdsNeeded = (props: ModalProps) => {
   return (
@@ -59,7 +59,7 @@ const WhyAreAdsNeeded = (props: ModalProps) => {
         </p>
       </div>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default WhyAreAdsNeeded;
+export default WhyAreAdsNeeded

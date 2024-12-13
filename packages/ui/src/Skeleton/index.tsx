@@ -1,8 +1,8 @@
-import { For } from "solid-js";
+import { For } from "solid-js"
 
 const Skeleton = () => {
-  return <div class="w-1/3 min-w-20 h-4 rounded-md bg-darkSlate-500" />;
-};
+  return <div class="w-1/3 min-w-20 h-4 rounded-md bg-darkSlate-500" />
+}
 
 const SidebarInstance = () => {
   return (
@@ -13,22 +13,22 @@ const SidebarInstance = () => {
         <div class="w-32 h-4 rounded-md bg-darkSlate-500" />
       </div>
     </div>
-  );
-};
+  )
+}
 
-Skeleton.sidebarInstance = SidebarInstance;
+Skeleton.sidebarInstance = SidebarInstance
 
 Skeleton.sidebarInstances = () => {
   return (
     <div class="flex flex-col gap-2 mt-10">
       <For each={new Array(4)}>{() => <SidebarInstance />}</For>
     </div>
-  );
-};
+  )
+}
 
 Skeleton.sidebarInstanceSmall = () => {
-  return <div class="h-10 w-10 rounded-lg bg-darkSlate-500 py-2 px-4" />;
-};
+  return <div class="h-10 w-10 rounded-lg bg-darkSlate-500 py-2 px-4" />
+}
 
 const Instance = () => {
   return (
@@ -39,10 +39,10 @@ const Instance = () => {
         <div class="w-32 h-4 rounded-md bg-darkSlate-500" />
       </div>
     </div>
-  );
-};
+  )
+}
 
-Skeleton.instance = Instance;
+Skeleton.instance = Instance
 
 Skeleton.instances = () => {
   return (
@@ -67,12 +67,12 @@ Skeleton.instances = () => {
         <For each={new Array(10)}>{() => <Instance />}</For>
       </div>
     </div>
-  );
-};
+  )
+}
 
 Skeleton.news = () => {
-  return <div class="w-full h-24 rounded-lg bg-darkSlate-500 mb-5" />;
-};
+  return <div class="w-full h-24 rounded-lg bg-darkSlate-500 mb-5" />
+}
 
 const Modpack = () => {
   return (
@@ -84,10 +84,10 @@ const Modpack = () => {
         <div class="w-1/2 h-4 rounded-md bg-darkSlate-500" />
       </div>
     </div>
-  );
-};
+  )
+}
 
-Skeleton.modpack = Modpack;
+Skeleton.modpack = Modpack
 
 Skeleton.modpacksList = () => {
   return (
@@ -97,16 +97,16 @@ Skeleton.modpacksList = () => {
       <Modpack />
       <Modpack />
     </div>
-  );
-};
+  )
+}
 const ModpackVersion = () => {
   return (
     <div class="flex flex-col justify-between w-1/2 rounded-xl p-4 gap-4 box-border">
       <div class="w-full h-2 rounded-md bg-darkSlate-500" />
       <div class="w-1/2 h-2 rounded-md bg-darkSlate-500" />
     </div>
-  );
-};
+  )
+}
 Skeleton.modpackVersionList = () => {
   return (
     <div class="flex flex-col gap-2 w-full">
@@ -115,8 +115,8 @@ Skeleton.modpackVersionList = () => {
       <ModpackVersion />
       <ModpackVersion />
     </div>
-  );
-};
+  )
+}
 Skeleton.modpackOverviewPage = () => {
   return (
     <div class="flex flex-col gap-2 w-full">
@@ -133,8 +133,8 @@ Skeleton.modpackOverviewPage = () => {
         <div class="w-72 h-44 rounded-xl bg-darkSlate-500" />
       </div>
     </div>
-  );
-};
+  )
+}
 
 Skeleton.modpackScreenshotsPage = () => {
   return (
@@ -144,8 +144,8 @@ Skeleton.modpackScreenshotsPage = () => {
       <div class="w-72 h-44 rounded-xl bg-darkSlate-500" />
       <div class="w-72 h-44 rounded-xl bg-darkSlate-500" />
     </div>
-  );
-};
+  )
+}
 
 Skeleton.modpackChangelogPage = () => {
   return (
@@ -167,8 +167,8 @@ Skeleton.modpackChangelogPage = () => {
       <div class="w-1/4 h-3 rounded-xl bg-darkSlate-500 mt-5" />
       <div class="w-1/2 h-3 rounded-xl bg-darkSlate-500" />
     </div>
-  );
-};
+  )
+}
 
 Skeleton.modpackSidebarCategories = () => {
   return (
@@ -182,12 +182,12 @@ Skeleton.modpackSidebarCategories = () => {
         )}
       </For>
     </div>
-  );
-};
+  )
+}
 
 Skeleton.select = () => {
-  return <div class="w-31	h-12 rounded-full bg-darkSlate-500" />;
-};
+  return <div class="w-31	h-12 rounded-full bg-darkSlate-500" />
+}
 
 Skeleton.filters = () => {
   return (
@@ -197,8 +197,8 @@ Skeleton.filters = () => {
       <Skeleton.select />
       <Skeleton.select />
     </div>
-  );
-};
+  )
+}
 
 Skeleton.explorer = () => {
   return (
@@ -216,8 +216,8 @@ Skeleton.explorer = () => {
         <div class="w-100 h-36 rounded-xl bg-darkSlate-500" />
       </div>
     </div>
-  );
-};
+  )
+}
 
 Skeleton.featuredHomeTile = () => {
   return (
@@ -230,7 +230,7 @@ Skeleton.featuredHomeTile = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export { Skeleton };
+export { Skeleton }

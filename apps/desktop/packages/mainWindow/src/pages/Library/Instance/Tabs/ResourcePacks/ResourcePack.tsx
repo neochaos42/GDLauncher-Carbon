@@ -1,16 +1,16 @@
-import { Checkbox, Switch } from "@gd/ui";
+import { Checkbox, Switch } from "@gd/ui"
 
-type IResourcePack = {
-  title: string;
-  enabled: boolean;
-  mcversion: string;
-  modloaderVersion: string;
-  resourcePackVersion: string;
-};
+interface IResourcePack {
+  title: string
+  enabled: boolean
+  mcversion: string
+  modloaderVersion: string
+  resourcePackVersion: string
+}
 
-type Props = {
-  resourcePack: IResourcePack;
-};
+interface Props {
+  resourcePack: IResourcePack
+}
 
 const ResourcePack = (props: Props) => {
   return (
@@ -33,7 +33,7 @@ const ResourcePack = (props: Props) => {
         <Switch />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ResourcePack;
+export default ResourcePack

@@ -1,57 +1,57 @@
-import { Button, Dropdown, Spinner } from "@gd/ui";
-import { ModalProps, useModal } from "../..";
-import ModalLayout from "../../ModalLayout";
-import { rspc } from "@/utils/rspcClient";
-import { instanceId } from "@/utils/browser";
-import { Show, createEffect, createSignal } from "solid-js";
-import { FEInstanceId, Modpack } from "@gd/core_module/bindings";
-import { useGDNavigate } from "@/managers/NavigationManager";
-import { useTransContext } from "@gd/i18n";
+import { Button, Dropdown, Spinner } from "@gd/ui"
+import { ModalProps, useModal } from "../.."
+import ModalLayout from "../../ModalLayout"
+import { rspc } from "@/utils/rspcClient"
+import { instanceId } from "@/utils/browser"
+import { Show, createEffect, createSignal } from "solid-js"
+import { Modpack } from "@gd/core_module/bindings"
+import { useGDNavigate } from "@/managers/NavigationManager"
+import { useTransContext } from "@gd/i18n"
 
 const ModPackVersionUpdate = (props: ModalProps) => {
-  const [t] = useTransContext();
+  const [t] = useTransContext()
   const [currentPlatform, setCurrentPlatform] = createSignal<
     "modrinth" | "curseforge" | null
-  >(null);
+  >(null)
   const [selectedVersion, setSelectedVersion] = createSignal<string | null>(
     null
-  );
-  const navigate = useGDNavigate();
-  const modalContext = useModal();
+  )
+  const navigate = useGDNavigate()
+  const modalContext = useModal()
   const instance = rspc.createQuery(() => ({
-    queryKey: ["instance.getInstanceDetails", instanceId() as number]
-  }));
+    queryKey: ["instance.getInstanceDetails", instanceId()!]
+  }))
 
   const changeModpackMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.changeModpack"]
-  }));
+  }))
 
   const getProjectId = () => {
-    const modpack = instance.data?.modpack?.modpack;
+    const modpack = instance.data?.modpack?.modpack
     if (modpack) {
       if (modpack.type === "curseforge") {
-        setCurrentPlatform("curseforge");
+        setCurrentPlatform("curseforge")
         return {
           projectId: modpack.value.project_id,
           fileId: modpack.value.file_id
-        };
+        }
       } else {
-        setCurrentPlatform("modrinth");
+        setCurrentPlatform("modrinth")
         return {
           projectId: modpack.value.project_id,
           fileId: modpack.value.version_id
-        };
+        }
       }
     }
 
-    return undefined;
-  };
+    return undefined
+  }
 
   createEffect(() => {
     if (!selectedVersion()) {
-      setSelectedVersion(getProjectId()?.fileId?.toString() || "");
+      setSelectedVersion(getProjectId()?.fileId?.toString() || "")
     }
-  });
+  })
 
   const responseCF = rspc.createQuery(() => ({
     queryKey: [
@@ -64,7 +64,7 @@ const ModPackVersionUpdate = (props: ModalProps) => {
       }
     ],
     enabled: false
-  }));
+  }))
 
   const responseModrinth = rspc.createQuery(() => ({
     queryKey: [
@@ -74,18 +74,18 @@ const ModPackVersionUpdate = (props: ModalProps) => {
       }
     ],
     enabled: false
-  }));
+  }))
 
   createEffect(() => {
     if (currentPlatform() === "curseforge") {
-      responseCF.refetch();
+      responseCF.refetch()
     } else if (currentPlatform() === "modrinth") {
-      responseModrinth.refetch();
+      responseModrinth.refetch()
     }
-  });
+  })
 
   const response = () =>
-    currentPlatform() === "curseforge" ? responseCF : responseModrinth;
+    currentPlatform() === "curseforge" ? responseCF : responseModrinth
 
   const options = () => {
     if (currentPlatform() === "curseforge") {
@@ -101,7 +101,7 @@ const ModPackVersionUpdate = (props: ModalProps) => {
           ),
           key: file.id.toString()
         })) || []
-      );
+      )
     }
 
     return (
@@ -116,14 +116,14 @@ const ModPackVersionUpdate = (props: ModalProps) => {
         ),
         key: file.id.toString()
       })) || []
-    );
-  };
+    )
+  }
 
   const handleUpdate = async () => {
-    if (!selectedVersion()) return;
+    if (!selectedVersion()) return
 
     await changeModpackMutation.mutateAsync({
-      instance: instanceId() as FEInstanceId,
+      instance: instanceId()!,
       modpack: {
         type: currentPlatform(),
         value:
@@ -133,15 +133,15 @@ const ModPackVersionUpdate = (props: ModalProps) => {
                 file_id: parseInt(selectedVersion()!)
               }
             : {
-                project_id: getProjectId()?.projectId.toString() as string,
+                project_id: getProjectId()?.projectId.toString()!,
                 version_id: selectedVersion()
               }
       } as Modpack
-    });
+    })
 
-    modalContext?.closeModal();
-    navigate("/library");
-  };
+    modalContext?.closeModal()
+    navigate("/library")
+  }
 
   return (
     <ModalLayout
@@ -159,7 +159,7 @@ const ModPackVersionUpdate = (props: ModalProps) => {
             options={options()}
             value={selectedVersion()}
             onChange={(option) => {
-              setSelectedVersion(option.key.toString());
+              setSelectedVersion(option.key.toString())
             }}
           />
 
@@ -167,7 +167,7 @@ const ModPackVersionUpdate = (props: ModalProps) => {
             <Button
               type="outline"
               onClick={() => {
-                modalContext?.closeModal();
+                modalContext?.closeModal()
               }}
             >
               {t("instance.cancel_export")}
@@ -183,7 +183,7 @@ const ModPackVersionUpdate = (props: ModalProps) => {
         </Show>
       </div>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default ModPackVersionUpdate;
+export default ModPackVersionUpdate

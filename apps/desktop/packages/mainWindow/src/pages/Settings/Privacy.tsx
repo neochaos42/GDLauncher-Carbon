@@ -1,14 +1,14 @@
-import { Button } from "@gd/ui";
-import { Trans } from "@gd/i18n";
-import PageTitle from "./components/PageTitle";
-import RowsContainer from "./components/RowsContainer";
-import Row from "./components/Row";
-import Title from "./components/Title";
-import RightHandSide from "./components/RightHandSide";
-import { useModal } from "@/managers/ModalsManager";
+import { Button } from "@gd/ui"
+import { Trans } from "@gd/i18n"
+import PageTitle from "./components/PageTitle"
+import RowsContainer from "./components/RowsContainer"
+import Row from "./components/Row"
+import Title from "./components/Title"
+import RightHandSide from "./components/RightHandSide"
+import { useModal } from "@/managers/ModalsManager"
 
 const Privacy = () => {
-  const modalsContext = useModal();
+  const modalsContext = useModal()
 
   return (
     <>
@@ -28,7 +28,7 @@ const Privacy = () => {
               size="small"
               rounded={false}
               onClick={() => {
-                window?.openCMPWindow();
+                window?.openCMPWindow()
               }}
             >
               <Trans key="login.manage" />
@@ -47,7 +47,7 @@ const Privacy = () => {
               onClick={() => {
                 modalsContext?.openModal({
                   name: "privacyStatement"
-                });
+                })
               }}
             >
               <Trans key="settings:privacy_policy" />
@@ -60,7 +60,7 @@ const Privacy = () => {
               onClick={() => {
                 modalsContext?.openModal({
                   name: "termsAndConditions"
-                });
+                })
               }}
             >
               <Trans key="settings:terms_of_service" />
@@ -69,7 +69,7 @@ const Privacy = () => {
         </Row>
       </RowsContainer>
     </>
-  );
-};
+  )
+}
 
-export default Privacy;
+export default Privacy

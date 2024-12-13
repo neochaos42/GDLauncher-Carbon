@@ -1,35 +1,35 @@
-import { rspc } from "@/utils/rspcClient";
-import { ModalProps, useModal } from "..";
-import ModalLayout from "../ModalLayout";
-import { Button, Input, createNotification } from "@gd/ui";
-import { Trans } from "@gd/i18n";
-import { createSignal } from "solid-js";
-import JavaPathAutoComplete from "@/components/JavaPathAutoComplete";
+import { rspc } from "@/utils/rspcClient"
+import { ModalProps, useModal } from ".."
+import ModalLayout from "../ModalLayout"
+import { Button, Input, createNotification } from "@gd/ui"
+import { Trans } from "@gd/i18n"
+import { createSignal } from "solid-js"
+import JavaPathAutoComplete from "@/components/JavaPathAutoComplete"
 
 const JavaProfileCreationModal = (props: ModalProps) => {
-  const modalsContext = useModal();
-  const notification = createNotification();
-  const [profileName, setProfileName] = createSignal("");
-  const [javaId, setJavaId] = createSignal("");
+  const modalsContext = useModal()
+  const notification = createNotification()
+  const [profileName, setProfileName] = createSignal("")
+  const [javaId, setJavaId] = createSignal("")
 
   const createProfileMutation = rspc.createMutation(() => ({
     mutationKey: ["java.createJavaProfile"]
-  }));
+  }))
   const createCustomJavaVersionMutation = rspc.createMutation(() => ({
     mutationKey: ["java.createCustomJavaVersion"]
-  }));
+  }))
 
   const allProfiles = rspc.createQuery(() => ({
     queryKey: ["java.getJavaProfiles"]
-  }));
+  }))
 
   const profileAlreadyExists = () => {
     for (const profile of allProfiles.data || []) {
-      if (profile.name === profileName()) return true;
+      if (profile.name === profileName()) return true
     }
 
-    return false;
-  };
+    return false
+  }
 
   return (
     <ModalLayout
@@ -59,7 +59,7 @@ const JavaProfileCreationModal = (props: ModalProps) => {
             inputColor="bg-darkSlate-600"
             disabled={createCustomJavaVersionMutation.isPending}
             updateValue={(value) => {
-              if (value) setJavaId(value);
+              if (value) setJavaId(value)
             }}
           />
         </div>
@@ -68,7 +68,7 @@ const JavaProfileCreationModal = (props: ModalProps) => {
             type="secondary"
             disabled={createCustomJavaVersionMutation.isPending}
             onClick={() => {
-              modalsContext?.closeModal();
+              modalsContext?.closeModal()
             }}
           >
             <Trans key="instance_confirm_deletion.cancel" />
@@ -84,14 +84,14 @@ const JavaProfileCreationModal = (props: ModalProps) => {
               await createProfileMutation.mutateAsync({
                 profileName: profileName(),
                 javaId: javaId()
-              });
+              })
 
               notification({
                 name: "Profile created",
                 type: "success"
-              });
+              })
 
-              modalsContext?.closeModal();
+              modalsContext?.closeModal()
             }}
           >
             <Trans key="create" />
@@ -99,7 +99,7 @@ const JavaProfileCreationModal = (props: ModalProps) => {
         </div>
       </div>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default JavaProfileCreationModal;
+export default JavaProfileCreationModal

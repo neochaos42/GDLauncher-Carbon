@@ -3,41 +3,41 @@ import {
   getCoreRowModel,
   ColumnDef,
   createSolidTable
-} from "@tanstack/solid-table";
-import { Trans, useTransContext } from "@gd/i18n";
-import { Button, createNotification, Popover, Tooltip } from "@gd/ui";
-import { port, rspc } from "@/utils/rspcClient";
-import PageTitle from "./components/PageTitle";
-import Row from "./components/Row";
-import Title from "./components/Title";
-import RowsContainer from "./components/RowsContainer";
-import { useGlobalStore } from "@/components/GlobalStoreContext";
-import { For, JSX, Match, Show, Switch } from "solid-js";
-import { useGDNavigate } from "@/managers/NavigationManager";
-import { convertSecondsToHumanTime } from "@/utils/helpers";
-import { useModal } from "@/managers/ModalsManager";
-import { AccountEntry } from "@gd/core_module/bindings";
+} from "@tanstack/solid-table"
+import { Trans, useTransContext } from "@gd/i18n"
+import { Button, createNotification, Popover, Tooltip } from "@gd/ui"
+import { port, rspc } from "@/utils/rspcClient"
+import PageTitle from "./components/PageTitle"
+import Row from "./components/Row"
+import Title from "./components/Title"
+import RowsContainer from "./components/RowsContainer"
+import { useGlobalStore } from "@/components/GlobalStoreContext"
+import { For, JSX, Match, Show, Switch } from "solid-js"
+import { useGDNavigate } from "@/managers/NavigationManager"
+import { convertSecondsToHumanTime } from "@/utils/helpers"
+import { useModal } from "@/managers/ModalsManager"
+import { AccountEntry } from "@gd/core_module/bindings"
 
 const GDLAccountRowItem = (props: {
-  title?: string;
-  value?: string | null | undefined;
-  children?: JSX.Element;
-  onEdit?: () => void;
+  title?: string
+  value?: string | null | undefined
+  children?: JSX.Element
+  onEdit?: () => void
 }) => {
-  const addNotification = createNotification();
+  const addNotification = createNotification()
 
   return (
     <div
       class="flex justify-between items-center group"
       onClick={() => {
-        if (!props.value) return;
+        if (!props.value) return
 
-        navigator.clipboard.writeText(props.value);
+        navigator.clipboard.writeText(props.value)
 
         addNotification({
           name: "Copied to clipboard",
           type: "success"
-        });
+        })
       }}
     >
       <div class="flex flex-col gap-2 justify-center">
@@ -60,8 +60,8 @@ const GDLAccountRowItem = (props: {
         <div class="text-md underline">EDIT</div>
       </Show> */}
     </div>
-  );
-};
+  )
+}
 
 const defaultColumns: ColumnDef<AccountEntry>[] = [
   {
@@ -157,39 +157,38 @@ const defaultColumns: ColumnDef<AccountEntry>[] = [
       </span>
     )
   }
-];
+]
 
 const Accounts = () => {
-  const globalStore = useGlobalStore();
-  const [t] = useTransContext();
+  const globalStore = useGlobalStore()
+  const [t] = useTransContext()
 
-  const navigate = useGDNavigate();
-  const modalsContext = useModal();
-  const addNotification = createNotification();
+  const navigate = useGDNavigate()
+  const modalsContext = useModal()
+  const addNotification = createNotification()
 
   const removeGDLAccountMutation = rspc.createMutation(() => ({
     mutationKey: ["account.removeGdlAccount"]
-  }));
+  }))
 
   const requestNewVerificationTokenMutation = rspc.createMutation(() => ({
     mutationKey: ["account.requestNewVerificationToken"]
-  }));
+  }))
 
   const removeAccountMutation = rspc.createMutation(() => ({
     mutationKey: ["account.deleteAccount"]
-  }));
+  }))
 
   const setActiveAccountMutation = rspc.createMutation(() => ({
     mutationKey: ["account.setActiveUuid"]
-  }));
+  }))
 
   const validGDLUser = () =>
     globalStore.gdlAccount.data?.status === "valid"
       ? globalStore.gdlAccount.data?.value
-      : undefined;
+      : undefined
 
-  const invalidGDLUser = () =>
-    globalStore.gdlAccount.data?.status === "invalid";
+  const invalidGDLUser = () => globalStore.gdlAccount.data?.status === "invalid"
 
   const deleteAccountContent = () => {
     if (validGDLUser()?.deletionTimeout) {
@@ -200,11 +199,11 @@ const Accounts = () => {
             time: convertSecondsToHumanTime(validGDLUser()?.deletionTimeout!)
           }}
         />
-      );
+      )
     } else {
-      return undefined;
+      return undefined
     }
-  };
+  }
 
   const verificationContent = () => {
     if (validGDLUser()?.verificationTimeout) {
@@ -217,19 +216,19 @@ const Accounts = () => {
             )
           }}
         />
-      );
+      )
     } else {
-      return undefined;
+      return undefined
     }
-  };
+  }
 
   const accountsTable = createSolidTable({
     get data() {
-      return globalStore.accounts.data || [];
+      return globalStore.accounts.data || []
     },
     columns: defaultColumns,
     getCoreRowModel: getCoreRowModel()
-  });
+  })
 
   return (
     <>
@@ -262,7 +261,7 @@ const Accounts = () => {
                       <Button
                         type="secondary"
                         onClick={() => {
-                          removeGDLAccountMutation.mutate(undefined);
+                          removeGDLAccountMutation.mutate(undefined)
                         }}
                       >
                         <i class="block w-6 h-6 i-ri:logout-box-line" />
@@ -285,21 +284,21 @@ const Accounts = () => {
                               (account) =>
                                 account.uuid ===
                                 globalStore.settings.data?.gdlAccountId
-                            )?.uuid;
+                            )?.uuid
 
                             if (!uuid) {
-                              throw new Error("No active gdl account");
+                              throw new Error("No active gdl account")
                             }
 
                             const request =
                               await requestNewVerificationTokenMutation.mutateAsync(
                                 uuid
-                              );
+                              )
 
                             if (request.status === "failed" && request.value) {
                               throw new Error(
                                 `Too many requests, retry in ${request.value}s`
-                              );
+                              )
                             }
                           }}
                         >
@@ -364,7 +363,7 @@ const Accounts = () => {
                       onClick={() => {
                         modalsContext?.openModal({
                           name: "confirmGDLAccountDeletion"
-                        });
+                        })
                       }}
                     >
                       <i class="block w-6 h-6 i-ri:delete-bin-7-fill" />
@@ -382,8 +381,8 @@ const Accounts = () => {
                   <Button
                     type="outline"
                     onClick={async () => {
-                      await removeGDLAccountMutation.mutateAsync(undefined);
-                      navigate("/");
+                      await removeGDLAccountMutation.mutateAsync(undefined)
+                      navigate("/")
                     }}
                   >
                     <Trans key="settings:link_gdl_account" />
@@ -399,7 +398,7 @@ const Accounts = () => {
                   <Button
                     type="outline"
                     onClick={() => {
-                      removeGDLAccountMutation.mutate(undefined);
+                      removeGDLAccountMutation.mutate(undefined)
                     }}
                   >
                     <i class="block w-6 h-6 i-ri:logout-box-line" />
@@ -420,7 +419,7 @@ const Accounts = () => {
                 type="secondary"
                 size="small"
                 onClick={() => {
-                  navigate("/?addMicrosoftAccount=true");
+                  navigate("/?addMicrosoftAccount=true")
                 }}
               >
                 <div class="i-ri:add-line" />
@@ -472,19 +471,19 @@ const Accounts = () => {
                             row.original.uuid !==
                               globalStore.currentlySelectedAccountUuid.data
                           ) {
-                            setActiveAccountMutation.mutate(row.original.uuid);
+                            setActiveAccountMutation.mutate(row.original.uuid)
                           } else if (
                             cell.column.columnDef.id === "uuid" ||
                             cell.column.columnDef.id === "username"
                           ) {
                             navigator.clipboard.writeText(
                               cell.getValue() as string
-                            );
+                            )
 
                             addNotification({
                               name: "Copied to clipboard",
                               type: "success"
-                            });
+                            })
                           }
                         }}
                       >
@@ -496,7 +495,7 @@ const Accounts = () => {
                                   <div
                                     class="w-4 h-4 i-ri:refresh-line"
                                     onClick={async () => {
-                                      navigate("/?addMicrosoftAccount=true");
+                                      navigate("/?addMicrosoftAccount=true")
                                     }}
                                   />
                                 </div>
@@ -506,31 +505,29 @@ const Accounts = () => {
                                   class="w-4 h-4 i-ri:delete-bin-2-fill"
                                   onClick={async () => {
                                     const gdlAccountUuid =
-                                      globalStore.settings.data?.gdlAccountId;
+                                      globalStore.settings.data?.gdlAccountId
                                     const accountsLength =
-                                      globalStore.accounts.data?.length;
+                                      globalStore.accounts.data?.length
 
                                     if (
                                       gdlAccountUuid &&
-                                      gdlAccountUuid ===
-                                        (row.original as AccountEntry).uuid
+                                      gdlAccountUuid === row.original.uuid
                                     ) {
                                       modalsContext?.openModal(
                                         {
                                           name: "confirmMsWithGDLAccountRemoval"
                                         },
                                         {
-                                          uuid: (row.original as AccountEntry)
-                                            .uuid
+                                          uuid: row.original.uuid
                                         }
-                                      );
+                                      )
                                     } else {
                                       await removeAccountMutation.mutateAsync(
-                                        (row.original as AccountEntry).uuid
-                                      );
+                                        row.original.uuid
+                                      )
 
                                       if (accountsLength === 1) {
-                                        navigate("/");
+                                        navigate("/")
                                       }
                                     }
                                   }}
@@ -585,10 +582,10 @@ const Accounts = () => {
         </table>
       </RowsContainer>
     </>
-  );
-};
+  )
+}
 
-export default Accounts;
+export default Accounts
 
 // Handle automatic redirect to gdl login that fails on peek because
 // all accounts are invalid because of the migration.

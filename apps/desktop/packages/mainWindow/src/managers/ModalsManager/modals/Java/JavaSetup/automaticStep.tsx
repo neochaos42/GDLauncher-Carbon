@@ -1,8 +1,8 @@
-import { Progressbar } from "@gd/ui";
-import JavaLogo from "/assets/images/icons/java-logo.svg";
-import { Trans } from "@gd/i18n";
+import { Progressbar } from "@gd/ui"
+import JavaLogo from "/assets/images/icons/java-logo.svg"
+import { Trans } from "@gd/i18n"
 
-const percentage = 40;
+const percentage = 40
 
 const AutomaticStep = () => {
   return (
@@ -30,7 +30,7 @@ const AutomaticStep = () => {
         />
       </p>
     </div>
-  );
-};
+  )
+}
 
-export default AutomaticStep;
+export default AutomaticStep

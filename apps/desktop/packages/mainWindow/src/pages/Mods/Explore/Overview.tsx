@@ -1,16 +1,36 @@
 /* eslint-disable solid/no-innerhtml */
-import { useRouteData } from "@solidjs/router";
-import { Match, Suspense, Switch } from "solid-js";
-import { Skeleton } from "@gd/ui";
-import { marked } from "marked";
-import sanitizeHtml from "sanitize-html";
-import { MRFEProject } from "@gd/core_module/bindings";
-import fetchData from "../mods.overview";
+import { useRouteData } from "@solidjs/router"
+import {
+  createEffect,
+  createSignal,
+  Match,
+  Show,
+  Suspense,
+  Switch
+} from "solid-js"
+import { Skeleton } from "@gd/ui"
+import { marked } from "marked"
+import sanitizeHtml from "sanitize-html"
+import fetchData from "../mods.overview"
 
 const Overview = () => {
-  const routeData: ReturnType<typeof fetchData> = useRouteData();
+  const routeData: ReturnType<typeof fetchData> = useRouteData()
 
   const Description = () => {
+    const [parsedDescription, setParsedDescription] = createSignal<
+      string | null
+    >(null)
+
+    createEffect(async () => {
+      if (routeData.modpackDescription?.data?.data) {
+        setParsedDescription(
+          await marked.parse(
+            sanitizeHtml(routeData.modpackDescription?.data?.data || "")
+          )
+        )
+      }
+    })
+
     const cleanHtml = () =>
       sanitizeHtml(routeData.modpackDescription?.data?.data || "", {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat([
@@ -33,7 +53,7 @@ const Overview = () => {
             class: "max-w-full h-auto"
           })
         }
-      });
+      })
 
     return (
       <Suspense fallback={<Skeleton.modpackOverviewPage />}>
@@ -46,20 +66,15 @@ const Overview = () => {
               />
             </Match>
             <Match when={!routeData.isCurseforge}>
-              <div
-                class="w-full"
-                innerHTML={marked.parse(
-                  sanitizeHtml(
-                    (routeData.modpackDetails.data as MRFEProject)?.body || ""
-                  )
-                )}
-              />
+              <Show when={parsedDescription()}>
+                <div class="w-full" innerHTML={parsedDescription()!} />
+              </Show>
             </Match>
           </Switch>
         </div>
       </Suspense>
-    );
-  };
+    )
+  }
 
   return (
     <Switch fallback={<Skeleton.modpackOverviewPage />}>
@@ -70,7 +85,7 @@ const Overview = () => {
         <Skeleton.modpackOverviewPage />
       </Match>
     </Switch>
-  );
-};
+  )
+}
 
-export default Overview;
+export default Overview

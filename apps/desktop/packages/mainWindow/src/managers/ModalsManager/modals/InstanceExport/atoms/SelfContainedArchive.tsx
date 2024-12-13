@@ -1,15 +1,15 @@
-import { useTransContext } from "@gd/i18n";
-import { Switch, Tooltip } from "@gd/ui";
-import { setPayload, payload } from "..";
+import { useTransContext } from "@gd/i18n"
+import { Switch, Tooltip } from "@gd/ui"
+import { setPayload, payload } from ".."
 
 const SelfContainedArchive = () => {
-  const [t] = useTransContext();
+  const [t] = useTransContext()
   const handleSwitch = () => {
     setPayload({
       ...payload,
       self_contained_addons_bundling: !payload.self_contained_addons_bundling
-    });
-  };
+    })
+  }
   return (
     <div class="w-full flex justify-between items-center pt-4">
       <div class="flex items-center gap-2">
@@ -23,6 +23,6 @@ const SelfContainedArchive = () => {
         checked={payload.self_contained_addons_bundling}
       />
     </div>
-  );
-};
-export default SelfContainedArchive;
+  )
+}
+export default SelfContainedArchive

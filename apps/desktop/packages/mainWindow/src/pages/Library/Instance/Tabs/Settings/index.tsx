@@ -1,43 +1,43 @@
-import { generateSequence } from "@/utils/helpers";
-import { port, queryClient, rspc } from "@/utils/rspcClient";
-import { Trans, useTransContext } from "@gd/i18n";
-import { Button, Dropdown, Input, Radio, Slider, Switch } from "@gd/ui";
-import { useParams, useRouteData } from "@solidjs/router";
-import fetchData from "../../instance.data";
-import { Match, Show, createMemo, Switch as SolidSwitch } from "solid-js";
-import { InstanceDetails } from "@gd/core_module/bindings";
-import Title from "@/pages/Settings/components/Title";
-import Row from "@/pages/Settings/components/Row";
-import RowsContainer from "@/pages/Settings/components/RowsContainer";
-import RightHandSide from "@/pages/Settings/components/RightHandSide";
-import { setInstanceId } from "@/utils/browser";
-import { useModal } from "@/managers/ModalsManager";
-import JavaPathAutoComplete from "@/components/JavaPathAutoComplete";
+import { generateSequence } from "@/utils/helpers"
+import { port, queryClient, rspc } from "@/utils/rspcClient"
+import { Trans, useTransContext } from "@gd/i18n"
+import { Button, Dropdown, Input, Radio, Slider, Switch } from "@gd/ui"
+import { useParams, useRouteData } from "@solidjs/router"
+import fetchData from "../../instance.data"
+import { Match, Show, createMemo, Switch as SolidSwitch } from "solid-js"
+import { InstanceDetails } from "@gd/core_module/bindings"
+import Title from "@/pages/Settings/components/Title"
+import Row from "@/pages/Settings/components/Row"
+import RowsContainer from "@/pages/Settings/components/RowsContainer"
+import RightHandSide from "@/pages/Settings/components/RightHandSide"
+import { setInstanceId } from "@/utils/browser"
+import { useModal } from "@/managers/ModalsManager"
+import JavaPathAutoComplete from "@/components/JavaPathAutoComplete"
 
 const Settings = () => {
-  const [t] = useTransContext();
-  const modalsContext = useModal();
-  const params = useParams();
+  const [t] = useTransContext()
+  const modalsContext = useModal()
+  const params = useParams()
   const updateInstanceMutation = rspc.createMutation(() => ({
     mutationKey: ["instance.updateInstance"],
     onMutate: (newData: any) => {
-      queryClient.setQueryData(["instance.getInstanceDetails"], newData);
+      queryClient.setQueryData(["instance.getInstanceDetails"], newData)
     }
-  }));
+  }))
 
   const getAllProfiles = rspc.createQuery(() => ({
     queryKey: ["java.getJavaProfiles"]
-  }));
+  }))
 
-  const routeData: ReturnType<typeof fetchData> = useRouteData();
+  const routeData: ReturnType<typeof fetchData> = useRouteData()
 
   const initialJavaArgs = createMemo((prev: string | null) => {
-    if (prev) return prev;
+    if (prev) return prev
 
-    return routeData?.instanceDetails?.data?.extraJavaArgs as string | null;
-  }, null);
+    return routeData?.instanceDetails?.data?.extraJavaArgs as string | null
+  }, null)
 
-  const mbTotalRAM = () => Number(routeData.totalRam.data) / 1024 / 1024;
+  const mbTotalRAM = () => Number(routeData.totalRam.data) / 1024 / 1024
 
   const templateGameResolution = () => {
     return [
@@ -45,36 +45,36 @@ const Settings = () => {
       { label: "1046 x 588 (150%)", key: "Standard:1046x588" },
       { label: "1208 x 679 (200%)", key: "Standard:1208x679" },
       { label: "1479 x 831 (300%)", key: "Standard:1479x831" }
-    ];
-  };
+    ]
+  }
 
   const gameResolutionDropdownKey = () => {
     if (routeData?.instanceDetails?.data?.gameResolution?.type === "Standard") {
       const gameResolution =
-        routeData?.instanceDetails?.data?.gameResolution.value.join("x");
-      return `Standard:${gameResolution}`;
+        routeData?.instanceDetails?.data?.gameResolution.value.join("x")
+      return `Standard:${gameResolution}`
     }
 
-    return "custom";
-  };
+    return "custom"
+  }
 
   const javaOverrideType = () => {
     if ("Profile" in (routeData?.instanceDetails?.data?.javaOverride || {})) {
-      return "Profile";
+      return "Profile"
     }
 
-    return "Path";
-  };
+    return "Path"
+  }
 
   const javaSelectedProfile = () => {
     const profileName = (routeData?.instanceDetails?.data?.javaOverride as any)
-      ?.Profile;
+      ?.Profile
 
-    if (!profileName) return null;
+    if (!profileName) return null
 
     return getAllProfiles.data?.find((profile) => profile.name === profileName)
-      ?.name;
-  };
+      ?.name
+  }
 
   return (
     <RowsContainer>
@@ -102,13 +102,13 @@ const Settings = () => {
               <Button
                 type="outline"
                 onClick={() => {
-                  setInstanceId(parseInt(params.id, 10));
+                  setInstanceId(parseInt(params.id, 10))
                   modalsContext?.openModal(
                     {
                       name: "unlock_confirmation"
                     },
                     { instanceState: "unlock" }
-                  );
+                  )
                 }}
               >
                 <i class="w-5 h-5 i-ri:lock-fill" />
@@ -124,13 +124,13 @@ const Settings = () => {
             <Button
               type="outline"
               onClick={() => {
-                setInstanceId(parseInt(params.id, 10));
+                setInstanceId(parseInt(params.id, 10))
                 modalsContext?.openModal(
                   {
                     name: "unpair_confirmation"
                   },
                   { instanceState: "unpair" }
-                );
+                )
               }}
             >
               <i class="w-5 h-5 i-ri:git-branch-fill" />
@@ -139,10 +139,10 @@ const Settings = () => {
             <Button
               type="outline"
               onClick={() => {
-                setInstanceId(parseInt(params.id, 10));
+                setInstanceId(parseInt(params.id, 10))
                 modalsContext?.openModal({
                   name: "modpack_version_update"
-                });
+                })
               }}
             >
               <i class="w-5 h-5 i-ri:arrow-left-right-fill" />
@@ -169,7 +169,7 @@ const Settings = () => {
                     : null
                 },
                 instance: parseInt(params.id, 10)
-              });
+              })
             }}
           />
         </RightHandSide>
@@ -186,14 +186,14 @@ const Settings = () => {
                   }
                 : {
                     Profile: routeData.instanceDetails.data?.requiredJavaProfile
-                  };
+                  }
 
             updateInstanceMutation.mutate({
               javaOverride: {
                 Set: payload as any
               },
               instance: parseInt(params.id, 10)
-            });
+            })
           }}
           options={[
             {
@@ -222,7 +222,7 @@ const Settings = () => {
                       }
                     },
                     instance: parseInt(params.id, 10)
-                  });
+                  })
                 }}
               />
             </div>
@@ -255,7 +255,7 @@ const Settings = () => {
                       }
                     },
                     instance: parseInt(params.id, 10)
-                  });
+                  })
                 }}
               />
               <Button
@@ -263,7 +263,7 @@ const Settings = () => {
                 onClick={() => {
                   modalsContext?.openModal({
                     name: "javaProfileCreation"
-                  });
+                  })
                 }}
               >
                 <Trans key="settings:add_new_profile" />
@@ -290,7 +290,7 @@ const Settings = () => {
                     : null
                 },
                 instance: parseInt(params.id, 10)
-              });
+              })
             }}
           />
         </RightHandSide>
@@ -308,32 +308,32 @@ const Settings = () => {
                 !val ||
                 routeData?.instanceDetails.data?.memory?.max_mb === val
               ) {
-                return;
+                return
               }
               queryClient.setQueryData(
                 ["instance.getInstanceDetails"],
                 (oldData: InstanceDetails | undefined) => {
-                  if (!oldData) return;
+                  if (!oldData) return
                   oldData.memory = {
                     max_mb: val,
                     min_mb: val
-                  };
-                  return oldData;
+                  }
+                  return oldData
                 }
-              );
+              )
             }}
             OnRelease={(val) => {
               if (
                 !val ||
                 routeData?.instanceDetails.data?.memory?.max_mb === val
               ) {
-                return;
+                return
               }
 
               updateInstanceMutation.mutate({
                 memory: { Set: { max_mb: val, min_mb: val } },
                 instance: parseInt(params.id, 10)
-              });
+              })
             }}
           />
         </div>
@@ -349,12 +349,12 @@ const Settings = () => {
             routeData?.instanceDetails?.data?.extraJavaArgs !== undefined
           }
           onChange={(e) => {
-            const checked = e.target.checked;
+            const checked = e.target.checked
 
             updateInstanceMutation.mutate({
               extraJavaArgs: { Set: checked ? "" : null },
               instance: parseInt(params.id, 10)
-            });
+            })
           }}
         />
       </Row>
@@ -371,12 +371,12 @@ const Settings = () => {
           <Switch
             checked={routeData?.instanceDetails?.data?.globalJavaArgs}
             onChange={(e) => {
-              const checked = e.target.checked;
+              const checked = e.target.checked
 
               updateInstanceMutation.mutate({
                 globalJavaArgs: { Set: checked },
                 instance: parseInt(params.id, 10)
-              });
+              })
             }}
           />
         </div>
@@ -392,7 +392,7 @@ const Settings = () => {
               updateInstanceMutation.mutate({
                 extraJavaArgs: { Set: e.target.value },
                 instance: parseInt(params.id, 10)
-              });
+              })
             }}
           />
           <Button
@@ -404,7 +404,7 @@ const Settings = () => {
               updateInstanceMutation.mutate({
                 extraJavaArgs: { Set: initialJavaArgs() },
                 instance: parseInt(params.id, 10)
-              });
+              })
             }}
           >
             <i class="w-5 h-5 i-ri:arrow-go-back-fill" />
@@ -418,7 +418,7 @@ const Settings = () => {
               updateInstanceMutation.mutate({
                 extraJavaArgs: { Set: "" },
                 instance: parseInt(params.id, 10)
-              });
+              })
             }}
           >
             <i class="w-5 h-5 i-ri:close-fill" />
@@ -442,7 +442,7 @@ const Settings = () => {
                     : null
                 },
                 instance: parseInt(params.id, 10)
-              });
+              })
             }}
           />
         </RightHandSide>
@@ -458,24 +458,24 @@ const Settings = () => {
             ]}
             onChange={(option) => {
               let value: {
-                type: "Standard" | "Custom";
-                value: [number, number];
-              } | null = null;
+                type: "Standard" | "Custom"
+                value: [number, number]
+              } | null = null
 
               if (option.key === "custom") {
                 value = {
                   type: "Custom",
                   value: [854, 480]
-                };
+                }
               } else {
                 const [width, height] = option.key
                   .toString()
                   .split(":")[1]
-                  .split("x");
+                  .split("x")
                 value = {
                   type: "Standard",
                   value: [parseInt(width, 10), parseInt(height, 10)]
-                };
+                }
               }
 
               updateInstanceMutation.mutate({
@@ -483,7 +483,7 @@ const Settings = () => {
                   Set: value
                 },
                 instance: parseInt(params.id, 10)
-              });
+              })
             }}
           />
           <Show
@@ -516,7 +516,7 @@ const Settings = () => {
                         }
                       },
                       instance: parseInt(params.id, 10)
-                    });
+                    })
                   }}
                 />
               </div>
@@ -543,7 +543,7 @@ const Settings = () => {
                         }
                       },
                       instance: parseInt(params.id, 10)
-                    });
+                    })
                   }}
                 />
               </div>
@@ -567,7 +567,7 @@ const Settings = () => {
                   Set: e.target.checked ? "" : null
                 },
                 instance: parseInt(params.id, 10)
-              });
+              })
             }}
           />
         </RightHandSide>
@@ -585,7 +585,7 @@ const Settings = () => {
                 Set: e.currentTarget.value.trim()
               },
               instance: parseInt(params.id, 10)
-            });
+            })
           }}
         />
       </Show>
@@ -604,7 +604,7 @@ const Settings = () => {
                   Set: e.target.checked ? "" : null
                 },
                 instance: parseInt(params.id, 10)
-              });
+              })
             }}
           />
         </RightHandSide>
@@ -622,7 +622,7 @@ const Settings = () => {
                 Set: e.currentTarget.value.trim()
               },
               instance: parseInt(params.id, 10)
-            });
+            })
           }}
         />
       </Show>
@@ -642,7 +642,7 @@ const Settings = () => {
                   Set: e.target.checked ? "" : null
                 },
                 instance: parseInt(params.id, 10)
-              });
+              })
             }}
           />
         </RightHandSide>
@@ -660,12 +660,12 @@ const Settings = () => {
                 Set: e.currentTarget.value.trim()
               },
               instance: parseInt(params.id, 10)
-            });
+            })
           }}
         />
       </Show>
     </RowsContainer>
-  );
-};
+  )
+}
 
-export default Settings;
+export default Settings

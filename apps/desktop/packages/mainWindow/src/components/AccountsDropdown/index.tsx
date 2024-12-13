@@ -1,57 +1,57 @@
-import { useGDNavigate } from "@/managers/NavigationManager";
+import { useGDNavigate } from "@/managers/NavigationManager"
 
-import { port, rspc } from "@/utils/rspcClient";
-import { AccountStatus, AccountType } from "@gd/core_module/bindings";
-import { Trans } from "@gd/i18n";
-import { Button, Popover } from "@gd/ui";
-import { For, Switch, Match, createSignal } from "solid-js";
-import gdlLogo from "/assets/images/gdlauncher_logo.svg";
-import defaultInstanceImg from "/assets/images/default-instance-img.png";
-import { useGlobalStore } from "../GlobalStoreContext";
+import { port, rspc } from "@/utils/rspcClient"
+import { AccountStatus, AccountType } from "@gd/core_module/bindings"
+import { Trans } from "@gd/i18n"
+import { Button, Popover } from "@gd/ui"
+import { For, Switch, Match, createSignal } from "solid-js"
+import gdlLogo from "/assets/images/gdlauncher_logo.svg"
+import defaultInstanceImg from "/assets/images/default-instance-img.png"
+import { useGlobalStore } from "../GlobalStoreContext"
 
-export type Label = {
-  name: string;
-  icon: string | undefined;
-  uuid: string;
-  type: AccountType;
-  status: AccountStatus | undefined;
-};
+export interface Label {
+  name: string
+  icon: string | undefined
+  uuid: string
+  type: AccountType
+  status: AccountStatus | undefined
+}
 
-export type Account = {
-  label: Label;
-  key: string;
-};
+export interface Account {
+  label: Label
+  key: string
+}
 
-export type OptionDropDown = {
-  label: string;
-  key: string;
-};
+export interface OptionDropDown {
+  label: string
+  key: string
+}
 
-export type Props = {
-  accounts: Account[];
-  value: string | null | undefined;
-  disabled?: boolean;
-  label?: string;
-  id?: string;
-};
+export interface Props {
+  accounts: Account[]
+  value: string | null | undefined
+  disabled?: boolean
+  label?: string
+  id?: string
+}
 
 export const AccountsDropdown = (props: Props) => {
-  const globalStore = useGlobalStore();
-  const navigate = useGDNavigate();
-  const [showAccountsDropdown, setShowAccountsDropdown] = createSignal(false);
+  const globalStore = useGlobalStore()
+  const navigate = useGDNavigate()
+  const [showAccountsDropdown, setShowAccountsDropdown] = createSignal(false)
 
   const setActiveAccountMutation = rspc.createMutation(() => ({
     mutationKey: ["account.setActiveUuid"]
-  }));
+  }))
 
   const validGDLUser = () =>
     globalStore.gdlAccount.data?.status === "valid"
       ? globalStore.gdlAccount.data?.value
-      : undefined;
+      : undefined
 
-  let gdlAccountRef: HTMLDivElement;
-  let mcAccountsRef: HTMLDivElement;
-  let settingsButtonRef: HTMLDivElement;
+  let gdlAccountRef: HTMLDivElement
+  let mcAccountsRef: HTMLDivElement
+  let settingsButtonRef: HTMLDivElement
 
   return (
     <Popover
@@ -61,7 +61,7 @@ export const AccountsDropdown = (props: Props) => {
       noShadow
       trigger="click"
       onOpen={() => {
-        setShowAccountsDropdown(true);
+        setShowAccountsDropdown(true)
 
         if (gdlAccountRef) {
           gdlAccountRef.animate(
@@ -78,7 +78,7 @@ export const AccountsDropdown = (props: Props) => {
               easing: "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
               fill: "forwards"
             }
-          );
+          )
         }
 
         if (mcAccountsRef) {
@@ -97,7 +97,7 @@ export const AccountsDropdown = (props: Props) => {
               fill: "forwards",
               delay: 50
             }
-          );
+          )
         }
 
         if (settingsButtonRef) {
@@ -116,11 +116,11 @@ export const AccountsDropdown = (props: Props) => {
               fill: "forwards",
               delay: 100
             }
-          );
+          )
         }
       }}
       onClose={() => {
-        setShowAccountsDropdown(false);
+        setShowAccountsDropdown(false)
       }}
       content={(close) => (
         <div class="flex flex-col gap-1">
@@ -179,7 +179,7 @@ export const AccountsDropdown = (props: Props) => {
                       globalStore.currentlySelectedAccountUuid.data
                   }}
                   onClick={() => {
-                    setActiveAccountMutation.mutate(account.uuid);
+                    setActiveAccountMutation.mutate(account.uuid)
                   }}
                 >
                   <div class="flex items-center gap-4">
@@ -226,9 +226,9 @@ export const AccountsDropdown = (props: Props) => {
               class="flex items-center justify-center gap-4"
               fullWidth
               onClick={() => {
-                if (props.disabled) return;
-                navigate("/settings/accounts");
-                close();
+                if (props.disabled) return
+                navigate("/settings/accounts")
+                close()
               }}
             >
               <div
@@ -275,5 +275,5 @@ export const AccountsDropdown = (props: Props) => {
         </div>
       </div>
     </Popover>
-  );
-};
+  )
+}

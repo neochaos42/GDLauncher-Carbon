@@ -1,5 +1,5 @@
 interface Props {
-  children: any;
+  children: any
 }
 const ModpackBrowserWrapper = (props: Props) => {
   return (
@@ -8,7 +8,7 @@ const ModpackBrowserWrapper = (props: Props) => {
         {props.children}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ModpackBrowserWrapper;
+export default ModpackBrowserWrapper

@@ -1,19 +1,19 @@
 /* eslint-disable solid/no-innerhtml */
-import { rspc } from "@/utils/rspcClient";
-import sanitizeHtml from "sanitize-html";
-import { ModalProps } from "..";
-import ModalLayout from "../ModalLayout";
-import { Suspense } from "solid-js";
+import { rspc } from "@/utils/rspcClient"
+import sanitizeHtml from "sanitize-html"
+import { ModalProps } from ".."
+import ModalLayout from "../ModalLayout"
+import { Suspense } from "solid-js"
 
 const TermsAndConditions = (props: ModalProps) => {
   const body = rspc.createQuery(() => ({
     queryKey: ["settings.getTermsOfServiceBody"]
-  }));
+  }))
 
   const sanitizedHtml = () => {
-    if (!body.data) return undefined;
-    return sanitizeHtml(body.data);
-  };
+    if (!body.data) return undefined
+    return sanitizeHtml(body.data)
+  }
 
   return (
     <ModalLayout noHeader={props.noHeader} title={props?.title}>
@@ -23,7 +23,7 @@ const TermsAndConditions = (props: ModalProps) => {
         </div>
       </Suspense>
     </ModalLayout>
-  );
-};
+  )
+}
 
-export default TermsAndConditions;
+export default TermsAndConditions
