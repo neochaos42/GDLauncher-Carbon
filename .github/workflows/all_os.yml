@@ -10,7 +10,7 @@ jobs:
     defaults:
       run:
         working-directory: ./GDLauncher
-    runs-on: macos-12
+    runs-on: macos-13
     timeout-minutes: 80
     steps:
       - uses: actions/checkout@v3
