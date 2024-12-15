@@ -99,6 +99,26 @@ function validateArgument(arg: string): Argument | null {
 }
 
 export function getPatchedUserData() {
+  const isSnapshot = __APP_VERSION__.includes("snapshot")
+  if (app.isPackaged && isSnapshot) {
+    const isDeepBinary = app
+      .getPath("exe")
+      .endsWith("Contents/MacOS/GDLauncher")
+    const isMacOS = process.platform === "darwin"
+    const appPackagePath = path.resolve(
+      app.getPath("exe"),
+      // MacOS .app are compressed folders, the actual executable is in Contents/MacOS/[Binary]
+      // but depending on whether you double-click the .app or run it from the terminal,
+      // the path will be different
+      isMacOS && isDeepBinary ? "../../../../" : "../",
+      "gdl_data"
+    )
+
+    ensureDirSync(appPackagePath)
+
+    return appPackagePath
+  }
+
   let appData = null
 
   if (os.platform() === "darwin" || os.platform() === "win32") {
@@ -121,9 +141,7 @@ const skipIntroAnimation = fss.existsSync(getPatchedUserData())
 
 app.setPath("userData", getPatchedUserData())
 
-if (!process.env.CI) {
-  Object.assign(console, log.functions)
-}
+Object.assign(console, log.functions)
 
 log.transports.file.resolvePathFn = (variables) =>
   path.join(getPatchedUserData(), variables.fileName!)
@@ -134,31 +152,7 @@ if (app.isPackaged) {
   const overrideCLIDataPath = validateArgument("--runtime_path")
   const overrideEnvDataPath = process.env.GDL_RUNTIME_PATH
 
-  const isSnapshot = __APP_VERSION__.includes("snapshot")
-
-  let snapshotDataPath = null
-
-  if (isSnapshot && !overrideCLIDataPath?.value && !overrideEnvDataPath) {
-    const isDeepBinary = app
-      .getPath("exe")
-      .endsWith("Contents/MacOS/GDLauncher")
-    const isMacOS = process.platform === "darwin"
-    const appPackagePath = path.resolve(
-      app.getPath("exe"),
-      // MacOS .app are compressed folders, the actual executable is in Contents/MacOS/[Binary]
-      // but depending on whether you double-click the .app or run it from the terminal,
-      // the path will be different
-      isMacOS && isDeepBinary ? "../../../../" : "../",
-      "gdl_data"
-    )
-    snapshotDataPath = appPackagePath
-
-    ensureDirSync(appPackagePath)
-  }
-
-  initRTPath(
-    overrideCLIDataPath?.value || overrideEnvDataPath || snapshotDataPath
-  )
+  initRTPath(overrideCLIDataPath?.value || overrideEnvDataPath)
 } else {
   const rtPath = import.meta.env.RUNTIME_PATH
   if (!rtPath) {

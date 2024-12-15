@@ -68,8 +68,14 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report-linux
+          name: playwright-report-macos
           path: ./GDLauncher/apps/desktop/playwright-report/
+      - name: Upload main.log for debugging
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: logs-macos
+          path: ./GDLauncher/apps/desktop/release/*.log
   ubuntu_x64:
     defaults:
       run:
@@ -139,8 +145,14 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-mac
+          name: playwright-report-linux
           path: ./GDLauncher/apps/desktop/playwright-report/
+      - name: Upload main.log for debugging
+          uses: actions/upload-artifact@v4
+          if: always()
+          with:
+            name: logs-linux
+            path: ./GDLauncher/apps/desktop/release/*.log
   windows_x64:
     defaults:
       run:
@@ -215,3 +227,9 @@ jobs:
         with:
           name: playwright-report-win
           path: ./GDLauncher/apps/desktop/playwright-report/
+      - name: Upload main.log for debugging
+          uses: actions/upload-artifact@v4
+          if: always()
+          with:
+            name: logs-windows
+            path: ./GDLauncher/apps/desktop/release/*.log
