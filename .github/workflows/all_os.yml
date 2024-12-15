@@ -75,7 +75,9 @@ jobs:
         if: always()
         with:
           name: logs-macos
-          path: ./GDLauncher/apps/desktop/release/*.log
+          path: |
+            ./GDLauncher/apps/desktop/release/linux-unpacked/gdl_data/main.log
+            ./GDLauncher/apps/desktop/release/linux-unpacked/gdl_data/data/__gdl_logs__/*.log
   ubuntu_x64:
     defaults:
       run:
@@ -152,7 +154,9 @@ jobs:
         if: always()
         with:
           name: logs-linux
-          path: ./GDLauncher/apps/desktop/release/*.log
+          path: |
+            ./GDLauncher/apps/desktop/release/mac-universal/gdl_data/main.log
+            ./GDLauncher/apps/desktop/release/mac-universal/gdl_data/data/__gdl_logs__/*.log
   windows_x64:
     defaults:
       run:
@@ -232,4 +236,6 @@ jobs:
         if: always()
         with:
           name: logs-windows
-          path: ./GDLauncher/apps/desktop/release/*.log
+          path: |
+            ./GDLauncher/apps/desktop/release/win-unpacked/gdl_data/main.log
+            ./GDLauncher/apps/desktop/release/win-unpacked/gdl_data/data/__gdl_logs__/*.log
