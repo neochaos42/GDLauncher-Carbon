@@ -148,11 +148,11 @@ jobs:
           name: playwright-report-linux
           path: ./GDLauncher/apps/desktop/playwright-report/
       - name: Upload main.log for debugging
-          uses: actions/upload-artifact@v4
-          if: always()
-          with:
-            name: logs-linux
-            path: ./GDLauncher/apps/desktop/release/*.log
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: logs-linux
+          path: ./GDLauncher/apps/desktop/release/*.log
   windows_x64:
     defaults:
       run:
@@ -228,8 +228,8 @@ jobs:
           name: playwright-report-win
           path: ./GDLauncher/apps/desktop/playwright-report/
       - name: Upload main.log for debugging
-          uses: actions/upload-artifact@v4
-          if: always()
-          with:
-            name: logs-windows
-            path: ./GDLauncher/apps/desktop/release/*.log
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: logs-windows
+          path: ./GDLauncher/apps/desktop/release/*.log
