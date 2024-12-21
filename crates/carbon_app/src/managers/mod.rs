@@ -47,7 +47,7 @@ pub enum AppError {
 mod app {
     use metrics::MetricsManager;
     use sentry::capture_error;
-    use tracing::error;
+    use tracing::{error, info};
 
     use crate::{cache_middleware, domain, iridium_client::get_client};
 
@@ -165,7 +165,9 @@ mod app {
                 match settings {
                     Ok(settings) => {
                         let show_app_close_warning = settings.show_app_close_warning;
+                        info!("_SHOW_APP_CLOSE_WARNING_:{}", show_app_close_warning);
                         println!("_SHOW_APP_CLOSE_WARNING_:{}", show_app_close_warning);
+                        info!("_POTATO_PC_MODE_:{}", settings.reduced_motion);
                         println!("_POTATO_PC_MODE_:{}", settings.reduced_motion);
                     }
                     Err(e) => {

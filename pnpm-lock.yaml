@@ -141,8 +141,8 @@ importers:
         specifier: ^8.20.5
         version: 8.20.5(solid-js@1.9.3)
       '@tanstack/solid-virtual':
-        specifier: 3.4.0
-        version: 3.4.0(solid-js@1.9.3)
+        specifier: 3.11.2
+        version: 3.11.2(solid-js@1.9.3)
       '@types/marked':
         specifier: ^5.0.2
         version: 5.0.2
@@ -188,6 +188,9 @@ importers:
       solid-transition-group:
         specifier: ^0.2.3
         version: 0.2.3(solid-js@1.9.3)
+      virtua:
+        specifier: 0.39.2
+        version: 0.39.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(solid-js@1.9.3)(vue@3.5.13(typescript@5.6.3))
       vite:
         specifier: ^6.0.3
         version: 6.0.3(@types/node@20.11.6)(jiti@1.21.6)(less@4.2.0)(terser@5.27.0)(tsx@4.19.0)
@@ -3418,10 +3421,10 @@ packages:
   '@storybook/builder-manager@7.6.10':
     resolution: {integrity: sha512-f+YrjZwohGzvfDtH8BHzqM3xW0p4vjjg9u7uzRorqUiNIAAKHpfNrZ/WvwPlPYmrpAHt4xX/nXRJae4rFSygPw==}
 
-  '@storybook/builder-vite@8.5.0-alpha.22':
-    resolution: {integrity: sha512-uc5orKNNxtOEk9yXSTkj8yLhP6DUO0rVfRedzT5KwCvuH71IEbV+kvfpgsWWtVzf+pDuO8MudVoghCSlmUkifA==}
+  '@storybook/builder-vite@8.5.0-beta.4':
+    resolution: {integrity: sha512-a4NFy6y2pfBMQWe4ZPCMh5/Fr3YMDeWWsPoc6KGXc5IbV0YMF8bPlQt3hLKRBGWQOR7C/VuuKnD4FE5CSHIbCA==}
     peerDependencies:
-      storybook: ^8.5.0-alpha.22
+      storybook: ^8.5.0-beta.4
       vite: ^4.0.0 || ^5.0.0 || ^6.0.0
 
   '@storybook/channels@7.6.10':
@@ -3455,10 +3458,10 @@ packages:
   '@storybook/csf-plugin@7.6.10':
     resolution: {integrity: sha512-Sc+zZg/BnPH2X28tthNaQBnDiFfO0QmfjVoOx0fGYM9SvY3P5ehzWwp5hMRBim6a/twOTzePADtqYL+t6GMqqg==}
 
-  '@storybook/csf-plugin@8.5.0-alpha.22':
-    resolution: {integrity: sha512-aWhQn8i/Y8HuShxzfF5d/N6ZIjjGfUEx8kdvNoFg/fhpNzYb0BJwDAAk7lPV4n/v860nB3iNDxr9qv2H00Fs3g==}
+  '@storybook/csf-plugin@8.5.0-beta.4':
+    resolution: {integrity: sha512-b+V6hWSjo1g1jj+CQBm0br0/XAZ92NTEL7yiu3UuZsPZr27bNFysDEEpfxWjnlJP28z9R7VaHvMnEsQ5hRjdOA==}
     peerDependencies:
-      storybook: ^8.5.0-alpha.22
+      storybook: ^8.5.0-beta.4
 
   '@storybook/csf-tools@7.6.10':
     resolution: {integrity: sha512-TnDNAwIALcN6SA4l00Cb67G02XMOrYU38bIpFJk5VMDX2dvgPjUtJNBuLmEbybGcOt7nPyyFIHzKcY5FCVGoWA==}
@@ -3545,8 +3548,8 @@ packages:
     peerDependencies:
       solid-js: '>=1.3'
 
-  '@tanstack/solid-virtual@3.4.0':
-    resolution: {integrity: sha512-ZuPrsrpwsgUuqjF8EfTPJCvUXpMYxWmHl4QNZ0/a6YExZRvakQKNcbe12xaGeHQOnSW9g7lEWCiaN2LtspDEcg==}
+  '@tanstack/solid-virtual@3.11.2':
+    resolution: {integrity: sha512-2GYbqBjkcgmbE2vpQPWpG2PsjrszyEkdoPD/GajSno0LKyShLtxbwvWo/Zoz8xkdxyHl+t9DayJbxANA0tQIsg==}
     peerDependencies:
       solid-js: ^1.3.0
 
@@ -3554,8 +3557,8 @@ packages:
     resolution: {integrity: sha512-P9dF7XbibHph2PFRz8gfBKEXEY/HJPOhym8CHmjF8y3q5mWpKx9xtZapXQUWCgkqvsK0R46Azuz+VaxD4Xl+Tg==}
     engines: {node: '>=12'}
 
-  '@tanstack/virtual-core@3.4.0':
-    resolution: {integrity: sha512-75jXqXxqq5M5Veb9KP1STi8kA5u408uOOAefk2ftHDGCpUk3RP6zX++QqfbmHJTBiU72NQ+ghgCZVts/Wocz8Q==}
+  '@tanstack/virtual-core@3.11.2':
+    resolution: {integrity: sha512-vTtpNt7mKCiZ1pwU9hfKPhpdVO2sVzFQsxoVBGtOSHxlrRRzYr8iQ2TlwbAcRYCcEiZ9ECAM8kBzH0v2+VzfKw==}
 
   '@testing-library/dom@8.20.1':
     resolution: {integrity: sha512-/DiOQ5xBxgdYRC8LNk7U+RWat0S3qRLeIw3ZIkMQ9kkVlRmwD/Eg8k8CqIpD6GW7u20JIUOfMKbxtiLutpjQ4g==}
@@ -9167,6 +9170,26 @@ packages:
   vfile@6.0.1:
     resolution: {integrity: sha512-1bYqc7pt6NIADBJ98UiG0Bn/CHIVOoZ/IyEkqIruLg0mE1BKzkOXY2D6CSqQIcKqgadppE5lrxgWXJmXd7zZJw==}
 
+  virtua@0.39.2:
+    resolution: {integrity: sha512-KhDYmfDe36L1W5ir1b5+jeV40+u4bb5bRiZggWwGinreGXKnxxcLGdk+yVZlO5dNdBq/nxj4v4w6yxuwgLXSBg==}
+    peerDependencies:
+      react: '>=16.14.0'
+      react-dom: '>=16.14.0'
+      solid-js: '>=1.0'
+      svelte: '>=5.0'
+      vue: '>=3.2'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+      solid-js:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+
   vite-node@0.32.4:
     resolution: {integrity: sha512-L2gIw+dCxO0LK14QnUMoqSYpa9XRGnTTTDjW2h19Mr+GR0EFj4vx52W41gFXfMLqpA00eK4ZjOVYo1Xk//LFEw==}
     engines: {node: '>=v14.18.0'}
@@ -13546,9 +13569,9 @@ snapshots:
       - encoding
       - supports-color
 
-  '@storybook/builder-vite@8.5.0-alpha.22(storybook@7.6.10(encoding@0.1.13))(vite@6.0.3(@types/node@20.11.6)(jiti@1.21.6)(less@4.2.0)(terser@5.27.0)(tsx@4.19.0))':
+  '@storybook/builder-vite@8.5.0-beta.4(storybook@7.6.10(encoding@0.1.13))(vite@6.0.3(@types/node@20.11.6)(jiti@1.21.6)(less@4.2.0)(terser@5.27.0)(tsx@4.19.0))':
     dependencies:
-      '@storybook/csf-plugin': 8.5.0-alpha.22(storybook@7.6.10(encoding@0.1.13))
+      '@storybook/csf-plugin': 8.5.0-beta.4(storybook@7.6.10(encoding@0.1.13))
       browser-assert: 1.2.1
       storybook: 7.6.10(encoding@0.1.13)
       ts-dedent: 2.2.0
@@ -13741,7 +13764,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@storybook/csf-plugin@8.5.0-alpha.22(storybook@7.6.10(encoding@0.1.13))':
+  '@storybook/csf-plugin@8.5.0-beta.4(storybook@7.6.10(encoding@0.1.13))':
     dependencies:
       storybook: 7.6.10(encoding@0.1.13)
       unplugin: 1.6.0
@@ -13909,14 +13932,14 @@ snapshots:
       '@tanstack/table-core': 8.20.5
       solid-js: 1.9.3
 
-  '@tanstack/solid-virtual@3.4.0(solid-js@1.9.3)':
+  '@tanstack/solid-virtual@3.11.2(solid-js@1.9.3)':
     dependencies:
-      '@tanstack/virtual-core': 3.4.0
+      '@tanstack/virtual-core': 3.11.2
       solid-js: 1.9.3
 
   '@tanstack/table-core@8.20.5': {}
 
-  '@tanstack/virtual-core@3.4.0': {}
+  '@tanstack/virtual-core@3.11.2': {}
 
   '@testing-library/dom@8.20.1':
     dependencies:
@@ -20162,7 +20185,7 @@ snapshots:
 
   storybook-solidjs-vite@1.0.0-beta.2(storybook@7.6.10(encoding@0.1.13))(vite@6.0.3(@types/node@20.11.6)(jiti@1.21.6)(less@4.2.0)(terser@5.27.0)(tsx@4.19.0)):
     dependencies:
-      '@storybook/builder-vite': 8.5.0-alpha.22(storybook@7.6.10(encoding@0.1.13))(vite@6.0.3(@types/node@20.11.6)(jiti@1.21.6)(less@4.2.0)(terser@5.27.0)(tsx@4.19.0))
+      '@storybook/builder-vite': 8.5.0-beta.4(storybook@7.6.10(encoding@0.1.13))(vite@6.0.3(@types/node@20.11.6)(jiti@1.21.6)(less@4.2.0)(terser@5.27.0)(tsx@4.19.0))
     transitivePeerDependencies:
       - storybook
       - vite
@@ -20918,6 +20941,13 @@ snapshots:
       '@types/unist': 3.0.2
       unist-util-stringify-position: 4.0.0
       vfile-message: 4.0.2
+
+  virtua@0.39.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(solid-js@1.9.3)(vue@3.5.13(typescript@5.6.3)):
+    optionalDependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      solid-js: 1.9.3
+      vue: 3.5.13(typescript@5.6.3)
 
   vite-node@0.32.4(@types/node@20.11.6)(less@4.2.0)(terser@5.27.0):
     dependencies:

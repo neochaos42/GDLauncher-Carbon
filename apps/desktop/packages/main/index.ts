@@ -938,12 +938,12 @@ app.on("open-url", (event, url) => {
 const LOOP_TIMEOUT = 4000
 
 // keep event loop busy until potato pc mode is set or timeout is reached
-// if (!isPotatoPcModeSet && !import.meta.env.DEV) {
-//   let timeEnd = Date.now()
-//   while (!isPotatoPcModeSet && timeEnd - timeStart < LOOP_TIMEOUT) {
-//     timeEnd = Date.now()
-//   }
+if (!isPotatoPcModeSet && !import.meta.env.DEV) {
+  let timeEnd = Date.now()
+  while (!isPotatoPcModeSet && timeEnd - timeStart < LOOP_TIMEOUT) {
+    timeEnd = Date.now()
+  }
 
-//   // DO NOT REMOVE THIS CONSOLE LOG as V8 optimizes the loop away
-//   console.log("First event loop tick done in ", timeEnd - timeStart)
-// }
+  // DO NOT REMOVE THIS CONSOLE LOG as V8 optimizes the loop away
+  console.log("First event loop tick done in ", timeEnd - timeStart)
+}

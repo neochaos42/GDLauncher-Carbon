@@ -1918,10 +1918,12 @@ impl ManagerRef<'_, InstanceManager> {
         match &state {
             LaunchState::Inactive { .. } => {
                 // println to stdout is used by the launcher to detect when the game is closed
+                info!("_INSTANCE_STATE_:GAME_CLOSED|{action_to_take}");
                 println!("_INSTANCE_STATE_:GAME_CLOSED|{action_to_take}");
             }
             LaunchState::Running(_) => {
                 // println to stdout is used by the launcher to detect when the game is closed
+                info!("_INSTANCE_STATE_:GAME_LAUNCHED|{action_to_take}");
                 println!("_INSTANCE_STATE_:GAME_LAUNCHED|{action_to_take}");
             }
             LaunchState::Preparing(_) | LaunchState::Deleting => (),

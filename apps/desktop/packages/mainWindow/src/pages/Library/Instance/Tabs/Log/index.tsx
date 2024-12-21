@@ -1,5 +1,5 @@
-import { LogEntry } from "@/utils/logs"
-import { port, rspc } from "@/utils/rspcClient"
+import { LogEntry, LogEntryLevel, LogEntrySourceKind } from "@/utils/logs"
+import { port, rspc } from "@/utils/rspcClient.js"
 import { useParams } from "@solidjs/router"
 import { createEffect, createSignal, onCleanup, onMount } from "solid-js"
 import LogsSidebar from "./LogsSidebar"
@@ -45,13 +45,13 @@ const Logs = () => {
     wsConnection.onmessage = (event) => {
       setIsLoading(false)
       const newLogs = JSON.parse(event.data) as LogEntry[]
-
       setLogs((prev) => [...prev, ...newLogs])
 
       if (!logsContentRef || !autoFollowPreference()) return
 
       if (autoFollow()) {
-        logsContentRef.scrollTop = logsContentRef.scrollHeight
+        console.log("scroll to index", logs.length)
+        // rowVirtualizer.scrollToIndex(200000)
         setNewLogsCount(0)
       } else {
         setNewLogsCount((prev) => prev + 1)
@@ -134,7 +134,7 @@ const Logs = () => {
 
   const scrollToBottom = () => {
     if (logsContentRef) {
-      logsContentRef.scrollTop = logsContentRef.scrollHeight
+      // rowVirtualizer.scrollToIndex(logs.length - 1)
       setAutoFollow(true)
       setNewLogsCount(0)
       if (scrollBottomRef) {
@@ -152,7 +152,7 @@ const Logs = () => {
   }
 
   return (
-    <div class="h-full w-full flex overflow-hidden border border-darkSlate-600 border-t-solid">
+    <div class="border-darkSlate-600 border-t-solid flex h-full w-full overflow-hidden border">
       <LogsSidebar
         availableLogEntries={availableLogEntries.data || []}
         setSelectedLog={setSelectedLog}
