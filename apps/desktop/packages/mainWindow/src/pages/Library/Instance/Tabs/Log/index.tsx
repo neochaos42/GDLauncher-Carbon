@@ -1,4 +1,4 @@
-import { LogEntry, LogEntryLevel, LogEntrySourceKind } from "@/utils/logs"
+import { LogEntry } from "@/utils/logs"
 import { port, rspc } from "@/utils/rspcClient.js"
 import { useParams } from "@solidjs/router"
 import { createEffect, createSignal, onCleanup, onMount } from "solid-js"
