@@ -323,6 +323,9 @@ const loadCoreModule: CoreModule = () =>
 
     coreModule.stdout.on("data", (data) => {
       const dataString = data.toString()
+
+      console.log(`[CORE] Message: ${dataString}`)
+
       const rows = dataString.split(/\r?\n|\r|\n/g)
 
       logs.push({
@@ -417,7 +420,6 @@ const loadCoreModule: CoreModule = () =>
           }
         }
       }
-      console.log(`[CORE] Message: ${dataString}`)
     })
 
     coreModule.stderr.on("data", (data) => {

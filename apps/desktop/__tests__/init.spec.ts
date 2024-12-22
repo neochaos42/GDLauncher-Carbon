@@ -122,6 +122,8 @@ test.describe("Init Tests", () => {
   })
 
   test.afterAll(async () => {
+    if (!electronApp) return
+
     await electronApp.close()
   })
 

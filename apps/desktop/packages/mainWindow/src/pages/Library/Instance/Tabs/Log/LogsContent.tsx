@@ -8,14 +8,17 @@ import LogsOptions, { Columns, LogDensity } from "./components/LogsOptions"
 import { Trans } from "@gd/i18n"
 import { Button } from "@gd/ui"
 import { VList } from "@/components/VirtuaWrapper"
+import { VirtualizerHandle } from "virtua/lib/solid"
 
 interface Props {
   logs: LogEntry[]
   isActive: boolean
   isLoading: boolean
   scrollToBottom: () => void
+  onScroll: () => void
   assignScrollBottomRef: (ref: HTMLDivElement) => void
   assignLogsContentRef: (ref: HTMLDivElement) => void
+  assignVirtualizerRef: (ref: VirtualizerHandle) => void
   newLogsCount: number
   autoFollowPreference: boolean
   setAutoFollowPreference: (_: boolean) => void
@@ -224,7 +227,7 @@ const LogsContent = (props: Props) => {
 
   return (
     <div class="border-darkSlate-700 border-l-solid relative flex min-w-0 flex-1 flex-col border">
-      <div class="bg-darkSlate-800 box-border flex h-10 w-full flex-shrink-0 items-center justify-between gap-4 px-4 py-8">
+      <div class="bg-darkSlate-800 box-border flex h-10 w-full shrink-0 items-center justify-between gap-4 px-4 py-8">
         {/* <Input icon={<div class="i-ri:search-line" />} placeholder="Search" /> */}
         <div />
         <div class="flex items-center gap-4">
@@ -278,7 +281,16 @@ const LogsContent = (props: Props) => {
             </div>
           </Match>
           <Match when={props.logs.length > 0}>
-            <VList data={props.logs}>
+            <VList
+              data={props.logs}
+              ref={(virtuaHandle) => {
+                if (virtuaHandle) {
+                  props.assignVirtualizerRef(virtuaHandle)
+                }
+              }}
+              onWheel={props.onScroll}
+              overscan={10}
+            >
               {(log) => {
                 return (
                   <div
