@@ -1,5 +1,7 @@
 // Intentionally putting this on top to catch any potential error in dependencies as well
 
+console.log("Initializing application...")
+
 process.on("uncaughtException", handleUncaughtException)
 
 import {
@@ -32,6 +34,8 @@ import initAutoUpdater from "./autoUpdater"
 import "./appMenu"
 import { FELauncherActionOnGameLaunch } from "@gd/core_module/bindings"
 
+console.log("Modules imported successfully")
+
 const timeStart = Date.now()
 let isPotatoPcModeSet = false
 
@@ -46,8 +50,10 @@ let isGameRunning = false
 let showAppCloseWarning = true
 
 export function initRTPath(override: string | null | undefined) {
+  console.log("Initializing runtime path...")
   if (override) {
     CURRENT_RUNTIME_PATH = override
+    console.log("Runtime path overridden:", CURRENT_RUNTIME_PATH)
     return
   }
 
@@ -61,16 +67,19 @@ export function initRTPath(override: string | null | undefined) {
     const tmp_path = fss.readFileSync(runtimeOverridePath).toString()
     fse.ensureDirSync(tmp_path)
     file_override = tmp_path
+    console.log("Runtime path read from file:", file_override)
   } catch {
-    // ignore
+    console.log("No runtime path override file found")
   }
 
   CURRENT_RUNTIME_PATH =
     file_override ||
     path.join(app.getPath("userData"), RUNTIME_PATH_DEFAULT_NAME)
+  console.log("Current runtime path set to:", CURRENT_RUNTIME_PATH)
 }
 
 const args = process.argv.slice(1)
+console.log("Process arguments:", args)
 
 interface Argument {
   argument: string
@@ -78,10 +87,12 @@ interface Argument {
 }
 
 function validateArgument(arg: string): Argument | null {
+  console.log("Validating argument:", arg)
   const hasValue =
     args.includes(arg) && !args[args.indexOf(arg) + 1]?.startsWith("--")
 
   if (hasValue) {
+    console.log("Argument has value:", arg, args[args.indexOf(arg) + 1])
     return {
       argument: arg,
       value: args[args.indexOf(arg) + 1]
@@ -89,16 +100,19 @@ function validateArgument(arg: string): Argument | null {
   }
 
   if (args.includes(arg)) {
+    console.log("Argument found without value:", arg)
     return {
       argument: arg,
       value: null
     }
   }
 
+  console.log("Argument not found:", arg)
   return null
 }
 
 export function getPatchedUserData() {
+  console.log("Getting patched user data...")
   const isSnapshot = __APP_VERSION__.includes("snapshot")
   if (app.isPackaged && isSnapshot) {
     const isDeepBinary = app
@@ -115,6 +129,7 @@ export function getPatchedUserData() {
     )
 
     ensureDirSync(appPackagePath)
+    console.log("App package path for snapshot:", appPackagePath)
 
     return appPackagePath
   }
@@ -134,19 +149,24 @@ export function getPatchedUserData() {
     }
   }
 
+  console.log("App data path:", appData)
   return path.join(appData, "gdlauncher_carbon")
 }
 
-const skipIntroAnimation = fss.existsSync(getPatchedUserData())
+const patchedUserData = getPatchedUserData()
 
-app.setPath("userData", getPatchedUserData())
+const skipIntroAnimation = fss.existsSync(patchedUserData)
+console.log("Skip intro animation:", skipIntroAnimation)
 
-Object.assign(console, log.functions)
+app.setPath("userData", patchedUserData)
+console.log("User data path set to:", app.getPath("userData"))
 
 log.transports.file.resolvePathFn = (variables) =>
-  path.join(getPatchedUserData(), variables.fileName!)
+  path.join(patchedUserData, variables.fileName!)
 log.initialize()
 log.eventLogger.startLogging()
+console.log("Logging initialized")
+Object.assign(console, log.functions)
 
 if (app.isPackaged) {
   const overrideCLIDataPath = validateArgument("--runtime_path")
@@ -161,7 +181,7 @@ if (app.isPackaged) {
   initRTPath(rtPath)
 }
 
-console.log("Userdata path:", app.getPath("userData"))
+console.log("Userdata path:", patchedUserData)
 console.log("Runtime path:", CURRENT_RUNTIME_PATH)
 
 const sentrySessionId = crypto.randomUUID()
@@ -176,6 +196,7 @@ const overrideBaseApi = validateArgument("--gdl_override_base_api")
 
 if (!allowMultipleInstances) {
   if (!app.requestSingleInstanceLock()) {
+    console.log("Another instance is already running. Quitting...")
     app.quit()
     process.exit(0)
   }
@@ -196,10 +217,12 @@ if (!disableSentry) {
     Sentry.setContext("session", {
       gdl_session_id: sentrySessionId
     })
+    console.log("Sentry initialized")
   }
 }
 
 function maybeDisableGPU(override: boolean) {
+  console.log("Checking if GPU should be disabled...")
   if (app.isReady()) {
     console.error("App is ready, cannot disable GPU")
     return
@@ -208,6 +231,7 @@ function maybeDisableGPU(override: boolean) {
   const disableGPU = validateArgument("--disable-gpu") || override
 
   if (disableGPU) {
+    console.log("Disabling GPU...")
     app.commandLine.appendSwitch("no-sandbox")
     app.commandLine.appendSwitch("disable-gpu")
     app.commandLine.appendSwitch("disable-software-rasterizer")
@@ -220,6 +244,7 @@ function maybeDisableGPU(override: boolean) {
   // Disable GPU Acceleration for Windows 7
   if (disableGPU || (release().startsWith("6.1") && platform() === "win32")) {
     app.disableHardwareAcceleration()
+    console.log("Hardware acceleration disabled")
   }
 }
 
@@ -231,8 +256,10 @@ export interface Log {
 }
 
 const isDev = import.meta.env.MODE === "development"
+console.log("Is development mode:", isDev)
 
 const binaryName = os.platform() === "win32" ? "core_module.exe" : "core_module"
+console.log("Binary name:", binaryName)
 
 export type CoreModule = () => Promise<
   | {
@@ -250,6 +277,7 @@ export type CoreModule = () => Promise<
 
 const loadCoreModule: CoreModule = () =>
   new Promise((resolve, _) => {
+    console.log("Loading core module...")
     if (isDev) {
       resolve({
         type: "success",
@@ -258,6 +286,7 @@ const loadCoreModule: CoreModule = () =>
           kill: () => {}
         }
       })
+      console.log("Core module loaded in development mode")
       return
     }
 
@@ -289,6 +318,7 @@ const loadCoreModule: CoreModule = () =>
           RUST_BACKTRACE: "full"
         }
       })
+      console.log("Core module spawned successfully")
     } catch (err: unknown) {
       console.error(`[CORE] Spawn error: ${String(err)}`)
 
@@ -354,6 +384,7 @@ const loadCoreModule: CoreModule = () =>
 
           if (event === "GAME_LAUNCHED") {
             isGameRunning = true
+            console.log("Game launched, action:", action)
             switch (action) {
               case "closeWindow":
                 win?.close()
@@ -374,6 +405,7 @@ const loadCoreModule: CoreModule = () =>
             }
           } else if (event === "GAME_CLOSED") {
             isGameRunning = false
+            console.log("Game closed, action:", action)
             switch (action) {
               case "closeWindow":
                 if (!win || win.isDestroyed()) {
@@ -399,12 +431,14 @@ const loadCoreModule: CoreModule = () =>
         } else if (row.startsWith("_SHOW_APP_CLOSE_WARNING_:")) {
           const rightPart = row.split(":")[1]
           showAppCloseWarning = rightPart === "true"
+          console.log("Show app close warning:", showAppCloseWarning)
         } else if (row.startsWith("_POTATO_PC_MODE_:")) {
           isPotatoPcModeSet = true
           const rightPart = row.split(":")[1]
           if (rightPart === "true") {
             maybeDisableGPU(true)
           }
+          console.log("Potato PC mode set:", isPotatoPcModeSet)
         } else if (row.startsWith("_HASHED_EMAIL_PREFERENCE_CHANGED_:")) {
           const rightPart = row.split(":")[1]
           const enabled = rightPart.split("|")[0] === "true"
@@ -418,6 +452,7 @@ const loadCoreModule: CoreModule = () =>
               ;(app as any).overwolf.generateUserEmailHashes({})
             }
           }
+          console.log("Hashed email preference changed:", enabled, email)
         }
       }
     })
@@ -472,6 +507,7 @@ const coreModule = loadCoreModule()
 
 if ((app as any).overwolf) {
   ;(app as any).overwolf.disableAnonymousAnalytics()
+  console.log("Overwolf anonymous analytics disabled")
 }
 
 // Set application name for Windows 10+ notifications
@@ -492,7 +528,9 @@ let lastDisplay: Display | null = null
 let isSpawningWindow = false
 
 async function createWindow(): Promise<BrowserWindow> {
+  console.log("Creating window...")
   if (isSpawningWindow) {
+    console.log("Window is already being spawned")
     return win!
   }
 
@@ -587,6 +625,7 @@ async function createWindow(): Promise<BrowserWindow> {
 
   win.on("ready-to-show", () => {
     isSpawningWindow = false
+    console.log("Window is ready to show")
 
     coreModule.finally(() => {
       if (win && !win?.isDestroyed()) {
@@ -814,10 +853,12 @@ ipcMain.handle("getCoreModule", async () => {
 })
 
 app.whenReady().then(async () => {
+  console.log("App is ready")
   const accessibility = validateArgument("--enable-accessibility")
 
   if (accessibility) {
     app.setAccessibilitySupportEnabled(true)
+    console.log("Accessibility support enabled")
   }
 
   console.log("OVERWOLF APP ID", process.env.OVERWOLF_APP_UID)
