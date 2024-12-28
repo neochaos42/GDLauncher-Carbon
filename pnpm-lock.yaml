@@ -102,8 +102,8 @@ importers:
         specifier: ^31.7.3
         version: 31.7.3
       '@overwolf/ow-electron-builder':
-        specifier: ^25.0.5
-        version: 25.0.6(electron-builder-squirrel-windows@25.0.5)
+        specifier: ^24.13.8
+        version: 24.13.8(electron-builder-squirrel-windows@25.0.5)
       '@playwright/test':
         specifier: ^1.49.1
         version: 1.49.1
@@ -344,7 +344,7 @@ importers:
         version: 7.6.10(react@18.2.0)
       '@storybook/addon-styling':
         specifier: ^1.3.0
-        version: 1.3.7(@types/react@18.2.48)(encoding@0.1.13)(less@4.2.0)(postcss@8.4.49)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.6.3)(webpack@5.90.0(esbuild@0.23.1))
+        version: 1.3.7(@types/react@18.2.48)(encoding@0.1.13)(less@4.2.0)(postcss@8.4.49)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.6.3)(webpack@5.90.0(esbuild@0.18.20))
       '@storybook/blocks':
         specifier: ^7.0.22
         version: 7.6.10(@types/react@18.2.48)(encoding@0.1.13)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -356,7 +356,7 @@ importers:
         version: 5.17.0
       babel-loader:
         specifier: ^9.1.2
-        version: 9.1.3(@babel/core@7.23.7)(webpack@5.90.0(esbuild@0.23.1))
+        version: 9.1.3(@babel/core@7.23.7)(webpack@5.90.0(esbuild@0.18.20))
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -398,6 +398,9 @@ importers:
         version: 0.32.4(jsdom@25.0.1)(less@4.2.0)(playwright@1.49.1)(terser@5.27.0)
 
 packages:
+
+  7zip-bin@5.1.1:
+    resolution: {integrity: sha512-sAP4LldeWNz0lNzmTird3uWfFDWWTeg6V/MsmyyLR9X1idwKBWIgt/ZvinqQldJm3LecKEs1emkbquO6PCiLVQ==}
 
   7zip-bin@5.2.0:
     resolution: {integrity: sha512-ukTPVhqG4jNzMro2qA9HSCSSVJN3aN7tlb+hfqYCt3ER0yWroeA2VR38MNrOHLQ/cVj+DaIMad0kFCtWWowh/A==}
@@ -1440,6 +1443,10 @@ packages:
     resolution: {integrity: sha512-Qkzpg2s9GnVV2I2BjRksUi43U5e6+zaQMcjoJy0C+C5oxaKl+fmckGDQFtRpZpZV0NQekuZZ+tGz7EA9TVnQtQ==}
     engines: {node: '>=12'}
 
+  '@electron/notarize@2.2.1':
+    resolution: {integrity: sha512-aL+bFMIkpR0cmmj5Zgy0LMKEpgy43/hw5zadEArgmAMWWlKc5buwFvFT9G/o/YJkvXAJm5q3iuTuLaiaXW39sg==}
+    engines: {node: '>= 10.0.0'}
+
   '@electron/notarize@2.3.2':
     resolution: {integrity: sha512-zfayxCe19euNwRycCty1C7lF7snk9YwfRpB5M8GLr1a4ICH63znxaPNAubrMvj0yDvVozqfgsdYpXVUnpWBDpg==}
     engines: {node: '>= 10.0.0'}
@@ -1447,6 +1454,11 @@ packages:
   '@electron/notarize@2.5.0':
     resolution: {integrity: sha512-jNT8nwH1f9X5GEITXaQ8IF/KdskvIkOFfB2CvwumsveVidzpSc+mvhhTMdAGSYF3O+Nq49lJ7y+ssODRXu06+A==}
     engines: {node: '>= 10.0.0'}
+
+  '@electron/osx-sign@1.0.5':
+    resolution: {integrity: sha512-k9ZzUQtamSoweGQDV2jILiRIHUu7lYlJ3c6IEmjv1hC17rclE+eb9U+f6UFlOOETo0JzY1HNlXy4YOlCvl+Lww==}
+    engines: {node: '>=12.0.0'}
+    hasBin: true
 
   '@electron/osx-sign@1.3.1':
     resolution: {integrity: sha512-BAfviURMHpmb1Yb50YbCxnOY0wfwaLXH5KJ4+80zS0gUkzDX3ec23naTlEqKsN+PwYn+a1cCzM7BJ4Wcd3sGzw==}
@@ -1457,6 +1469,10 @@ packages:
     resolution: {integrity: sha512-zF4x3QupRU3uNGaP5X1wjpmcjfw1H87kyqZ00Tc3HvriV+4gmOGuvQjGNkrJuXdsApssdNyVwLsy+TaeTGGcVw==}
     engines: {node: '>=12.13.0'}
     hasBin: true
+
+  '@electron/universal@1.5.1':
+    resolution: {integrity: sha512-kbgXxyEauPJiQQUNG2VgUeyfQNFk6hBF11ISN2PNI6agUgPl55pv4eQmaqHzTAzchBvqZ2tQuRVaPStGf0mxGw==}
+    engines: {node: '>=8.6'}
 
   '@electron/universal@2.0.1':
     resolution: {integrity: sha512-fKpv9kg4SPmt+hY7SVBnIYULE9QJl8L3sCfcBsnqbJwwBwAeTLokJ9TRt9y7bK0JAzIW2y78TVVjvnQEms/yyA==}
@@ -2349,6 +2365,10 @@ packages:
   '@juggle/resize-observer@3.4.0':
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
 
+  '@malept/cross-spawn-promise@1.1.1':
+    resolution: {integrity: sha512-RTBGWL5FWQcg9orDOCcp4LvItNzUPcyEU9bwaeJX0rJ1IQxzucC48Y0/sQLp/g6t99IQgAlGIaesJS+gTn7tVQ==}
+    engines: {node: '>= 10'}
+
   '@malept/cross-spawn-promise@2.0.0':
     resolution: {integrity: sha512-1DpKU0Z5ThltBwjNySMC14g0CkbyhCaz9FkhxqNsZI6uAPJXFS8cMXlBKo26FJ8ZuW6S9GCMcR9IO5k2X5/9Fg==}
     engines: {node: '>= 12.13.0'}
@@ -2415,15 +2435,12 @@ packages:
     engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
     deprecated: This functionality has been moved to @npmcli/fs
 
-  '@overwolf/ow-app-builder-lib@25.0.6':
-    resolution: {integrity: sha512-GZaElRIuenZMmX9fbKncfQfzQqdqhehPifafJFkY8uD828VQQ1yF1BaWbKGWEn8B+mEPdUZcO/SlRg5W7DlV5g==}
+  '@overwolf/ow-app-builder-lib@24.13.8':
+    resolution: {integrity: sha512-v6Mf3FIt3EwjAPgf7PUSPoq0tmWy0SGc3W3qmF944tvnM5sP7lxX7I4Tj0KQa84O97IS9hmQv9nAWMuwYc7pTw==}
     engines: {node: '>=14.0.0'}
-    peerDependencies:
-      dmg-builder: 25.0.5
-      electron-builder-squirrel-windows: 25.0.5
 
-  '@overwolf/ow-electron-builder@25.0.6':
-    resolution: {integrity: sha512-7OsLutSGtkx8AtwvWxHpoYptkHJO4hjJWiOx8AZvuDAAm8LPp/f4IuJrUEoEMnPZL8pFrThgxF9Al53T/oH27Q==}
+  '@overwolf/ow-electron-builder@24.13.8':
+    resolution: {integrity: sha512-CYL95PZEIDOQ30vmVFgUsdpIKRzkcG7QqqOG7j2sRfZI0UWCtxbI0hQvAFEbj8pNTPzfOSKL/0MAjzS8BaXzJg==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -4293,8 +4310,18 @@ packages:
     resolution: {integrity: sha512-KMReFUr0B4t+D+OBkjR3KYqvocp2XaSzO55UcB6mgQMd3KbcE+mWTyvVV7D/zsdEbNnV6acZUutkiHQXvTr1Rw==}
     engines: {node: '>= 8'}
 
+  app-builder-bin@4.0.0:
+    resolution: {integrity: sha512-xwdG0FJPQMe0M0UA4Tz0zEB8rBJTRA5a476ZawAqiBkMv16GRK5xpXThOjMaEOFnZ6zabejjG4J3da0SXG63KA==}
+
   app-builder-bin@5.0.0-alpha.7:
     resolution: {integrity: sha512-ww2mK4ITUvqisnqOuUWAeHzokpPidyZ7a0ZkwW+V7sF5/Pdi2OldkRjAWqEzn6Xtmj3SLVT84as4wB59A6jJ4g==}
+
+  app-builder-lib@24.13.3:
+    resolution: {integrity: sha512-FAzX6IBit2POXYGnTCT8YHFO/lr5AapAII6zzhQO3Rw4cEDOgK+t1xhLc5tNcKlicTHlo9zxIwnYCX9X2DLkig==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      dmg-builder: 24.13.3
+      electron-builder-squirrel-windows: 24.13.3
 
   app-builder-lib@25.0.5:
     resolution: {integrity: sha512-rxgxMx1f7I4ZAP0jA5+5iB7X6x6MJvGF7GauRzQBnIVihwXX2HOiAE7yenyY9Ry5YAiH47MnCxdq413Wq6XOcQ==}
@@ -4557,6 +4584,10 @@ packages:
   buffer-crc32@0.2.13:
     resolution: {integrity: sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ==}
 
+  buffer-equal@1.0.1:
+    resolution: {integrity: sha512-QoV3ptgEaQpvVwbXdSO39iqPQTCxSF7A5U99AxbHYqUdCizL/lH2Z0A2y6nbZucxMEOtNyZfG2s6gsVugGpKkg==}
+    engines: {node: '>=0.4'}
+
   buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
 
@@ -4570,9 +4601,16 @@ packages:
     resolution: {integrity: sha512-6p/gfG1RJSQeIbz8TK5aPNkoztgY1q5TgmGFMAXcY8itsGW6Y2ld1ALsZ5UJn8rog7hKF3zHx5iQbNQ8uLcRlw==}
     engines: {node: '>=12.0.0'}
 
+  builder-util-runtime@9.2.4:
+    resolution: {integrity: sha512-upp+biKpN/XZMLim7aguUyW8s0FUpDvOtK6sbanMFDAMBzpHDqdhgVYm6zc9HJ6nWo7u2Lxk60i2M6Jd3aiNrA==}
+    engines: {node: '>=12.0.0'}
+
   builder-util-runtime@9.2.5:
     resolution: {integrity: sha512-HjIDfhvqx/8B3TDN4GbABQcgpewTU4LMRTQPkVpKYV3lsuxEJoIfvg09GyWTNmfVNSUAYf+fbTN//JX4TH20pg==}
     engines: {node: '>=12.0.0'}
+
+  builder-util@24.13.1:
+    resolution: {integrity: sha512-NhbCSIntruNDTOVI9fdXz0dihaqX2YuE1D6zZMrwiErzH4ELZHE6mdiB40wEgZNprDia+FghRFgKoAqMZRRjSA==}
 
   builder-util@25.0.3:
     resolution: {integrity: sha512-eH5c1ukdY2xjtFQWQ6jlzEuXuqcuAVc3UQ6V6fdYu9Kg3CkDbCR82Mox42uaJDmee9WXSbP/88cOworFdOHPhw==}
@@ -4872,6 +4910,9 @@ packages:
   config-chain@1.1.13:
     resolution: {integrity: sha512-qj+f8APARXHrM0hraqXYb2/bOVSV4PvJQlNZ/DVj0QrmNM2q2euizkeuVckQ57J+W0mRH6Hvi+k50M4Jul2VRQ==}
 
+  config-file-ts@0.2.6:
+    resolution: {integrity: sha512-6boGVaglwblBgJqGyxm4+xCmEGcWgnWHSWHY5jad58awQhB6gftq0G8HbzU39YqCIYHMLAiL1yjwiZ36m/CL8w==}
+
   config-file-ts@0.2.8-rc1:
     resolution: {integrity: sha512-GtNECbVI82bT4RiDIzBSVuTKoSHufnU7Ce7/42bkWZJZFLjmDF2WBpVsvRkhKCfKBnTBb3qZrBwPpFBU/Myvhg==}
 
@@ -5166,6 +5207,9 @@ packages:
     resolution: {integrity: sha512-D+mk+qE8VC/PAUrlAU34N+VfXev0ghe5ywmpqrawphmVZc1bEfn56uo9qpyGp1p4xpzOHkSW4ztBd6L7Xx4ACw==}
     engines: {node: '>=0.3.1'}
 
+  dir-compare@3.3.0:
+    resolution: {integrity: sha512-J7/et3WlGUCxjdnD3HAAzQ6nsnc0WL6DD7WcwJb7c39iH1+AWfg+9OqzJNaI6PkBwBvm1mhZNL9iY/nRiZXlPg==}
+
   dir-compare@4.2.0:
     resolution: {integrity: sha512-2xMCmOoMrdQIPHdsTawECdNPwlVFB9zGcz3kuhmBO6U3oU+UQjsue0i8ayLKpgBcm+hcXPMVSGUN9d+pvJ6+VQ==}
 
@@ -5176,8 +5220,8 @@ packages:
   dlv@1.1.3:
     resolution: {integrity: sha512-+HlytyjlPKnIG8XuRG8WvmBP8xs8P71y+SKKS6ZXWoEgLuePxtDoUEiH7WkdePWrQ5JBpE6aoVqfZfJUQkjXwA==}
 
-  dmg-builder@25.0.5:
-    resolution: {integrity: sha512-ocnZV44ZqInoSFaY54fF7BlCtw+WtbrjyPrkBhaB+Ztn7GPKjmFgRbIKytifJ8h9Cib8jdFRMgjCUtkU45Y6DA==}
+  dmg-builder@24.13.3:
+    resolution: {integrity: sha512-rcJUkMfnJpfCboZoOOPf4L29TRtEieHNOeAbYPWPxlaBw/Z1RKrRA86dOI9rwaI4tQSc/RD82zTNHprfUHXsoQ==}
 
   dmg-license@1.0.11:
     resolution: {integrity: sha512-ZdzmqwKmECOWJpqefloC5OJy1+WZBBse5+MR88z9g9Zn4VY+WYUkAyojmhzJckH5YbbZGcYIuGAkY5/Ys5OM2Q==}
@@ -5213,6 +5257,9 @@ packages:
     resolution: {integrity: sha512-zIHwmZPRshsCdpMDyVsqGmgyP0yT8GAgXUnkdAoJisxvf33k7yO6OuoKmcTGuXPWSsm8Oh88nZicRLA9Y0rUeA==}
     engines: {node: '>=12'}
 
+  dotenv-expand@5.1.0:
+    resolution: {integrity: sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==}
+
   dotenv@16.0.3:
     resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
     engines: {node: '>=12'}
@@ -5224,6 +5271,10 @@ packages:
   dotenv@16.4.5:
     resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
     engines: {node: '>=12'}
+
+  dotenv@9.0.2:
+    resolution: {integrity: sha512-I9OvvrHp4pIARv4+x9iuewrWycX6CcZtoAu1XrzPxc5UygMJXJZYmBsynku8IkrJwgypE5DGNjDPmPRhDCptUg==}
+    engines: {node: '>=10'}
 
   dset@3.1.3:
     resolution: {integrity: sha512-20TuZZHCEZ2O71q9/+8BwKwZ0QtD9D8ObhrihJPr+vLLYlSuAU3/zL4cSlgbfeoGHTjCSJBa7NGcrF9/Bx/WJQ==}
@@ -5255,6 +5306,9 @@ packages:
   electron-log@5.1.1:
     resolution: {integrity: sha512-If7HU4Slbh2xfjOXOLxifkbgu6HmWDNJyXPLW+XNTOHMfFKisg0trA3d/7syyu25S+lHosfsd0VMfDSjGn1+Pw==}
     engines: {node: '>= 14'}
+
+  electron-publish@24.13.1:
+    resolution: {integrity: sha512-2ZgdEqJ8e9D17Hwp5LEq5mLQPjqU3lv/IALvgp+4W8VeNhryfGhYEQC/PgDPMrnWUp+l60Ou5SJLsu+k4mhQ8A==}
 
   electron-publish@25.0.3:
     resolution: {integrity: sha512-wSGm+TFK2lArswIFBPLuIRHbo945s3MCvG5y1xVC57zL/PsrElUkaGH2ERtRrcKNpaDNq77rDA9JnMJhAFJjUg==}
@@ -7922,6 +7976,10 @@ packages:
   read-cache@1.0.0:
     resolution: {integrity: sha512-Owdv/Ft7IjOgm/i0xvNDZ1LrRANRfew4b2prF3OWMQLxLfu3bS8FVhCsrSCMK4lR56Y9ya+AThoTpDCTxCmpRA==}
 
+  read-config-file@6.3.2:
+    resolution: {integrity: sha512-M80lpCjnE6Wt6zb98DoW8WHR09nzMSpu8XHtPkiTHrJ5Az9CybfeQhTJ8D7saeBHpGhLPIVyA8lcL6ZmdKwY6Q==}
+    engines: {node: '>=12.0.0'}
+
   read-config-file@6.4.0:
     resolution: {integrity: sha512-uB5QOBeF84PT61GlV11OTV4jUGHAO3iDEOP6v9ygxhG6Bs9PLg7WsjNT6mtIX2G+x8lJTr4ZWNeG6LDTKkNf2Q==}
     engines: {node: '>=12.0.0'}
@@ -9676,6 +9734,8 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
 snapshots:
+
+  7zip-bin@5.1.1: {}
 
   7zip-bin@5.2.0: {}
 
@@ -11514,6 +11574,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@electron/notarize@2.2.1':
+    dependencies:
+      debug: 4.4.0
+      fs-extra: 9.1.0
+      promise-retry: 2.0.1
+    transitivePeerDependencies:
+      - supports-color
+
   '@electron/notarize@2.3.2':
     dependencies:
       debug: 4.4.0
@@ -11527,6 +11595,17 @@ snapshots:
       debug: 4.3.7
       fs-extra: 9.1.0
       promise-retry: 2.0.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@electron/osx-sign@1.0.5':
+    dependencies:
+      compare-version: 0.1.2
+      debug: 4.4.0
+      fs-extra: 10.1.0
+      isbinaryfile: 4.0.10
+      minimist: 1.2.8
+      plist: 3.1.0
     transitivePeerDependencies:
       - supports-color
 
@@ -11559,6 +11638,18 @@ snapshots:
       yargs: 17.7.2
     transitivePeerDependencies:
       - bluebird
+      - supports-color
+
+  '@electron/universal@1.5.1':
+    dependencies:
+      '@electron/asar': 3.2.8
+      '@malept/cross-spawn-promise': 1.1.1
+      debug: 4.4.0
+      dir-compare: 3.3.0
+      fs-extra: 9.1.0
+      minimatch: 3.1.2
+      plist: 3.1.0
+    transitivePeerDependencies:
       - supports-color
 
   '@electron/universal@2.0.1':
@@ -12184,6 +12275,10 @@ snapshots:
 
   '@juggle/resize-observer@3.4.0': {}
 
+  '@malept/cross-spawn-promise@1.1.1':
+    dependencies:
+      cross-spawn: 7.0.6
+
   '@malept/cross-spawn-promise@2.0.0':
     dependencies:
       cross-spawn: 7.0.6
@@ -12303,25 +12398,23 @@ snapshots:
       mkdirp: 1.0.4
       rimraf: 3.0.2
 
-  '@overwolf/ow-app-builder-lib@25.0.6(dmg-builder@25.0.5)(electron-builder-squirrel-windows@25.0.5)':
+  '@overwolf/ow-app-builder-lib@24.13.8':
     dependencies:
+      7zip-bin: 5.1.1
       '@develar/schema-utils': 2.6.5
-      '@electron/notarize': 2.3.2
-      '@electron/osx-sign': 1.3.1
-      '@electron/rebuild': 3.6.0
-      '@electron/universal': 2.0.1
+      '@electron/notarize': 2.2.1
+      '@electron/osx-sign': 1.0.5
+      '@electron/universal': 1.5.1
       '@malept/flatpak-bundler': 0.4.0
       '@types/fs-extra': 9.0.13
       async-exit-hook: 2.0.1
       bluebird-lst: 1.0.9
-      builder-util: 25.0.3
-      builder-util-runtime: 9.2.5
+      builder-util: 24.13.1
+      builder-util-runtime: 9.2.4
       chromium-pickle-js: 0.2.0
       debug: 4.4.0
-      dmg-builder: 25.0.5(electron-builder-squirrel-windows@25.0.5)
       ejs: 3.1.9
-      electron-builder-squirrel-windows: 25.0.5(dmg-builder@25.0.5)
-      electron-publish: 25.0.3
+      electron-publish: 24.13.1
       form-data: 4.0.0
       fs-extra: 10.1.0
       hosted-git-info: 4.1.0
@@ -12329,32 +12422,29 @@ snapshots:
       isbinaryfile: 5.0.0
       js-yaml: 4.1.0
       lazy-val: 1.0.5
-      minimatch: 10.0.1
-      read-config-file: 6.4.0
-      resedit: 1.7.2
+      minimatch: 5.1.6
+      read-config-file: 6.3.2
       sanitize-filename: 1.6.3
       semver: 7.6.3
       tar: 6.2.0
       temp-file: 3.4.0
     transitivePeerDependencies:
-      - bluebird
       - supports-color
 
-  '@overwolf/ow-electron-builder@25.0.6(electron-builder-squirrel-windows@25.0.5)':
+  '@overwolf/ow-electron-builder@24.13.8(electron-builder-squirrel-windows@25.0.5)':
     dependencies:
-      '@overwolf/ow-app-builder-lib': 25.0.6(dmg-builder@25.0.5)(electron-builder-squirrel-windows@25.0.5)
-      builder-util: 25.0.3
-      builder-util-runtime: 9.2.5
+      '@overwolf/ow-app-builder-lib': 24.13.8
+      builder-util: 24.13.1
+      builder-util-runtime: 9.2.4
       chalk: 4.1.2
-      dmg-builder: 25.0.5(electron-builder-squirrel-windows@25.0.5)
+      dmg-builder: 24.13.3(electron-builder-squirrel-windows@25.0.5)
       fs-extra: 10.1.0
       is-ci: 3.0.1
       lazy-val: 1.0.5
-      read-config-file: 6.4.0
+      read-config-file: 6.3.2
       simple-update-notifier: 2.0.0
       yargs: 17.7.2
     transitivePeerDependencies:
-      - bluebird
       - electron-builder-squirrel-windows
       - supports-color
 
@@ -13463,7 +13553,7 @@ snapshots:
       '@storybook/global': 5.0.0
       ts-dedent: 2.2.0
 
-  '@storybook/addon-styling@1.3.7(@types/react@18.2.48)(encoding@0.1.13)(less@4.2.0)(postcss@8.4.49)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.6.3)(webpack@5.90.0(esbuild@0.23.1))':
+  '@storybook/addon-styling@1.3.7(@types/react@18.2.48)(encoding@0.1.13)(less@4.2.0)(postcss@8.4.49)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.6.3)(webpack@5.90.0(esbuild@0.18.20))':
     dependencies:
       '@babel/template': 7.22.15
       '@babel/types': 7.23.6
@@ -13476,19 +13566,19 @@ snapshots:
       '@storybook/preview-api': 7.6.10
       '@storybook/theming': 7.6.10(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@storybook/types': 7.6.10
-      css-loader: 6.9.1(webpack@5.90.0(esbuild@0.23.1))
-      less-loader: 11.1.4(less@4.2.0)(webpack@5.90.0(esbuild@0.23.1))
-      postcss-loader: 7.3.4(postcss@8.4.49)(typescript@5.6.3)(webpack@5.90.0(esbuild@0.23.1))
+      css-loader: 6.9.1(webpack@5.90.0(esbuild@0.18.20))
+      less-loader: 11.1.4(less@4.2.0)(webpack@5.90.0(esbuild@0.18.20))
+      postcss-loader: 7.3.4(postcss@8.4.49)(typescript@5.6.3)(webpack@5.90.0(esbuild@0.18.20))
       prettier: 2.8.8
       resolve-url-loader: 5.0.0
-      sass-loader: 13.3.3(webpack@5.90.0(esbuild@0.23.1))
-      style-loader: 3.3.4(webpack@5.90.0(esbuild@0.23.1))
+      sass-loader: 13.3.3(webpack@5.90.0(esbuild@0.18.20))
+      style-loader: 3.3.4(webpack@5.90.0(esbuild@0.18.20))
     optionalDependencies:
       less: 4.2.0
       postcss: 8.4.49
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      webpack: 5.90.0(esbuild@0.23.1)
+      webpack: 5.90.0(esbuild@0.18.20)
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
@@ -13648,7 +13738,7 @@ snapshots:
       '@storybook/node-logger': 7.6.10
       '@storybook/types': 7.6.10
       '@types/cross-spawn': 6.0.6
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.6
       globby: 11.1.0
       jscodeshift: 0.15.1(@babel/preset-env@7.23.8(@babel/core@7.25.2))
       lodash: 4.17.21
@@ -14932,9 +15022,45 @@ snapshots:
       normalize-path: 3.0.0
       picomatch: 2.3.1
 
+  app-builder-bin@4.0.0: {}
+
   app-builder-bin@5.0.0-alpha.7: {}
 
-  app-builder-lib@25.0.5(dmg-builder@25.0.5)(electron-builder-squirrel-windows@25.0.5):
+  app-builder-lib@24.13.3(dmg-builder@24.13.3)(electron-builder-squirrel-windows@25.0.5):
+    dependencies:
+      '@develar/schema-utils': 2.6.5
+      '@electron/notarize': 2.2.1
+      '@electron/osx-sign': 1.0.5
+      '@electron/universal': 1.5.1
+      '@malept/flatpak-bundler': 0.4.0
+      '@types/fs-extra': 9.0.13
+      async-exit-hook: 2.0.1
+      bluebird-lst: 1.0.9
+      builder-util: 24.13.1
+      builder-util-runtime: 9.2.4
+      chromium-pickle-js: 0.2.0
+      debug: 4.4.0
+      dmg-builder: 24.13.3(electron-builder-squirrel-windows@25.0.5)
+      ejs: 3.1.9
+      electron-builder-squirrel-windows: 25.0.5(dmg-builder@24.13.3)
+      electron-publish: 24.13.1
+      form-data: 4.0.0
+      fs-extra: 10.1.0
+      hosted-git-info: 4.1.0
+      is-ci: 3.0.1
+      isbinaryfile: 5.0.0
+      js-yaml: 4.1.0
+      lazy-val: 1.0.5
+      minimatch: 5.1.6
+      read-config-file: 6.3.2
+      sanitize-filename: 1.6.3
+      semver: 7.6.3
+      tar: 6.2.0
+      temp-file: 3.4.0
+    transitivePeerDependencies:
+      - supports-color
+
+  app-builder-lib@25.0.5(dmg-builder@24.13.3)(electron-builder-squirrel-windows@25.0.5):
     dependencies:
       '@develar/schema-utils': 2.6.5
       '@electron/notarize': 2.3.2
@@ -14949,9 +15075,9 @@ snapshots:
       builder-util-runtime: 9.2.5
       chromium-pickle-js: 0.2.0
       debug: 4.4.0
-      dmg-builder: 25.0.5(electron-builder-squirrel-windows@25.0.5)
+      dmg-builder: 24.13.3(electron-builder-squirrel-windows@25.0.5)
       ejs: 3.1.9
-      electron-builder-squirrel-windows: 25.0.5(dmg-builder@25.0.5)
+      electron-builder-squirrel-windows: 25.0.5(dmg-builder@24.13.3)
       electron-publish: 25.0.3
       form-data: 4.0.0
       fs-extra: 10.1.0
@@ -15185,12 +15311,12 @@ snapshots:
     dependencies:
       '@babel/core': 7.25.2
 
-  babel-loader@9.1.3(@babel/core@7.23.7)(webpack@5.90.0(esbuild@0.23.1)):
+  babel-loader@9.1.3(@babel/core@7.23.7)(webpack@5.90.0(esbuild@0.18.20)):
     dependencies:
       '@babel/core': 7.23.7
       find-cache-dir: 4.0.0
       schema-utils: 4.2.0
-      webpack: 5.90.0(esbuild@0.23.1)
+      webpack: 5.90.0(esbuild@0.18.20)
 
   babel-plugin-istanbul@6.1.1:
     dependencies:
@@ -15383,6 +15509,8 @@ snapshots:
 
   buffer-crc32@0.2.13: {}
 
+  buffer-equal@1.0.1: {}
+
   buffer-from@1.1.2: {}
 
   buffer@5.7.1:
@@ -15402,10 +15530,38 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  builder-util-runtime@9.2.4:
+    dependencies:
+      debug: 4.4.0
+      sax: 1.3.0
+    transitivePeerDependencies:
+      - supports-color
+
   builder-util-runtime@9.2.5:
     dependencies:
       debug: 4.4.0
       sax: 1.3.0
+    transitivePeerDependencies:
+      - supports-color
+
+  builder-util@24.13.1:
+    dependencies:
+      7zip-bin: 5.2.0
+      '@types/debug': 4.1.12
+      app-builder-bin: 4.0.0
+      bluebird-lst: 1.0.9
+      builder-util-runtime: 9.2.4
+      chalk: 4.1.2
+      cross-spawn: 7.0.6
+      debug: 4.4.0
+      fs-extra: 10.1.0
+      http-proxy-agent: 5.0.0
+      https-proxy-agent: 5.0.1
+      is-ci: 3.0.1
+      js-yaml: 4.1.0
+      source-map-support: 0.5.21
+      stat-mode: 1.0.0
+      temp-file: 3.4.0
     transitivePeerDependencies:
       - supports-color
 
@@ -15759,6 +15915,11 @@ snapshots:
       proto-list: 1.2.4
     optional: true
 
+  config-file-ts@0.2.6:
+    dependencies:
+      glob: 10.4.5
+      typescript: 5.6.3
+
   config-file-ts@0.2.8-rc1:
     dependencies:
       glob: 10.4.5
@@ -15836,7 +15997,7 @@ snapshots:
 
   crypto-random-string@2.0.0: {}
 
-  css-loader@6.9.1(webpack@5.90.0(esbuild@0.23.1)):
+  css-loader@6.9.1(webpack@5.90.0(esbuild@0.18.20)):
     dependencies:
       icss-utils: 5.1.0(postcss@8.4.49)
       postcss: 8.4.49
@@ -15846,7 +16007,7 @@ snapshots:
       postcss-modules-values: 4.0.0(postcss@8.4.49)
       postcss-value-parser: 4.2.0
       semver: 7.6.3
-      webpack: 5.90.0(esbuild@0.23.1)
+      webpack: 5.90.0(esbuild@0.18.20)
 
   css-tree@3.1.0:
     dependencies:
@@ -16028,6 +16189,11 @@ snapshots:
 
   diff@5.1.0: {}
 
+  dir-compare@3.3.0:
+    dependencies:
+      buffer-equal: 1.0.1
+      minimatch: 3.1.2
+
   dir-compare@4.2.0:
     dependencies:
       minimatch: 3.1.2
@@ -16039,18 +16205,17 @@ snapshots:
 
   dlv@1.1.3: {}
 
-  dmg-builder@25.0.5(electron-builder-squirrel-windows@25.0.5):
+  dmg-builder@24.13.3(electron-builder-squirrel-windows@25.0.5):
     dependencies:
-      app-builder-lib: 25.0.5(dmg-builder@25.0.5)(electron-builder-squirrel-windows@25.0.5)
-      builder-util: 25.0.3
-      builder-util-runtime: 9.2.5
+      app-builder-lib: 24.13.3(dmg-builder@24.13.3)(electron-builder-squirrel-windows@25.0.5)
+      builder-util: 24.13.1
+      builder-util-runtime: 9.2.4
       fs-extra: 10.1.0
       iconv-lite: 0.6.3
       js-yaml: 4.1.0
     optionalDependencies:
       dmg-license: 1.0.11
     transitivePeerDependencies:
-      - bluebird
       - electron-builder-squirrel-windows
       - supports-color
 
@@ -16096,11 +16261,15 @@ snapshots:
     dependencies:
       dotenv: 16.4.5
 
+  dotenv-expand@5.1.0: {}
+
   dotenv@16.0.3: {}
 
   dotenv@16.4.0: {}
 
   dotenv@16.4.5: {}
+
+  dotenv@9.0.2: {}
 
   dset@3.1.3: {}
 
@@ -16123,9 +16292,9 @@ snapshots:
     dependencies:
       jake: 10.8.7
 
-  electron-builder-squirrel-windows@25.0.5(dmg-builder@25.0.5):
+  electron-builder-squirrel-windows@25.0.5(dmg-builder@24.13.3):
     dependencies:
-      app-builder-lib: 25.0.5(dmg-builder@25.0.5)(electron-builder-squirrel-windows@25.0.5)
+      app-builder-lib: 25.0.5(dmg-builder@24.13.3)(electron-builder-squirrel-windows@25.0.5)
       archiver: 5.3.2
       builder-util: 25.0.3
       fs-extra: 10.1.0
@@ -16135,6 +16304,18 @@ snapshots:
       - supports-color
 
   electron-log@5.1.1: {}
+
+  electron-publish@24.13.1:
+    dependencies:
+      '@types/fs-extra': 9.0.13
+      builder-util: 24.13.1
+      builder-util-runtime: 9.2.4
+      chalk: 4.1.2
+      fs-extra: 10.1.0
+      lazy-val: 1.0.5
+      mime: 2.6.0
+    transitivePeerDependencies:
+      - supports-color
 
   electron-publish@25.0.3:
     dependencies:
@@ -16554,7 +16735,7 @@ snapshots:
 
   execa@5.1.1:
     dependencies:
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.6
       get-stream: 6.0.1
       human-signals: 2.1.0
       is-stream: 2.0.1
@@ -16825,7 +17006,7 @@ snapshots:
 
   foreground-child@3.1.1:
     dependencies:
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.6
       signal-exit: 4.1.0
 
   form-data@4.0.0:
@@ -17898,10 +18079,10 @@ snapshots:
     dependencies:
       readable-stream: 2.3.8
 
-  less-loader@11.1.4(less@4.2.0)(webpack@5.90.0(esbuild@0.23.1)):
+  less-loader@11.1.4(less@4.2.0)(webpack@5.90.0(esbuild@0.18.20)):
     dependencies:
       less: 4.2.0
-      webpack: 5.90.0(esbuild@0.23.1)
+      webpack: 5.90.0(esbuild@0.18.20)
 
   less@4.2.0:
     dependencies:
@@ -19183,13 +19364,13 @@ snapshots:
     optionalDependencies:
       postcss: 8.4.33
 
-  postcss-loader@7.3.4(postcss@8.4.49)(typescript@5.6.3)(webpack@5.90.0(esbuild@0.23.1)):
+  postcss-loader@7.3.4(postcss@8.4.49)(typescript@5.6.3)(webpack@5.90.0(esbuild@0.18.20)):
     dependencies:
       cosmiconfig: 8.3.6(typescript@5.6.3)
       jiti: 1.21.0
       postcss: 8.4.49
       semver: 7.6.3
-      webpack: 5.90.0(esbuild@0.23.1)
+      webpack: 5.90.0(esbuild@0.18.20)
     transitivePeerDependencies:
       - typescript
 
@@ -19466,6 +19647,15 @@ snapshots:
   read-cache@1.0.0:
     dependencies:
       pify: 2.3.0
+
+  read-config-file@6.3.2:
+    dependencies:
+      config-file-ts: 0.2.6
+      dotenv: 9.0.2
+      dotenv-expand: 5.1.0
+      js-yaml: 4.1.0
+      json5: 2.2.3
+      lazy-val: 1.0.5
 
   read-config-file@6.4.0:
     dependencies:
@@ -19827,10 +20017,10 @@ snapshots:
       parse-srcset: 1.0.2
       postcss: 8.4.35
 
-  sass-loader@13.3.3(webpack@5.90.0(esbuild@0.23.1)):
+  sass-loader@13.3.3(webpack@5.90.0(esbuild@0.18.20)):
     dependencies:
       neo-async: 2.6.2
-      webpack: 5.90.0(esbuild@0.23.1)
+      webpack: 5.90.0(esbuild@0.18.20)
 
   sax@1.3.0: {}
 
@@ -20282,9 +20472,9 @@ snapshots:
 
   strnum@1.0.5: {}
 
-  style-loader@3.3.4(webpack@5.90.0(esbuild@0.23.1)):
+  style-loader@3.3.4(webpack@5.90.0(esbuild@0.18.20)):
     dependencies:
-      webpack: 5.90.0(esbuild@0.23.1)
+      webpack: 5.90.0(esbuild@0.18.20)
 
   style-to-object@0.4.4:
     dependencies:
@@ -20436,16 +20626,16 @@ snapshots:
       type-fest: 0.16.0
       unique-string: 2.0.0
 
-  terser-webpack-plugin@5.3.10(esbuild@0.23.1)(webpack@5.90.0(esbuild@0.23.1)):
+  terser-webpack-plugin@5.3.10(esbuild@0.18.20)(webpack@5.90.0(esbuild@0.18.20)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       jest-worker: 27.5.1
       schema-utils: 3.3.0
       serialize-javascript: 6.0.2
       terser: 5.27.0
-      webpack: 5.90.0(esbuild@0.23.1)
+      webpack: 5.90.0(esbuild@0.18.20)
     optionalDependencies:
-      esbuild: 0.23.1
+      esbuild: 0.18.20
 
   terser@5.27.0:
     dependencies:
@@ -21221,7 +21411,7 @@ snapshots:
 
   webpack-virtual-modules@0.6.1: {}
 
-  webpack@5.90.0(esbuild@0.23.1):
+  webpack@5.90.0(esbuild@0.18.20):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.6
@@ -21244,7 +21434,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 3.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.10(esbuild@0.23.1)(webpack@5.90.0(esbuild@0.23.1))
+      terser-webpack-plugin: 5.3.10(esbuild@0.18.20)(webpack@5.90.0(esbuild@0.18.20))
       watchpack: 2.4.0
       webpack-sources: 3.2.3
     transitivePeerDependencies:
