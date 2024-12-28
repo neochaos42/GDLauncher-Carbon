@@ -29,7 +29,7 @@
     "@gd/i18n": "workspace:*",
     "@gd/ui": "workspace:*",
     "@overwolf/ow-electron": "^31.7.3",
-    "@overwolf/ow-electron-builder": "^25.0.6",
+    "@overwolf/ow-electron-builder": "^25.0.5",
     "@playwright/test": "^1.49.1",
     "@rive-app/canvas": "^2.21.5",
     "@rspc/client": "^0.2.0",
