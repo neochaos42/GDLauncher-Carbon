@@ -33,6 +33,7 @@
     "lint": "turbo run lint --filter @gd/desktop --filter @gd/ui",
     "lint-fix": "turbo run lint-fix --filter @gd/desktop --filter @gd/ui",
     "test": "turbo run test",
+    "test-prod": "turbo run test --filter @gd/desktop",
     "rspc-bindings:generate": "cargo run -p carbon_app -- --generate-ts-bindings",
     "------divider-prisma-generate-normal------": "------divider------",
     "prisma:generate": "cargo run -p prisma-cli -- generate --schema=./crates/carbon_app/prisma/schema.prisma",
