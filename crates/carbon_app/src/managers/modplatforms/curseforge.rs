@@ -1,11 +1,3 @@
-use std::{env, sync::Arc};
-
-use anyhow::bail;
-use reqwest_middleware::ClientWithMiddleware;
-use serde_json::json;
-use tracing::{info, trace};
-use url::Url;
-
 use crate::{
     domain::{
         self,
@@ -23,6 +15,12 @@ use crate::{
     error::request::GoodJsonRequestError,
     managers::AppInner,
 };
+use anyhow::bail;
+use reqwest_middleware::ClientWithMiddleware;
+use serde_json::json;
+use std::{env, sync::Arc};
+use tracing::{info, trace};
+use url::Url;
 
 pub struct CurseForge {
     client: ClientWithMiddleware,

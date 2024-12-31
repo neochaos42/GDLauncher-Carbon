@@ -14,7 +14,7 @@ const changelogs: Changelog = {
     {
       title: "GDL accounts are now live.",
       description:
-        "A GDL account is just an entry in our database that is linked to a Microsoft account ID (UUID). We use your token to authenticate you, your password is NEVER stored. Having a GDL account will give you access to somw new features."
+        "A GDL account is just an entry in our database that is linked to a Microsoft account ID (UUID). We use your token to authenticate you, your password is NEVER stored. Having a GDL account will give you access to some new features."
     },
     {
       title: "Redesigned the whole authentication flow.",

@@ -1,8 +1,4 @@
-use std::collections::HashMap;
-
-use anyhow::bail;
-use serde::{Deserialize, Serialize};
-
+use super::{InstanceData, InstanceManager, InstanceType};
 use crate::{
     domain::{
         instance::{
@@ -23,8 +19,9 @@ use crate::{
     },
     managers::{instance::InvalidInstanceIdError, ManagerRef},
 };
-
-use super::{InstanceData, InstanceManager, InstanceType};
+use anyhow::bail;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 pub mod packinfo;
 
