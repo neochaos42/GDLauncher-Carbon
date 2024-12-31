@@ -84,8 +84,9 @@ pub async fn process_modpack(
     instance_shortpath: String,
     task: &VisualTask,
     has_callback_task: bool,
-    downloads: &mut Vec<Downloadable>,
-) -> anyhow::Result<TSubtasks> {
+) -> anyhow::Result<(TSubtasks, Option<StandardVersion>)> {
+    let mut version: Option<StandardVersion> = None;
+
     let runtime_path = app.settings_manager().runtime_path.clone();
     let instance_path = runtime_path
         .get_instances()
@@ -472,8 +473,6 @@ pub async fn process_modpack(
 
         completion.await?;
 
-        let version;
-
         if let Some(v) = v {
             tracing::info!("Modpack version: {v:?}");
 
@@ -548,7 +547,7 @@ pub async fn process_modpack(
         t_finalize_import,
     };
 
-    Ok(Arc::new(subtasks))
+    Ok((Arc::new(subtasks), version))
 }
 
 pub async fn process_modpack_staging(

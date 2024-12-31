@@ -325,7 +325,7 @@ impl ManagerRef<'_, InstanceManager> {
             let try_result: anyhow::Result<_> = async {
                 let mut downloads = Vec::new();
 
-                let t_subtasks = modpack::process_modpack(
+                let (t_subtasks, modpack_version) = modpack::process_modpack(
                     Arc::clone(&app),
                     instance_id.clone(),
                     deep_check,
@@ -333,7 +333,6 @@ impl ManagerRef<'_, InstanceManager> {
                     instance_shortpath.clone(),
                     &task,
                     callback_task.is_some(),
-                    &mut downloads,
                 )
                 .await?;
                 modpack::process_modpack_staging(
@@ -342,6 +341,12 @@ impl ManagerRef<'_, InstanceManager> {
                     &t_subtasks,
                 )
                 .await?;
+
+                let version = if modpack_version.is_some() {
+                    modpack_version
+                } else {
+                    version
+                };
 
                 let version = match version {
                     Some(v) => v,
