@@ -72,8 +72,8 @@ pub async fn process_minecraft(
 
     let instance_root = instance_path.get_root();
     let setup_path = instance_root.join(".setup");
-    let is_first_run = setup_path.is_dir();
-    let do_modpack_install = is_first_run && !setup_path.join("modpack-complete").is_dir();
+    let is_setup = setup_path.is_dir();
+    let is_modpack_complete = setup_path.join("modpack-complete").exists();
 
     t_subtasks.t_request_modloader_info.start_opaque();
 
@@ -269,50 +269,6 @@ pub async fn process_minecraft(
         .with_context(|| format!("Failed to download instance files for instance {instance_id}"))?;
 
         completion.await?;
-    }
-
-    // update mod metadata and add modpack complete flag after mods are downloaded
-    if is_first_run {
-        trace!("marking modpack initialization as complete");
-
-        if do_modpack_install {
-            t_subtasks.t_generating_packinfo.start_opaque();
-
-            let staging_path = setup_path.join("staging.json");
-
-            let staged_text;
-            let mut filter = None;
-
-            if staging_path.exists() {
-                staged_text = tokio::fs::read_to_string(staging_path).await?;
-                filter = Some(
-                    serde_json::from_str::<Vec<&str>>(&staged_text)
-                        .context("could not parse staging snapshot for packinfo creation")?,
-                );
-
-                let packinfo =
-                    packinfo::scan_dir(&instance_path.get_data_path(), filter.as_ref()).await?;
-                let packinfo_str = packinfo::make_packinfo(packinfo)?;
-                tokio::fs::write(instance_path.get_root().join("packinfo.json"), packinfo_str)
-                    .await?;
-            }
-
-            t_subtasks.t_generating_packinfo.complete_opaque();
-        }
-
-        tokio::fs::create_dir_all(setup_path.join("modpack-complete")).await?;
-
-        tracing::info!("queueing metadata caching for running instance");
-
-        t_subtasks.t_fill_cache.start_opaque();
-
-        app.meta_cache_manager()
-            .queue_caching(instance_id, true)
-            .await;
-
-        t_subtasks.t_fill_cache.complete_opaque();
-
-        trace!("queued metadata caching");
     }
 
     if !download_required {

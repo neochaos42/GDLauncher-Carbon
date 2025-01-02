@@ -319,8 +319,7 @@ impl ManagerRef<'_, InstanceManager> {
 
             let instance_root = instance_path.get_root();
             let setup_path = instance_root.join(".setup");
-            let is_first_run = setup_path.is_dir();
-            let do_modpack_install = is_first_run && !setup_path.join("modpack-complete").is_dir();
+            let is_setup = setup_path.is_dir();
 
             let try_result: anyhow::Result<_> = async {
                 let mut downloads = Vec::new();
@@ -390,7 +389,8 @@ impl ManagerRef<'_, InstanceManager> {
                 )
                 .await?;
 
-                if is_first_run {
+                // If the setup path exists, let's delete it because installation is now complete
+                if setup_path.exists() {
                     tokio::fs::remove_dir_all(setup_path).await?;
                 }
 
@@ -657,7 +657,7 @@ impl ManagerRef<'_, InstanceManager> {
                 return;
             };
 
-            if is_first_run {
+            if is_setup {
                 let res = app
                     .metrics_manager()
                     .track_event(GDLMetricsEvent::InstanceInstalled {

@@ -76,6 +76,13 @@ pub struct TSubtasksInner {
     pub t_finalize_import: Option<Subtask>,
 }
 
+/// This function prepares the modpack in a staging directory in the instance folder.
+/// The original instane data is not modified.
+///
+/// It downloads and processes all required files STRICTLY belonging to the modpack.
+///
+/// When it's done, it creates the staging-packinfo.json and packinfo.json file and marks the modpack as installed through
+/// the modpack-complete disk flag.
 pub async fn process_modpack(
     app: Arc<AppInner>,
     instance_id: InstanceId,
@@ -94,19 +101,20 @@ pub async fn process_modpack(
 
     let instance_root = instance_path.get_root();
     let setup_path = instance_root.join(".setup");
-    let is_first_run = setup_path.is_dir();
+    let is_setup = setup_path.is_dir();
+    let is_modpack_complete = setup_path.join("modpack-complete").exists();
+    let staging_packinfo_path = setup_path.join("staging-packinfo.json");
 
     let staging_dir = setup_path.join("staging");
-    let do_modpack_install = is_first_run && !setup_path.join("modpack-complete").is_dir();
-    let do_modpack_staging = do_modpack_install && !setup_path.join("staging.json").exists();
 
     let packinfo_path = instance_root.join("packinfo.json");
+    let tmp_packinfo_path = instance_root.join("tmp-packinfo.json");
     let packinfo = match tokio::fs::read_to_string(packinfo_path).await {
         Ok(text) => Some(packinfo::parse_packinfo(&text).context("while parsing packinfo json")?),
         Err(_) => None,
     };
 
-    let t_modpack = match do_modpack_staging {
+    let t_modpack = match is_setup && !is_modpack_complete {
         true => Some((
             task.subtask(Translation::InstanceTaskLaunchRequestModpack),
             task.subtask(Translation::InstanceTaskLaunchDownloadModpack),
@@ -143,12 +151,12 @@ pub async fn process_modpack(
 
     let t_reconstruct_assets = task.subtask(Translation::InstanceTaskReconstructAssets);
 
-    let t_forge_processors = match is_first_run {
+    let t_forge_processors = match is_setup {
         true => Some(task.subtask(Translation::InstanceTaskLaunchRunForgeProcessors)),
         false => None,
     };
 
-    let t_neoforge_processors = match is_first_run {
+    let t_neoforge_processors = match is_setup {
         true => Some(task.subtask(Translation::InstanceTaskLaunchRunNeoforgeProcessors)),
         false => None,
     };
@@ -176,7 +184,10 @@ pub async fn process_modpack(
 
         let cffile_path = setup_path.join("curseforge");
         let mrfile_path = setup_path.join("modrinth");
-        let skip_overrides_path = setup_path.join("modpack-skip-overlays");
+
+        // Is this required? Can we not extract them twice? Extraction should be idempotent.
+        // TODO: look into this
+        let skip_overrides_path = setup_path.join("modpack-skip-overrides");
         let skip_overrides = skip_overrides_path.is_dir();
 
         let modpack = match tokio::fs::read_to_string(&change_version_path).await {
@@ -193,6 +204,9 @@ pub async fn process_modpack(
 
         t_request.start_opaque();
 
+        // If a cf or mr file is provided, we don't need to do anything.
+        // In case a modpack (from a change-pack-version.json file) is provided,
+        // we need to download the modpack zip file.
         let file = match (cffile_path.is_file(), mrfile_path.is_file(), &modpack) {
             (false, false, None) => {
                 t_request.complete_opaque();
@@ -296,12 +310,14 @@ pub async fn process_modpack(
             }
         };
 
+        // Temporarily create a staging directory and download the modpack files there
         tokio::fs::create_dir_all(&staging_dir.join("instance")).await?;
-
         let instance_prep_path = InstancePath::new(staging_dir.clone());
 
         let mut skipped_mods = Vec::new();
 
+        // Prepaers the list of modpack downloadable files and the manifest, as
+        // well as extract the overrides in it
         let v: Option<StandardVersion> = match file {
             Some(Modplatform::Curseforge) => {
                 let (modpack_progress_tx, mut modpack_progress_rx) =
@@ -458,6 +474,7 @@ pub async fn process_modpack(
             .await?
             .concurrent_downloads;
 
+        // Actually downloads the modpack files
         carbon_net::download_multiple(
             &modpack_downloads[..],
             DownloadOptions::builder()
@@ -526,7 +543,33 @@ pub async fn process_modpack(
         }
 
         let snapshot = serde_json::to_string_pretty(&files)?;
-        tokio::fs::write(setup_path.join("staging.json"), snapshot).await?;
+        tokio::fs::write(staging_packinfo_path, snapshot).await?;
+
+        t_generating_packinfo.start_opaque();
+
+        let files_refs: Vec<&str> = files.iter().map(|s| s.as_str()).collect();
+        // At this point the modpack files are all in the staging directory, so that's the path we need to scan.
+        // The packinfo on the other hand is in the instance folder itself.
+        let packinfo =
+            packinfo::scan_dir(&instance_prep_path.get_data_path(), Some(&files_refs)).await?;
+
+        let packinfo_str = packinfo::make_packinfo(packinfo)?;
+        tokio::fs::write(tmp_packinfo_path, packinfo_str).await?;
+
+        t_generating_packinfo.complete_opaque();
+
+        trace!("marking modpack initialization as complete");
+
+        tracing::info!("queueing metadata caching for running instance");
+        t_fill_cache.start_opaque();
+
+        app.meta_cache_manager()
+            .queue_caching(instance_id, true)
+            .await;
+
+        t_fill_cache.complete_opaque();
+
+        trace!("queued metadata caching");
     }
 
     let subtasks = TSubtasksInner {
@@ -550,6 +593,8 @@ pub async fn process_modpack(
     Ok((Arc::new(subtasks), version))
 }
 
+// TODO: Modpack staging is not atomic and does not track applied changes, so if the process is interrupted,
+// the instance will be in an inconsistent state.
 pub async fn process_modpack_staging(
     app: Arc<AppInner>,
     instance_shortpath: String,
@@ -572,9 +617,9 @@ pub async fn process_modpack_staging(
         let change_version_path = setup_path.join("change-pack-version.json");
         let overwrite_changed = !change_version_path.exists(); // TODO
 
-        let staging_file = setup_path.join("staging.json");
+        let staging_packinfo = setup_path.join("staging-packinfo.json");
 
-        let staged_text = tokio::fs::read_to_string(&staging_file).await?;
+        let staged_text = tokio::fs::read_to_string(&staging_packinfo).await?;
         let staging_snapshot = serde_json::from_str::<Vec<&str>>(&staged_text)
             .context("could not parse staging snapshot")?;
 
@@ -696,7 +741,7 @@ pub async fn process_modpack_staging(
         tokio::fs::create_dir(&audit_dir).await?;
 
         let audit_file = audit_dir.join("audit.txt");
-        let mut audit_txt = "Install Audit\n".to_string();
+        let mut audit_txt = "GDLauncher Modpack Install/Update Audit\n".to_string();
 
         if (!skipped_replacements.is_empty()) {
             audit_txt += "\nFiles that could not be replaced:\n";
@@ -739,12 +784,21 @@ pub async fn process_modpack_staging(
         }
 
         tokio::fs::write(audit_file, audit_txt).await?;
-        let _ = tokio::fs::rename(staging_file, audit_dir.join("staged.json")).await;
 
         trace!("Cleaning up staging directory");
         tokio::fs::remove_dir_all(staging_dir).await?;
         trace!("Staging complete");
         t_subtasks.t_apply_staging.complete_opaque();
+
+        if instance_root.join("tmp-packinfo.json").exists() {
+            tokio::fs::rename(
+                instance_root.join("tmp-packinfo.json"),
+                instance_root.join("packinfo.json"),
+            )
+            .await?;
+        }
+
+        tokio::fs::write(setup_path.join("modpack-complete"), "").await?;
     }
 
     Ok(())
