@@ -257,24 +257,32 @@ impl ManagerRef<'_, InstanceManager> {
 
         let log_file_name = format!("{}_{}", now.format("%Y-%m-%d"), now.format("%H-%M-%S"));
 
-        let logs_file_path = instance_path
-            .get_gdl_logs_path()
-            .join(format!("{}.log", log_file_name));
+        let logs_file_path = if launch_account.is_some() {
+            Some(
+                instance_path
+                    .get_gdl_logs_path()
+                    .join(format!("{}.log", log_file_name)),
+            )
+        } else {
+            None
+        };
 
         let logs_file_path_clone = logs_file_path.clone();
+        let logs_file_path_clone_1 = logs_file_path.clone();
 
         let file_fut = logs_file_path
-            .parent()
+            .and_then(|p| p.parent().map(|p| p.to_owned()))
             .map(|p| async {
                 if let Err(e) =
-                    tokio::fs::create_dir_all(&logs_file_path_clone.parent().unwrap()).await
+                    tokio::fs::create_dir_all(&logs_file_path_clone.unwrap().parent().unwrap())
+                        .await
                 {
                     tracing::error!({ error = ?e }, "Failed to create log directory");
                 }
             })
             .map(|f| async {
                 f.await;
-                tokio::fs::File::create(&logs_file_path_clone).await
+                tokio::fs::File::create(&logs_file_path_clone_1.unwrap()).await
             });
 
         let mut file = match file_fut {
