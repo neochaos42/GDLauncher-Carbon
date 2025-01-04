@@ -100,7 +100,7 @@ const changelogs: Changelog = {
         "Internal technical change that should improve performance across pages in some cases."
     },
     {
-      title: "Added many micro-transitions.",
+      title: "Added many micro-transitions (not transactions!).",
       description: "To various parts of the app, like the instances page."
     },
     {

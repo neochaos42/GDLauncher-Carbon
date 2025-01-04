@@ -35,7 +35,7 @@ const ContextMenuContent = <T extends ValidComponent = "div">(
     <ContextMenuPrimitive.Portal>
       <ContextMenuPrimitive.Content
         class={cn(
-          "z-50 min-w-32 origin-[var(--kb-menu-content-transform-origin)] overflow-visible rounded-md border border-solid border-darkSlate-600 bg-darkSlate-800 p-1 text-lightSlate-200 shadow-md animate-in outline-none",
+          "z-50 min-w-40 max-w-[200px] origin-[var(--kb-menu-content-transform-origin)] overflow-visible rounded-md border border-solid border-darkSlate-600 bg-darkSlate-800 p-1 text-lightSlate-200 shadow-md data-[expanded]:animate-menuEnter animate-menuLeave outline-none",
           local.class
         )}
         {...others}
@@ -145,7 +145,7 @@ const ContextMenuSubContent = <T extends ValidComponent = "div">(
   return (
     <ContextMenuPrimitive.SubContent
       class={cn(
-        "z-80 min-w-32 origin-[var(--kb-menu-content-transform-origin)] overflow-hidden rounded-md border border-solid border-darkSlate-600 bg-darkSlate-800 p-1 text-lightSlate-200 shadow-md animate-in outline-none",
+        "z-80 min-w-40 origin-[var(--kb-menu-content-transform-origin)] overflow-hidden rounded-md border border-solid border-darkSlate-600 bg-darkSlate-800 p-1 text-lightSlate-200 shadow-md data-[expanded]:animate-menuEnter animate-menuLeave outline-none",
         local.class
       )}
       {...others}
@@ -209,7 +209,7 @@ const ContextMenuGroupLabel = <T extends ValidComponent = "span">(
   return (
     <ContextMenuPrimitive.GroupLabel
       class={cn(
-        "block w-full px-2 py-1.5 text-sm font-semibold text-lightSlate-400",
+        "block w-full px-2 py-1.5 text-sm font-semibold text-lightSlate-400 truncate max-w-[calc(100%-1rem)]",
         local.class
       )}
       {...others}

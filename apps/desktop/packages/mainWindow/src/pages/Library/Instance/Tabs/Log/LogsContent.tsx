@@ -267,7 +267,7 @@ const LogsContent = (props: Props) => {
         </div>
       </div>
       <div
-        class="bg-darkSlate-900 relative mb-4 box-border w-full flex-1 overflow-auto px-4 py-2"
+        class="bg-darkSlate-900 relative mb-4 box-border w-full flex-1 overflow-auto py-2 pl-4 pr-2"
         ref={props.assignLogsContentRef}
         id="instance_logs_container" // used to override user select and cursor in index.html
       >
