@@ -210,6 +210,18 @@ const Tile = (props: Props) => {
               </ContextMenuGroupLabel>
               <ContextMenuSeparator />
               <ContextMenuItem
+                class="border-brands-bisecthosting text-brands-bisecthosting flex items-center gap-2 border-2 border-solid"
+                onClick={() => {
+                  modalsContext?.openModal({
+                    name: "bisectHostingAffiliate"
+                  })
+                }}
+              >
+                <div class="h-4 w-4 i-simple-icons:bisecthosting" />
+                <Trans key="instance.action_create_server" />
+              </ContextMenuItem>
+              <ContextMenuSeparator />
+              <ContextMenuItem
                 class="flex items-center gap-2"
                 onClick={handlePlay}
                 disabled={isLoading() || isInQueue() || props.isDeleting}

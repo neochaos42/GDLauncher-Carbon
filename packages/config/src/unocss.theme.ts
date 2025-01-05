@@ -134,7 +134,8 @@ const theme = {
     brands: {
       curseforge: "rgb(var(--brands-curseforge) / <alpha-value>)",
       modrinth: "rgb(var(--brands-modrinth) / <alpha-value>)",
-      discord: "rgb(var(--brands-discord) / <alpha-value>)"
+      discord: "rgb(var(--brands-discord) / <alpha-value>)",
+      bisecthosting: "rgb(var(--brands-bisecthosting) / <alpha-value>)"
     }
     // TODO: Move satisfies to the entire theme when possible
   } satisfies Theme,
