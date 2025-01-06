@@ -590,7 +590,7 @@ const Tile = (props: Props) => {
                     </Show>
                     <Show when={isLoading() || isInQueue() || props.isDeleting}>
                       <div
-                        class="z-11 absolute bottom-0 left-0 right-0 top-0 backdrop-blur-sm"
+                        class="z-11 absolute bottom-0 left-0 right-0 top-0 rounded-2xl backdrop-blur-sm"
                         style={
                           props.shouldSetViewTransition
                             ? {
