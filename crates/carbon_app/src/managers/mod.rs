@@ -147,7 +147,10 @@ mod app {
                 Arc::from_raw(inner.cast::<AppInner>())
             };
 
-            account::AccountRefreshService::start(Arc::downgrade(&app));
+            let timer = tokio::time::Instant::now();
+            info!("Starting account refresh service");
+            account::AccountRefreshService::start(Arc::downgrade(&app)).await;
+            info!("Account refresh service started in {:?}", timer.elapsed());
 
             let _app = app.clone();
             tokio::spawn(async move {
