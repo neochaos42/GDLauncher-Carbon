@@ -107,13 +107,14 @@ mod app {
                     }
                 };
 
-            let app = Arc::new(UnsafeCell::new(MaybeUninit::<AppInner>::uninit()));
-            let unsaferef = UnsafeAppRef(Arc::downgrade(&app));
-
-            let http_client =
-                cache_middleware::new_client(unsaferef.clone(), get_client(gdl_base_api.clone()));
-
             let app = unsafe {
+                let app = Arc::new(UnsafeCell::new(MaybeUninit::<AppInner>::uninit()));
+                let unsaferef = UnsafeAppRef(Arc::downgrade(&app));
+
+                let http_client = cache_middleware::new_client(
+                    unsaferef.clone(),
+                    get_client(gdl_base_api.clone()),
+                );
                 let inner = Arc::into_raw(app);
 
                 (*inner).get().write(MaybeUninit::new(AppInner {
@@ -185,9 +186,9 @@ mod app {
             });
 
             let _app = app.clone();
-            let http_client = http_client.clone();
             tokio::spawn(async move {
-                let _ = http_client
+                let _ = _app
+                    .reqwest_client
                     .get(format!("{}/v1/announcement", gdl_base_api))
                     .send()
                     .await;
