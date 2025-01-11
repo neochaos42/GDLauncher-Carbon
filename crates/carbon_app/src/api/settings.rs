@@ -1,9 +1,7 @@
-use std::str::FromStr;
-
-use rspc::RouterBuilder;
-use serde::{Deserialize, Serialize};
-use specta::Type;
-
+use super::{
+    modplatforms::{ModChannelWithUsage, ModPlatform, ModSources},
+    Set,
+};
 use crate::{
     api::{
         keys::settings::{
@@ -13,11 +11,10 @@ use crate::{
     },
     managers::App,
 };
-
-use super::{
-    modplatforms::{ModChannelWithUsage, ModPlatform, ModSources},
-    Set,
-};
+use rspc::RouterBuilder;
+use serde::{Deserialize, Serialize};
+use specta::Type;
+use std::str::FromStr;
 
 pub(super) fn mount() -> RouterBuilder<App> {
     router! {
@@ -240,10 +237,10 @@ struct FESettings {
     gdl_account_id: Option<String>,
 }
 
-impl TryFrom<crate::db::app_configuration::Data> for FESettings {
+impl TryFrom<carbon_repos::db::app_configuration::Data> for FESettings {
     type Error = anyhow::Error;
 
-    fn try_from(data: crate::db::app_configuration::Data) -> Result<Self, Self::Error> {
+    fn try_from(data: carbon_repos::db::app_configuration::Data) -> Result<Self, Self::Error> {
         Ok(Self {
             theme: data.theme,
             language: data.language,
@@ -276,7 +273,7 @@ impl TryFrom<crate::db::app_configuration::Data> for FESettings {
             auto_manage_java_system_profiles: data.auto_manage_java_system_profiles,
             mod_sources: ModSources {
                 channels: {
-                    use crate::domain::modplatforms::ModChannelWithUsage as DModChannelWithUsage;
+                    use carbon_platforms::ModChannelWithUsage as DModChannelWithUsage;
 
                     let mut channels = DModChannelWithUsage::str_to_vec(&data.mod_channels)?;
                     DModChannelWithUsage::fixup_list(&mut channels);
@@ -290,7 +287,7 @@ impl TryFrom<crate::db::app_configuration::Data> for FESettings {
                     .mod_platform_blacklist
                     .split(",")
                     .filter(|p| !p.is_empty())
-                    .map(crate::domain::modplatforms::ModPlatform::from_str)
+                    .map(carbon_platforms::ModPlatform::from_str)
                     .map(|r| r.map(ModPlatform::from))
                     .collect::<Result<_, _>>()?,
             },

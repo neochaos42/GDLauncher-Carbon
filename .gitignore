@@ -1,6 +1,6 @@
 # Logs
 logs
-*.log
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -91,8 +91,8 @@ playwright-report
 test-results
 
 **/.idea
-crates/carbon_app/src/db.rs
-/crates/carbon_app/prisma/dev.db
-/crates/carbon_app/prisma/dev.db-journal
-/crates/iridium
+crates/carbon_repos/src/db.rs
+crates/carbon_repos/prisma/dev.db
+crates/carbon_repos/prisma/dev.db-journal
+crates/iridium
 .vscode

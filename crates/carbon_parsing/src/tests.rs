@@ -212,7 +212,9 @@ fn test_invalid_log_level() {
     parser.feed(input.as_bytes());
 
     match parser.parse_next() {
-        Err(ParserError::InvalidLogLevel(_)) => {}
+        Ok(Some(ParsedItem::LogEntry(entry))) => {
+            assert_eq!(entry.level, LogEntryLevel::Unknown);
+        }
         _ => panic!("Expected InvalidLogLevel error"),
     }
 }

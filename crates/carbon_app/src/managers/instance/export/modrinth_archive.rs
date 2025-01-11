@@ -1,17 +1,9 @@
-use std::{collections::HashMap, fs::File, io::Write, path::PathBuf, sync::Arc};
-
-use anyhow::anyhow;
-use tokio::sync::mpsc;
-
 use crate::{
     api::translation::Translation,
     domain::{
         instance::{
             info::{GameVersion, ModLoaderType},
             ExportEntry, InstanceId,
-        },
-        modplatforms::modrinth::version::{
-            Hashes, ModpackIndex, ModrinthFile, ModrinthGame, ModrinthPackDependencies,
         },
         vtask::VisualTaskId,
     },
@@ -22,8 +14,14 @@ use crate::{
         AppInner,
     },
 };
+use anyhow::anyhow;
+use carbon_platforms::modrinth::version::{
+    Hashes, ModpackIndex, ModrinthFile, ModrinthGame, ModrinthPackDependencies,
+};
+use std::{collections::HashMap, fs::File, io::Write, path::PathBuf, sync::Arc};
+use tokio::sync::mpsc;
 
-use crate::db::{mod_file_cache as fcdb, mod_metadata as metadb};
+use carbon_repos::db::{mod_file_cache as fcdb, mod_metadata as metadb};
 
 use super::ZipMode;
 
