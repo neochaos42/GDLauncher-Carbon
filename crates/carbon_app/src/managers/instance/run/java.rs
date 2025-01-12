@@ -76,9 +76,8 @@ pub async fn check_and_install(
 
     let msg = format!("Suggested Java Profile: {java_profile:?}");
 
-    log.send_modify(|log| log.add_entry(LogEntry::system_message(msg.clone())));
-
     if let Some(ref mut file) = file {
+        log.send_modify(|log| log.add_entry(LogEntry::system_message(msg.clone())));
         file.write_all(format_message_as_log4j_event(&msg).as_bytes())
             .await?;
     }
@@ -274,9 +273,8 @@ pub async fn check_and_install(
 
     let msg = format!("Using Java: {java:#?}");
 
-    log.send_modify(|log| log.add_entry(LogEntry::system_message(msg.clone())));
-
     if let Some(file) = file {
+        log.send_modify(|log| log.add_entry(LogEntry::system_message(msg.clone())));
         file.write_all(format_message_as_log4j_event(&msg).as_bytes())
             .await?;
     }

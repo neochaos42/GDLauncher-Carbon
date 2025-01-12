@@ -311,10 +311,10 @@ impl ManagerRef<'_, InstanceManager> {
             })
         );
 
-        log.send_modify(|log| {
-            log.add_entry(LogEntry::system_message(msg.clone()));
-        });
         if let Some(file) = file.as_mut() {
+            log.send_modify(|log| {
+                log.add_entry(LogEntry::system_message(msg.clone()));
+            });
             file.write_all(format_message_as_log4j_event(&msg).as_bytes())
                 .await?;
         }
@@ -549,7 +549,7 @@ impl ManagerRef<'_, InstanceManager> {
                             tracing::info!("Instance killed");
                             drop(child.kill().await);
                         },
-                        _ = read_logs(log.clone(), stdout, stderr, file.as_mut()) => {
+                        _ = read_logs(&log, stdout, stderr, file.as_mut()) => {
                             tracing::info!("Instance read logs");
                         },
                         _ = update_playtime => {
@@ -574,10 +574,11 @@ impl ManagerRef<'_, InstanceManager> {
                     if let Ok(exitcode) = child.wait().await {
                         let msg = format!("{exitcode}");
 
-                        log.send_modify(|log| log.add_entry(LogEntry::system_message(msg.clone())));
-
                         if let Some(file) = file.as_mut() {
                             // TODO: not sure how to handle an error in here
+                            log.send_modify(|log| {
+                                log.add_entry(LogEntry::system_message(msg.clone()))
+                            });
                             let _ = file
                                 .write_all(format_message_as_log4j_event(&msg).as_bytes())
                                 .await;
@@ -843,7 +844,7 @@ impl From<&LaunchState> for domain::LaunchState {
 }
 
 async fn read_logs(
-    log: watch::Sender<GameLog>,
+    log: &watch::Sender<GameLog>,
     stdout: impl AsyncReadExt + Unpin + Send + 'static,
     stderr: impl AsyncReadExt + Unpin + Send + 'static,
     file: Option<&mut File>,
@@ -888,12 +889,12 @@ async fn read_pipe(
 }
 
 async fn process_logs(
-    log: watch::Sender<GameLog>,
+    log: &watch::Sender<GameLog>,
     mut stdout_rx: mpsc::Receiver<Vec<u8>>,
     mut stderr_rx: mpsc::Receiver<Vec<u8>>,
     mut file: Option<&mut File>,
 ) {
-    let mut stdout_processor = LogProcessor::new(LogEntrySourceKind::StdOut, log.clone()).await;
+    let mut stdout_processor = LogProcessor::new(LogEntrySourceKind::StdOut, log).await;
 
     let mut stderr_processor = LogProcessor::new(LogEntrySourceKind::StdErr, log).await;
 

@@ -302,7 +302,7 @@ impl ManagerRef<'_, InstanceManager> {
                         };
 
                         let mut stdout_processor =
-                            LogProcessor::new(LogEntrySourceKind::StdOut, tx).await;
+                            LogProcessor::new(LogEntrySourceKind::StdOut, &tx).await;
 
                         let mut buf = Vec::new();
                         let _ = file.read_to_end(&mut buf).await;
@@ -323,14 +323,14 @@ pub fn format_message_as_log4j_event(message: &str) -> String {
     format!("<log4j:Event logger=\"GDLAUNCHER\" timestamp=\"{}\" level=\"INFO\" thread=\"N/A\">\n\t<log4j:Message><![CDATA[{}]]></log4j:Message>\n</log4j:Event>\n", Utc::now().timestamp_millis(), message)
 }
 
-pub struct LogProcessor {
+pub struct LogProcessor<'a> {
     pub parser: LogParser,
     pub kind: LogEntrySourceKind,
-    pub log: watch::Sender<GameLog>,
+    pub log: &'a watch::Sender<GameLog>,
 }
 
-impl LogProcessor {
-    pub async fn new(kind: LogEntrySourceKind, log: watch::Sender<GameLog>) -> Self {
+impl<'a> LogProcessor<'a> {
+    pub async fn new(kind: LogEntrySourceKind, log: &'a watch::Sender<GameLog>) -> Self {
         Self {
             parser: LogParser::new(),
             kind,

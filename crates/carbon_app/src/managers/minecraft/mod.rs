@@ -118,9 +118,8 @@ impl ManagerRef<'_, MinecraftManager> {
 
         let msg = format!("LWJGL Meta {} - {}", lwjgl.uid, lwjgl.version);
 
-        log.send_modify(|log| log.add_entry(LogEntry::system_message(msg.clone())));
-
         if let Some(file) = file.as_mut() {
+            log.send_modify(|log| log.add_entry(LogEntry::system_message(msg.clone())));
             file.write_all(format_message_as_log4j_event(&msg).as_bytes())
                 .await?;
         }
@@ -154,9 +153,8 @@ impl ManagerRef<'_, MinecraftManager> {
                 .join("\n\t-> ")
         );
 
-        log.send_modify(|log| log.add_entry(LogEntry::system_message(msg.clone())));
-
         if let Some(file) = file.as_mut() {
+            log.send_modify(|log| log.add_entry(LogEntry::system_message(msg.clone())));
             file.write_all(format_message_as_log4j_event(&msg).as_bytes())
                 .await?;
         }
@@ -176,9 +174,8 @@ impl ManagerRef<'_, MinecraftManager> {
             client_main_jar.path.to_string_lossy().to_string()
         );
 
-        log.send_modify(|log| log.add_entry(LogEntry::system_message(msg.clone())));
-
         if let Some(file) = file.as_mut() {
+            log.send_modify(|log| log.add_entry(LogEntry::system_message(msg.clone())));
             file.write_all(format_message_as_log4j_event(&msg).as_bytes())
                 .await?;
         }
