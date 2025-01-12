@@ -24,5 +24,9 @@ export enum LogEntryLevel {
   // eslint-disable-next-line no-unused-vars
   Warn = "Warn",
   // eslint-disable-next-line no-unused-vars
-  Error = "Error"
+  Error = "Error",
+  // eslint-disable-next-line no-unused-vars
+  Fatal = "Fatal",
+  // eslint-disable-next-line no-unused-vars
+  Unknown = "Unknown"
 }

@@ -38,7 +38,7 @@ function DateTimeFormatter(props: {
 }) {
   return (
     <span
-      class="text-lightSlate-600 bg-darkSlate-900 z-10 rounded-md py-2 pr-2 font-thin leading-4"
+      class="text-lightSlate-600 bg-darkSlate-900 z-10 rounded-md py-2 pr-2 font-thin italic"
       classList={{
         "text-xs": props.fontMultiplier === 0,
         "text-sm": props.fontMultiplier === 1,
@@ -55,7 +55,7 @@ function DateTimeFormatter(props: {
 function LoggerFormatter(props: { logger: string; fontMultiplier: 0 | 1 | 2 }) {
   return (
     <span
-      class={`bg-darkSlate-900 z-10 rounded-md py-2 pr-2 font-thin leading-4`}
+      class={`bg-darkSlate-900 z-10 rounded-md py-2 pr-2 font-thin italic`}
       classList={{
         "text-xs": props.fontMultiplier === 0,
         "text-sm": props.fontMultiplier === 1,
@@ -75,7 +75,7 @@ function SourceKindFormatter(props: {
 }) {
   return (
     <span
-      class={`bg-darkSlate-900 z-10 rounded-md py-2 pr-2 font-thin leading-4`}
+      class={`bg-darkSlate-900 z-10 rounded-md py-2 pr-2 font-thin italic`}
       classList={{
         "text-xs": props.fontMultiplier === 0,
         "text-sm": props.fontMultiplier === 1,
@@ -96,7 +96,7 @@ function ThreadNameFormatter(props: {
 }) {
   return (
     <span
-      class={`bg-darkSlate-900 z-10 rounded-md py-2 pr-2 font-thin leading-4`}
+      class={`bg-darkSlate-900 z-10 rounded-md py-2 pr-2 font-thin italic`}
       classList={{
         "text-xs": props.fontMultiplier === 0,
         "text-sm": props.fontMultiplier === 1,
@@ -116,7 +116,7 @@ function LevelFormatter(props: {
 }) {
   return (
     <span
-      class={`pr-2 py-2 font-bold ${color[props.level]} bg-darkSlate-900 z-10 rounded-md leading-4`}
+      class={`pr-2 py-2 font-bold ${color[props.level]} bg-darkSlate-900 z-10 rounded-md italic`}
       classList={{
         "text-xs": props.fontMultiplier === 0,
         "text-sm": props.fontMultiplier === 1,
@@ -307,25 +307,34 @@ const LogsContent = (props: Props) => {
                         fontMultiplier={fontMultiplier()}
                       />
                     </Show>
-                    <Show when={columns().sourceKind}>
+                    <Show
+                      when={
+                        columns().sourceKind &&
+                        log.sourceKind !== LogEntrySourceKind._System
+                      }
+                    >
                       <SourceKindFormatter
                         sourceKind={log.sourceKind}
                         fontMultiplier={fontMultiplier()}
                       />
                     </Show>
-                    <Show when={columns().level}>
+                    <Show
+                      when={
+                        columns().level && log.level !== LogEntryLevel.Unknown
+                      }
+                    >
                       <LevelFormatter
                         level={log.level}
                         fontMultiplier={fontMultiplier()}
                       />
                     </Show>
-                    <Show when={columns().logger}>
+                    <Show when={columns().logger && log.logger !== "N/A"}>
                       <LoggerFormatter
                         logger={log.logger}
                         fontMultiplier={fontMultiplier()}
                       />
                     </Show>
-                    <Show when={columns().threadName}>
+                    <Show when={columns().threadName && log.thread !== "N/A"}>
                       <ThreadNameFormatter
                         threadName={log.thread}
                         fontMultiplier={fontMultiplier()}
