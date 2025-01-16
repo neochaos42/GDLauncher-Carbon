@@ -54,13 +54,13 @@ export default function LogsOptions(props: Props) {
                 onChange={(value) => props.setLogsDensity(value as LogDensity)}
               >
                 <DropdownMenuRadioItem value="low">
-                  <Trans key="logs_density_low" />
+                  <Trans key="logs_density.low" />
                 </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="medium">
-                  <Trans key="logs_density_comfortable" />
+                  <Trans key="logs_density.comfortable" />
                 </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="high">
-                  <Trans key="logs_density_compact" />
+                  <Trans key="logs_density.compact" />
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuSubContent>
