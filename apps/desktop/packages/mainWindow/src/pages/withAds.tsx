@@ -1,7 +1,5 @@
-import { AdsBanner } from "@/components/AdBanner"
 import AppNavbar from "@/components/Navbar"
 import { Outlet, useRouteData } from "@solidjs/router"
-import { Match, Show, Switch, createEffect } from "solid-js"
 import fetchData from "./app.data"
 import { setMappedMcVersions, setMcVersions } from "@/utils/mcVersion"
 import {
@@ -10,13 +8,10 @@ import {
   setSupportedModloaders
 } from "@/utils/sidebar"
 import adSize from "@/utils/adhelper"
-import { Trans } from "@gd/i18n"
 import { useModal } from "@/managers/ModalsManager"
-import { BisectBanner } from "@/components/BisectBanner"
 
 function withAdsLayout() {
   const routeData: ReturnType<typeof fetchData> = useRouteData()
-  const modalContext = useModal()
 
   createEffect(() => {
     if (routeData.minecraftVersions.data) {
