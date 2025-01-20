@@ -61,7 +61,7 @@ function withAdsLayout() {
           <div class="flex justify-end h-[calc(100vh-60px)]">
             <div
               style={{
-                width: `calc(100vw - ${adSize.width}px)`
+                width: `calc(100vw - ${0}px)`
               }}
             >
               <Outlet />
