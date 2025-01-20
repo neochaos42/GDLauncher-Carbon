@@ -1,3 +1,3 @@
 export const AdsBanner = () => {
-  return (<div />)
+  return <div />
 }
