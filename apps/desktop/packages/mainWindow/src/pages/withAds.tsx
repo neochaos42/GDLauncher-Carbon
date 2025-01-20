@@ -78,5 +78,6 @@ function withAdsLayout() {
   )
 }
 
+export default withAdsLayout;
 
 
