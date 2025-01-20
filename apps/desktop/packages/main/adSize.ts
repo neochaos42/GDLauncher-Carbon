@@ -17,8 +17,8 @@ export default function getAdSize(display?: Display) {
       adSize: {
         useFallbackAd,
         useVertical: true,
-        width: 160,
-        height: 600
+        width: 0,
+        height: 0
       }
     }
   } else {
@@ -30,8 +30,8 @@ export default function getAdSize(display?: Display) {
       adSize: {
         useFallbackAd,
         useVertical: false,
-        width: 400,
-        height: 600
+        width: 0,
+        height: 0
       }
     }
   }
