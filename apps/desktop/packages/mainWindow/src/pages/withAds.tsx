@@ -74,35 +74,7 @@ function withAdsLayout() {
               <Outlet />
             </div>
             <div class="flex flex-col justify-between h-[calc(100vh-100px)]">
-              <div
-                class="py-4"
-                style={{
-                  width: `${adSize.width}px`,
-                  height: `${adSize.height}px`
-                }}
-              >
-                <Show when={adSize.shouldShow}>
-                  <Switch>
-                    <Match when={adSize.useFallbackAd}>
-                      <BisectBanner />
-                    </Match>
-                    <Match when={!adSize.useFallbackAd}>
-                      <AdsBanner />
-                    </Match>
-                  </Switch>
-                </Show>
-              </div>
               <div class="flex justify-center">
-                <div
-                  class="text-center hover:text-lightSlate-50 transition-colors duration-200 text-lightSlate-700"
-                  onClick={() => {
-                    modalContext?.openModal({
-                      name: "whyAreAdsNeeded"
-                    })
-                  }}
-                >
-                  <Trans key="why_are_ads_needed" />
-                </div>
               </div>
             </div>
           </div>
