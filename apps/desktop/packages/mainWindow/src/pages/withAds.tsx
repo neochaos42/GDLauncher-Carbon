@@ -7,6 +7,7 @@ import {
   setModrinthCategories,
   setSupportedModloaders
 } from "@/utils/sidebar"
+import { createEffect } from "solid-js";
 
 function withAdsLayout() {
   const routeData: ReturnType<typeof fetchData> = useRouteData()
