@@ -1,6 +1,3 @@
-
 export const AdsBanner = () => {
-  return (
-    <div></div>
-  )
+  return (<div />)
 }
