@@ -7,8 +7,6 @@ import {
   setModrinthCategories,
   setSupportedModloaders
 } from "@/utils/sidebar"
-import adSize from "@/utils/adhelper"
-import { useModal } from "@/managers/ModalsManager"
 
 function withAdsLayout() {
   const routeData: ReturnType<typeof fetchData> = useRouteData()
@@ -80,3 +78,7 @@ function withAdsLayout() {
 }
 
 export default withAdsLayout
+function createEffect(arg0: () => void) {
+  throw new Error("Function not implemented.")
+}
+
